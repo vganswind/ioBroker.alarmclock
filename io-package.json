@@ -1,0 +1,106 @@
+{
+    "common": {
+        "name": "alarmclock",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Alarmclock",
+        "titleLang": {
+            "en": "Alarmclock",
+            "de": "Wecker",
+            "ru": "Будильник",
+            "pt": "Despertador",
+            "nl": "Wekker",
+            "fr": "Réveil",
+            "it": "Sveglia",
+            "es": "Despertador",
+            "pl": "Budzik",
+            "zh-cn": "闹钟"
+        },
+        "desc": {
+            "en": "Adapter to set up a Alarmclock",
+            "de": "Adapter zum Aufbau eines Weckers",
+            "ru": "Адаптер для установки будильника",
+            "pt": "Adaptador para configurar um despertador",
+            "nl": "Adapter om een ​​wekker in te stellen",
+            "fr": "Adaptateur pour configurer un réveil",
+            "it": "Adattatore per impostare una sveglia",
+            "es": "Adaptador para configurar un Despertador",
+            "pl": "Adapter do ustawienia Budzika",
+            "zh-cn": "设置闹钟的适配器"
+        },
+        "authors": [
+            "Volker Ganswind <volker@ganswind.dyndns.org>"
+        ],
+        "keywords": [
+            "alarmclock",
+            "clock"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "alarmclock.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/vganswind/ioBroker.alarmclock/main/admin/alarmclock.png",
+        "readme": "https://github.com/vganswind/ioBroker.alarmclock/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "date-and-time",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
