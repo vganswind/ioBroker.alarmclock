@@ -101,6 +101,170 @@
                 "def": false
             },
             "native": {}
+        },
+        {
+            "_id": "config",
+            "type": "channel",
+            "common": {
+                "name": "Configuration"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.1_Monday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Monday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "07:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.2_Tuesday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Tuesday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "07:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.3_Wednesday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Wednesday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "07:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.4_Thursday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Thursday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "07:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.5_Friday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Friday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "07:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.6_Saturday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Saturday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "09:30"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.7_Sunday",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Wake up time on Sunday",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "10:00"
+            },
+            "native": {}
+        },
+        {
+            "_id": "config.snoozeTime",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Snooze time",
+                "type": "string",
+                "read": true,
+                "write": true,
+                "def": "00:10"
+            },
+            "native": {}
+        },
+        {
+            "_id": "state",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "Alarm status",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "nextAlarm",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "next Alarm",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "snooze",
+            "type": "state",
+            "common": {
+                "role": "button",
+                "name": "Activate snooze",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "off",
+            "type": "state",
+            "common": {
+                "role": "button",
+                "name": "Turn off the alarm",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "def": false
+            },
+            "native": {}
         }
     ]
 }

@@ -33,7 +33,7 @@ class Alarmclock extends utils.Adapter {
      */
     async onReady() {
         // Initialize your adapter here
-
+        this.log.debug("Starting Adapter: " + this.namespace);
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
 
@@ -42,43 +42,9 @@ class Alarmclock extends utils.Adapter {
         this.log.info("config option1: " + this.config.option1);
         this.log.info("config option2: " + this.config.option2);
 
-        /*
-        For every state in the system there has to be also an object of type state
-        Here a simple template for a boolean variable named "testVariable"
-        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
-        await this.setObjectNotExistsAsync("testVariable", {
-            type: "state",
-            common: {
-                name: "testVariable",
-                type: "boolean",
-                role: "indicator",
-                read: true,
-                write: true,
-            },
-            native: {},
-        });
-
-        // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-        this.subscribeStates("testVariable");
-        // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-        // this.subscribeStates("lights.*");
-        // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-        // this.subscribeStates("*");
-
-        /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-        */
-        // the variable testVariable is set to true as command (ack=false)
-        await this.setStateAsync("testVariable", true);
-
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        await this.setStateAsync("testVariable", { val: true, ack: true });
-
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
+        this.subscribeStates("config.*");
+        this.subscribeStates("snooze");
+        this.subscribeStates("off");
 
         // examples for the checkPassword/checkGroup functions
         let result = await this.checkPasswordAsync("admin", "iobroker");
@@ -86,6 +52,10 @@ class Alarmclock extends utils.Adapter {
 
         result = await this.checkGroupAsync("admin", "admin");
         this.log.info("check group user admin group admin: " + result);
+
+        this.setState("info.connection", true, true);
+        await this.setStateAsync("state", { val: "initialize", ack: true });
+        this.log.debug("Finish starting Adapter: " + this.namespace);
     }
 
     /**
@@ -100,6 +70,7 @@ class Alarmclock extends utils.Adapter {
             // ...
             // clearInterval(interval1);
 
+            this.setState("info.connection", false, true);
             callback();
         } catch (e) {
             callback();
@@ -130,8 +101,73 @@ class Alarmclock extends utils.Adapter {
      */
     onStateChange(id, state) {
         if (state) {
-            // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            if(id == this.namespace + ".config.1_Monday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.1_Monday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.2_Tuesday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.2_Tuesday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.3_Wednesday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.3_Wednesday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.4_Thursday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.4_Thursday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.5_Friday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.5_Friday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.6_Saturday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.6_Saturday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.7_Sunday" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.7_Sunday", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else if(id == this.namespace + ".config.snoozeTime" && !state.ack) {
+                if(state.val != null) {
+                    if(this.checkTimeValue(state.val.toString())) {
+                        this.setState(this.namespace + ".config.snoozeTime", state.val, true);
+                    } else {
+                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                    }
+                }
+            } else {
+                this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            }
         } else {
             // The state was deleted
             this.log.info(`state ${id} deleted`);
@@ -156,6 +192,24 @@ class Alarmclock extends utils.Adapter {
     //     }
     // }
 
+    /**
+     * Prüfung auf korrekte Uhrzeit
+     * @param {string} time Die zu prüfende Uhrzeit
+     * @returns Ob es sich um eine korrekte Uhrzeit handelt
+     */
+    checkTimeValue(time) {
+        this.log.debug("Check time Value: " + time);
+
+        const chk = time.match(/^(\d+):(\d+)$/);
+        if(chk!=null) {
+            const hour = parseInt(chk[1]);
+            const min = parseInt(chk[2]);
+            if(hour>=0 && hour<=23 && min>=0 && min<=59) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 if (require.main !== module) {
