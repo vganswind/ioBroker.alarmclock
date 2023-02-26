@@ -11,6 +11,29 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
+// Uhrzeiten des Weckers
+const alarmTimes = [
+    "00:10", // snooze
+    "09:00", // Mo
+    "09:00", // Di
+    "09:00", // Mi
+    "09:00", // Do
+    "10:00", // Fr
+    "11:00", // Sa
+    "00:00"  // So
+];
+// Objektnamen der Weckzeiten
+const configStateNames = [
+    ".config.snoozeTime",
+    ".config.1_Monday",
+    ".config.2_Tuesday",
+    ".config.3_Wednesday",
+    ".config.4_Thursday",
+    ".config.5_Friday",
+    ".config.6_Saturday",
+    ".config.7_Sunday"
+];
+
 class Alarmclock extends utils.Adapter {
 
     /**
@@ -55,6 +78,18 @@ class Alarmclock extends utils.Adapter {
 
         this.setState("info.connection", true, true);
         await this.setStateAsync("state", { val: "initialize", ack: true });
+
+        for(let i=0;i<configStateNames.length;i++) {
+            const checkValue = await this.getStateAsync(this.namespace + configStateNames[i]);
+            if(checkValue && checkValue.val && this.checkTimeValue(checkValue.val.toString()) ) {
+                alarmTimes[i] = checkValue.val.toString();
+            } else {
+                this.setState(this.namespace + configStateNames[i], "09:00", true);
+                alarmTimes[i] = "09:00";
+            }
+        }
+
+        this.log.debug("alarmTimes: " + alarmTimes.toString());
         this.log.debug("Finish starting Adapter: " + this.namespace);
     }
 
@@ -100,73 +135,18 @@ class Alarmclock extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
+        this.log.info("stateChange " + id + " " + JSON.stringify(state));
+
         if (state) {
-            if(id == this.namespace + ".config.1_Monday" && !state.ack) {
-                if(state.val != null) {
+            for(let i=0;i<configStateNames.length;i++) {
+                if(id == this.namespace + configStateNames[i] && state.val && !state.ack) {
                     if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.1_Monday", state.val, true);
+                        alarmTimes[i] = state.val.toString();
                     } else {
                         this.log.error(`${id}: ${state.val} is not a Time-Value!`);
+                        this.setState(id, alarmTimes[i], true);
                     }
                 }
-            } else if(id == this.namespace + ".config.2_Tuesday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.2_Tuesday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.3_Wednesday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.3_Wednesday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.4_Thursday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.4_Thursday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.5_Friday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.5_Friday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.6_Saturday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.6_Saturday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.7_Sunday" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.7_Sunday", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else if(id == this.namespace + ".config.snoozeTime" && !state.ack) {
-                if(state.val != null) {
-                    if(this.checkTimeValue(state.val.toString())) {
-                        this.setState(this.namespace + ".config.snoozeTime", state.val, true);
-                    } else {
-                        this.log.error(`${id}: ${state.val} is not a Time-Value!`);
-                    }
-                }
-            } else {
-                this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             }
         } else {
             // The state was deleted
