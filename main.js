@@ -90,6 +90,7 @@ class Alarmclock extends utils.Adapter {
         }
 
         this.log.debug("alarmTimes: " + alarmTimes.toString());
+        this.updateNextAlarmTime();
         this.log.debug("Finish starting Adapter: " + this.namespace);
     }
 
@@ -142,6 +143,7 @@ class Alarmclock extends utils.Adapter {
                 if(id == this.namespace + configStateNames[i] && state.val && !state.ack) {
                     if(this.checkTimeValue(state.val.toString())) {
                         alarmTimes[i] = state.val.toString();
+                        this.updateNextAlarmTime();
                     } else {
                         this.log.error(`${id}: ${state.val} is not a Time-Value!`);
                         this.setState(id, alarmTimes[i], true);
@@ -189,6 +191,36 @@ class Alarmclock extends utils.Adapter {
             }
         }
         return false;
+    }
+
+    /**
+     * Prüfen und Setzten der Zeit des nächsten Alarm
+     */
+    updateNextAlarmTime() {
+        const now = new Date();
+        const alarm = new Date();
+        now.setSeconds(0);
+        alarm.setSeconds(0);
+        let weekDay = now.getDay();
+        if(weekDay === 0) weekDay = 7;
+
+        const chk = alarmTimes[weekDay].match(/^(\d+):(\d+)$/);
+        if(chk!=null) {
+            alarm.setHours(parseInt(chk[1]));
+            alarm.setMinutes(parseInt(chk[2]));
+        }
+
+        if(now.getTime() < alarm.getTime()) {
+            this.nextAlarm = alarmTimes[weekDay];
+        } else {
+            if(weekDay+1>7) {
+                this.nextAlarm = alarmTimes[1];
+            } else {
+                this.nextAlarm = alarmTimes[weekDay+1];
+            }
+        }
+        this.log.debug("nextAlarm: " + this.nextAlarm);
+        this.setState(this.namespace + ".nextAlarm", this.nextAlarm, true);
     }
 }
 
