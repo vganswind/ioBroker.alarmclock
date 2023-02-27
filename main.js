@@ -108,7 +108,7 @@ class Alarmclock extends utils.Adapter {
             // ...
             // clearInterval(interval1);
 
-            this.clearTimeout(this.timeout);
+            if(this.timeout) this.clearTimeout(this.timeout);
             this.setState("info.connection", false, true);
             callback();
         } catch (e) {
