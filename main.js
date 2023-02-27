@@ -156,10 +156,14 @@ class Alarmclock extends utils.Adapter {
             }
 
             if(id === this.namespace + ".off") {
-                this.setStateAsync("state", { val: "off", ack: true });
-                this.isRunning = false;
-                this.setStateAsync("running", { val: false, ack: true });
-                this.updateNextAlarmTime();
+                if(this.isRunning) {
+                    this.setStateAsync("state", { val: "off", ack: true });
+                    this.isRunning = false;
+                    this.setStateAsync("running", { val: false, ack: true });
+                    this.updateNextAlarmTime();
+                } else {
+                    this.log.warn("alarm not running, Alarm off ignored");
+                }
             }
 
             if(id === this.namespace + ".snooze") {
@@ -175,7 +179,7 @@ class Alarmclock extends utils.Adapter {
                     if(this.timeout) this.clearTimeout(this.timeout);
                     this.timeout = this.setTimeout(() => this.onTimeout(), time * 1000);
                 } else {
-                    this.log.warn("alarm not running, snooze ignored");
+                    this.log.warn("alarm not running, Alarm snooze ignored");
                 }
             }
         } else {
