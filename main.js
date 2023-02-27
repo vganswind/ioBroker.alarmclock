@@ -57,6 +57,8 @@ class Alarmclock extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
         this.log.debug("Starting Adapter: " + this.namespace);
+        this.timeout = null;
+        this.isRunning = false;
         // Reset the connection indicator during startup
         this.setState("info.connection", false, true);
 
@@ -106,6 +108,7 @@ class Alarmclock extends utils.Adapter {
             // ...
             // clearInterval(interval1);
 
+            this.clearTimeout(this.timeout);
             this.setState("info.connection", false, true);
             callback();
         } catch (e) {
@@ -136,18 +139,43 @@ class Alarmclock extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
-        this.log.info("stateChange " + id + " " + JSON.stringify(state));
+        this.log.debug("stateChange " + id + " " + JSON.stringify(state));
 
         if (state) {
             for(let i=0;i<configStateNames.length;i++) {
                 if(id == this.namespace + configStateNames[i] && state.val && !state.ack) {
                     if(this.checkTimeValue(state.val.toString())) {
                         alarmTimes[i] = state.val.toString();
+                        this.setState(id, alarmTimes[i], true);
                         this.updateNextAlarmTime();
                     } else {
                         this.log.error(`${id}: ${state.val} is not a Time-Value!`);
                         this.setState(id, alarmTimes[i], true);
                     }
+                }
+            }
+
+            if(id === this.namespace + ".off") {
+                this.setStateAsync("state", { val: "off", ack: true });
+                this.isRunning = false;
+                this.setStateAsync("running", { val: false, ack: true });
+                this.updateNextAlarmTime();
+            }
+
+            if(id === this.namespace + ".snooze") {
+                if(this.isRunning) {
+                    this.setStateAsync("state", { val: "snooze", ack: true });
+                    let time = 0;
+                    const chk = alarmTimes[0].match(/^(\d+):(\d+)$/);
+                    if(chk!=null) {
+                        time += parseInt(chk[1]) * 60 * 60;
+                        time += parseInt(chk[2]) * 60;
+                    }
+                    this.log.info("snooze wait " + time + " seconds");
+                    if(this.timeout) this.clearTimeout(this.timeout);
+                    this.timeout = this.setTimeout(() => this.onTimeout(), time * 1000);
+                } else {
+                    this.log.warn("alarm not running, snooze ignored");
                 }
             }
         } else {
@@ -199,7 +227,6 @@ class Alarmclock extends utils.Adapter {
     updateNextAlarmTime() {
         const now = new Date();
         const alarm = new Date();
-        now.setSeconds(0);
         alarm.setSeconds(0);
         let weekDay = now.getDay();
         if(weekDay === 0) weekDay = 7;
@@ -218,9 +245,24 @@ class Alarmclock extends utils.Adapter {
             } else {
                 this.nextAlarm = alarmTimes[weekDay+1];
             }
+            alarm.setDate(alarm.getDate() + 1);
         }
         this.log.debug("nextAlarm: " + this.nextAlarm);
         this.setState(this.namespace + ".nextAlarm", this.nextAlarm, true);
+
+        this.log.info("alarm wait " + ((alarm.getTime() - now.getTime()) / 1000) + " seconds");
+        if(this.timeout) this.clearTimeout(this.timeout);
+        this.timeout = this.setTimeout(() => this.onTimeout(), (alarm.getTime() - now.getTime()));
+    }
+
+    /**
+     * Ausführen des Alarms
+     */
+    onTimeout() {
+        this.log.debug("onTimeout()");
+        this.setStateAsync("state", { val: "on", ack: true });
+        this.isRunning = true;
+        this.setStateAsync("running", { val: true, ack: true });
     }
 }
 

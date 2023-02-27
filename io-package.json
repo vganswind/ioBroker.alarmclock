@@ -265,6 +265,19 @@
                 "def": false
             },
             "native": {}
+        },
+        {
+            "_id": "running",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "Running the alarm",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
         }
     ]
 }
