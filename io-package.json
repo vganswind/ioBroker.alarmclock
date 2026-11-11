@@ -1,0 +1,84 @@
+{
+    "common": {
+        "name": "alarmclock",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
+        },
+        "titleLang": {
+            "en": "AlarmClock",
+            "de": "Wecker",
+            "ru": "БудильникЧасы",
+            "pt": "Despertador",
+            "nl": "Wekker",
+            "fr": "Réveil",
+            "it": "Sveglia",
+            "es": "Despertador",
+            "pl": "Budzik",
+            "uk": "Будильник",
+            "zh-cn": "闹钟"
+        },
+        "desc": {
+            "en": "alarmclock",
+            "de": "Wecker",
+            "ru": "будильник",
+            "pt": "despertador",
+            "nl": "wekker",
+            "fr": "réveil",
+            "it": "sveglia",
+            "es": "despertador",
+            "pl": "budzik",
+            "uk": "будильник",
+            "zh-cn": "闹钟"
+        },
+        "authors": ["Volker Ganswind <volker@ganswind.de>"],
+        "keywords": ["alarm"],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "alarmclock.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/vganswind/ioBroker.alarmclock/main/admin/alarmclock.png",
+        "readme": "https://github.com/vganswind/ioBroker.alarmclock/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "alarm",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=7.0.23"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
