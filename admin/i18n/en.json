@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Adapter settings for alarmclock",
-    "option1": "option1",
-    "option2": "option2"
+    "alarmclock adapter settings": "AlarmClock adapter settings",
+
+    "Holiday Calendar Settings": "Holiday Calendar Settings",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Here you can configure the settings for the holiday calendar of the alarm clock.",
+    "Select the holidays instance": "Select the holidays instance",
+    "Select the instance that contains the holiday data.": "Select the instance that contains the holiday data.",
+
+    "Vocation Calendar Settings": "Vocation Calendar Settings",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Here you can configure the settings for the vacation calendar of the alarm clock.",
+    "Select the instance that contains the vacation calendar data.": "Select the instance that contains the vacation calendar data.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Appointment name (e.g., 'Vacation' or 'Late shift')",
+
+    "Appointment Calendar Settings": "Appointment Calendar Settings",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Here you can configure the settings for the appointment calendar of the alarm clock.",
+    "Select the instance that contains the wake-up times.": "Select the instance that contains the wake-up times.",
+    "Event name (e.g., 'alarm' or 'alert')": "Event name (e.g., 'alarm' or 'alert')",
+
+    "Select the iCal instance": "Select the iCal instance",
+    "The name of the appointment to be checked": "The name of the appointment to be checked",
+    "Active?": "active?"
 }

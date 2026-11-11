@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Paramètres d'adaptateur pour alarmclock",
-    "option1": "option1",
-    "option2": "option2"
+    "alarmclock adapter settings": "Paramètres de l'adaptateur AlarmClock",
+
+    "Holiday Calendar Settings": "Paramètres du calendrier des jours fériés",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Ici, vous pouvez configurer les paramètres du calendrier des jours fériés pour le réveil.",
+    "Select the holidays instance": "Sélectionner l'instance des jours fériés",
+    "Select the instance that contains the holiday data.": "Sélectionnez l'instance contenant les données relatives aux jours fériés.",
+
+    "Vocation Calendar Settings": "Paramètres du calendrier des congés",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Ici, vous pouvez configurer les paramètres du calendrier des congés pour le réveil.",
+    "Select the instance that contains the vacation calendar data.": "Sélectionnez l'instance contenant les données du calendrier des congés.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Nom de l'événement (par ex. « Congés » ou « Travail en soirée »)",
+
+    "Appointment Calendar Settings": "Paramètres du calendrier des rendez-vous",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Ici, vous pouvez configurer les paramètres du calendrier des rendez-vous pour le réveil.",
+    "Select the instance that contains the wake-up times.": "Sélectionnez l'instance contenant les heures de réveil.",
+    "Event name (e.g., 'alarm' or 'alert')": "Nom de l'événement (par ex. « alarme » ou « alerte »)",
+
+    "Select the iCal instance": "Sélectionner l'instance iCal",
+    "The name of the appointment to be checked": "Nom de l'événement à vérifier",
+    "Active?": "actif ?"
 }

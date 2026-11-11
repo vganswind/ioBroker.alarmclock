@@ -2,25 +2,106 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "option1": {
-            "type": "checkbox",
-            "label": "option1",
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
+        "holidayHeading": {
+            "type": "header",
+            "text": "Holiday Calendar Settings",
+            "size": 4
         },
-        "option2": {
-            "type": "text",
-            "label": "option2",
+        "holidayInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the holiday calendar of the alarm clock."
+        },
+        "holidayInstance": {
+            "type": "instance",
             "newLine": true,
             "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
+            "sm": 6,
+            "label": "Select the holidays instance",
+            "adapter": "feiertage",
+            "tooltip": "Select the instance that contains the holiday data.",
+            "default": ""
+        },
+        "vocationHeading": {
+            "type": "header",
+            "text": "Vocation Calendar Settings",
+            "size": 4
+        },
+        "vocationInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the vacation calendar of the alarm clock."
+        },
+        "vocationInstance": {
+            "type": "instance",
+            "newLine": true,
+            "xs": 12,
+            "sm": 6,
+            "label": "Select the vacation calendar instance",
+            "adapter": "ical",
+            "tooltip": "Select the instance that contains the vacation calendar data.",
+            "default": ""
+        },
+        "vocationEvents": {
+            "type": "table",
+            "xs": 7,
+            "label": "The name of the appointment to be checked",
+            "noDelete": false,
+            "items": [
+                {
+                    "type": "text",
+                    "attr": "name",
+                    "title": "Appointment name (e.g., 'Vacation' or 'Late shift')",
+                    "width": "85%"
+                },
+                {
+                    "type": "checkbox",
+                    "attr": "enabled",
+                    "title": "Active?",
+                    "width": "15%",
+                    "default": true
+                }
+            ],
+            "default": []
+        },
+        "appointmentHeading": {
+            "type": "header",
+            "text": "Appointment Calendar Settings",
+            "size": 4
+        },
+        "appointmentInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the appointment calendar of the alarm clock."
+        },
+        "appointmentInstance": {
+            "type": "instance",
+            "newLine": true,
+            "xs": 12,
+            "sm": 6,
+            "label": "Select the iCal instance",
+            "adapter": "ical",
+            "tooltip": "Select the instance that contains the wake-up times.",
+            "default": ""
+        },
+        "appointmentEvents": {
+            "type": "table",
+            "xs": 7,
+            "label": "The name of the appointment to be checked",
+            "noDelete": false,
+            "items": [
+                {
+                    "type": "text",
+                    "attr": "name",
+                    "title": "Event name (e.g., 'alarm' or 'alert')",
+                    "width": "85%"
+                },
+                {
+                    "type": "checkbox",
+                    "attr": "enabled",
+                    "title": "Active?",
+                    "width": "15%",
+                    "default": true
+                }
+            ],
+            "default": []
         }
     }
 }

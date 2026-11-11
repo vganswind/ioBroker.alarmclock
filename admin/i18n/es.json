@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Ajustes del adaptador para alarmclock",
-    "option1": "opción1",
-    "option2": "opción2"
+    "alarmclock adapter settings": "Agordoj de la vekhorloĝa adaptilo",
+
+    "Holiday Calendar Settings": "Agordoj de la feri-kalendaro",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Ĉi tie vi povas agordi la feri-kalendaron por la vekhorloĝo.",
+    "Select the holidays instance": "Elektu la feri-fonton",
+    "Select the instance that contains the holiday data.": "Elektu la fonton, kiu enhavas la feri-datumojn.",
+
+    "Vocation Calendar Settings": "Agordoj de la feri-kalendaro (libertempoj)",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Ĉi tie vi povas agordi la kalendaron de libertempoj por la vekhorloĝo.",
+    "Select the instance that contains the vacation calendar data.": "Elektu la fonton, kiu enhavas la datumojn pri libertempoj.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Nomo de la evento (ekz. 'Libertempo' aŭ 'Malfrua deĵoro')",
+
+    "Appointment Calendar Settings": "Agordoj de la event-kalendaro",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Ĉi tie vi povas agordi la event-kalendaron por la vekhorloĝo.",
+    "Select the instance that contains the wake-up times.": "Elektu la fonton, kiu enhavas la vekhorojn.",
+    "Event name (e.g., 'alarm' or 'alert')": "Nomo de la evento (ekz. 'vekado' aŭ 'averto')",
+
+    "Select the iCal instance": "Elektu la iCal-fonton",
+    "The name of the appointment to be checked": "La nomo de la kontrolenda evento",
+    "Active?": "aktiva?"
 }

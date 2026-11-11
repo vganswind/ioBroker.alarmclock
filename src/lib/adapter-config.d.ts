@@ -4,8 +4,12 @@
 declare global {
     namespace ioBroker {
         interface AdapterConfig {
-            option1: boolean;
-            option2: string;
+            holidayInstance: string;
+            vocationInstance: string;
+            vocationEvents: { name: string; enabled: boolean }[];
+            appointmentInstance: string;
+            appointmentEvents: { name: string; enabled: boolean }[];
+            0;
         }
     }
 }

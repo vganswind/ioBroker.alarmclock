@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Ustawienia adaptera dla alarmclock",
-    "option1": "opcja 1",
-    "option2": "opcja 2"
+    "alarmclock adapter settings": "Ustawienia adaptera AlarmClock",
+
+    "Holiday Calendar Settings": "Ustawienia kalendarza świąt",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Tutaj możesz skonfigurować ustawienia kalendarza świąt dla budzika.",
+    "Select the holidays instance": "Wybierz instancję kalendarza świąt",
+    "Select the instance that contains the holiday data.": "Wybierz instancję zawierającą dane o świętach.",
+
+    "Vocation Calendar Settings": "Ustawienia kalendarza urlopów",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Tutaj możesz skonfigurować ustawienia kalendarza urlopów dla budzika.",
+    "Select the instance that contains the vacation calendar data.": "Wybierz instancję zawierającą dane kalendarza urlopów.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Nazwa wydarzenia (np. „Urlop” lub „Zmiana popołudniowa”)",
+
+    "Appointment Calendar Settings": "Ustawienia kalendarza wydarzeń",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Tutaj możesz skonfigurować ustawienia kalendarza wydarzeń dla budzika.",
+    "Select the instance that contains the wake-up times.": "Wybierz instancję zawierającą godziny pobudki.",
+    "Event name (e.g., 'alarm' or 'alert')": "Nazwa wydarzenia (np. „alarm” lub „alert”)",
+
+    "Select the iCal instance": "Wybierz instancję iCal",
+    "The name of the appointment to be checked": "Nazwa wydarzenia, które ma być sprawdzane",
+    "Active?": "aktywne?"
 }

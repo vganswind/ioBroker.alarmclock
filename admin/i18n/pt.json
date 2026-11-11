@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Configurações do adaptador para alarmclock",
-    "option1": "opção1",
-    "option2": "opção2"
+    "alarmclock adapter settings": "Configurações do adaptador AlarmClock",
+
+    "Holiday Calendar Settings": "Configurações do calendário de feriados",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Aqui você pode definir as configurações do calendário de feriados do despertador.",
+    "Select the holidays instance": "Selecionar a instância de feriados",
+    "Select the instance that contains the holiday data.": "Selecione a instância que contém os dados de feriados.",
+
+    "Vocation Calendar Settings": "Configurações do calendário de férias",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Aqui você pode definir as configurações do calendário de férias do despertador.",
+    "Select the instance that contains the vacation calendar data.": "Selecione a instância que contém os dados do calendário de férias.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Nome do compromisso (por exemplo, 'Férias' ou 'Turno noturno')",
+
+    "Appointment Calendar Settings": "Configurações do calendário de compromissos",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Aqui você pode definir as configurações do calendário de compromissos do despertador.",
+    "Select the instance that contains the wake-up times.": "Selecione a instância que contém os horários de despertar.",
+    "Event name (e.g., 'alarm' or 'alert')": "Nome do evento (por exemplo, 'alarme' ou 'alerta')",
+
+    "Select the iCal instance": "Selecionar a instância iCal",
+    "The name of the appointment to be checked": "O nome do compromisso a ser verificado",
+    "Active?": "ativo?"
 }

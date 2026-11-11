@@ -1,5 +1,22 @@
 {
-    "alarmclock adapter settings": "Настройки адаптера для alarmclock",
-    "option1": "вариант 1",
-    "option2": "вариант 2"
+    "alarmclock adapter settings": "Настройки адаптера AlarmClock",
+
+    "Holiday Calendar Settings": "Настройки календаря праздников",
+    "Here you can configure the settings for the holiday calendar of the alarm clock.": "Здесь можно настроить календарь праздников для будильника.",
+    "Select the holidays instance": "Выберите экземпляр календаря праздников",
+    "Select the instance that contains the holiday data.": "Выберите экземпляр, содержащий данные о праздниках.",
+
+    "Vocation Calendar Settings": "Настройки календаря отпусков",
+    "Here you can configure the settings for the vacation calendar of the alarm clock.": "Здесь можно настроить календарь отпусков для будильника.",
+    "Select the instance that contains the vacation calendar data.": "Выберите экземпляр, содержащий данные календаря отпусков.",
+    "Appointment name (e.g., 'Vacation' or 'Late shift')": "Название события (например, «Отпуск» или «Поздняя смена»)",
+
+    "Appointment Calendar Settings": "Настройки календаря событий",
+    "Here you can configure the settings for the appointment calendar of the alarm clock.": "Здесь можно настроить календарь событий для будильника.",
+    "Select the instance that contains the wake-up times.": "Выберите экземпляр, содержащий время пробуждения.",
+    "Event name (e.g., 'alarm' or 'alert')": "Название события (например, «будильник» или «оповещение»)",
+
+    "Select the iCal instance": "Выберите экземпляр iCal",
+    "The name of the appointment to be checked": "Название события для проверки",
+    "Active?": "активно?"
 }
