@@ -654,26 +654,29 @@ class Alarmclock extends utils.Adapter {
         const now = new Date();
 
         const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
-        if (nextAlarm && nextAlarm?.val != null) {
+        if (nextAlarm && nextAlarm?.val != null && nextAlarm?.val !== "") {
             let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
             if (rest < 0) rest = 0;
 
+            this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
             this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
         }
 
         const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
-        if (nextPreAlarm && nextPreAlarm?.val != null) {
+        if (nextPreAlarm && nextPreAlarm?.val != null && nextPreAlarm?.val !== "") {
             let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
             if (rest < 0) rest = 0;
 
+            this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
             this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
         }
 
         const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
-        if (snoozeUntil && snoozeUntil?.val != null) {
+        if (snoozeUntil && snoozeUntil?.val != null && snoozeUntil?.val !== "") {
             let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
             if (rest < 0) rest = 0;
 
+            this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 60000)} s`);
             this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 60000), true);
         }
     }
