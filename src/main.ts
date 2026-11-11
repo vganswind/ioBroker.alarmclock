@@ -6,10 +6,16 @@
 // you need to create an adapter
 import * as utils from "@iobroker/adapter-core";
 
+/** Intervall der Countdown-Updates in Millisekunden */
+const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 1 minute
+
 // Load your modules here, e.g.:
 // import * as fs from "fs";
 
 class Alarmclock extends utils.Adapter {
+    /** Interval for updating countdowns */
+    private updateCountdownsInterval: ioBroker.Interval | undefined;
+
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
@@ -636,6 +642,40 @@ class Alarmclock extends utils.Adapter {
 
         const groupResult = await this.checkGroupAsync("admin", "admin");
         this.log.info(`check group user admin group admin: ${JSON.stringify(groupResult)}`);
+
+        this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
+
+        this.updateCountdowns();
+    }
+
+    /** Update countdowns */
+    private async updateCountdowns(): Promise<void> {
+        this.log.debug("Updating countdowns...");
+        const now = new Date();
+
+        const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
+        if (nextAlarm && nextAlarm?.val != null) {
+            let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
+            if (rest < 0) rest = 0;
+
+            this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
+        }
+
+        const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
+        if (nextPreAlarm && nextPreAlarm?.val != null) {
+            let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
+            if (rest < 0) rest = 0;
+
+            this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
+        }
+
+        const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
+        if (snoozeUntil && snoozeUntil?.val != null) {
+            let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
+            if (rest < 0) rest = 0;
+
+            this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 60000), true);
+        }
     }
 
     /**
@@ -650,6 +690,7 @@ class Alarmclock extends utils.Adapter {
             // clearTimeout(timeout2);
             // ...
             // clearInterval(interval1);
+            this.clearInterval(this.updateCountdownsInterval);
 
             callback();
         } catch (error) {

@@ -22,7 +22,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+const UPDATECOUNTDOWNSINTERVAL = 3e4;
 class Alarmclock extends utils.Adapter {
+  /** Interval for updating countdowns */
+  updateCountdownsInterval;
   constructor(options = {}) {
     super({
       ...options,
@@ -584,6 +587,31 @@ class Alarmclock extends utils.Adapter {
     this.log.info(`check user admin pw iobroker: ${JSON.stringify(pwdResult)}`);
     const groupResult = await this.checkGroupAsync("admin", "admin");
     this.log.info(`check group user admin group admin: ${JSON.stringify(groupResult)}`);
+    this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
+    this.updateCountdowns();
+  }
+  /** Update countdowns */
+  async updateCountdowns() {
+    this.log.debug("Updating countdowns...");
+    const now = /* @__PURE__ */ new Date();
+    const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
+    if (nextAlarm && (nextAlarm == null ? void 0 : nextAlarm.val) != null) {
+      let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
+      if (rest < 0) rest = 0;
+      this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 6e4), true);
+    }
+    const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
+    if (nextPreAlarm && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) != null) {
+      let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
+      if (rest < 0) rest = 0;
+      this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 6e4), true);
+    }
+    const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
+    if (snoozeUntil && (snoozeUntil == null ? void 0 : snoozeUntil.val) != null) {
+      let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
+      if (rest < 0) rest = 0;
+      this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 6e4), true);
+    }
   }
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -592,6 +620,7 @@ class Alarmclock extends utils.Adapter {
    */
   onUnload(callback) {
     try {
+      this.clearInterval(this.updateCountdownsInterval);
       callback();
     } catch (error) {
       this.log.error(`Error during unloading: ${error.message}`);
