@@ -15,6 +15,8 @@ const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 1 minute
 class Alarmclock extends utils.Adapter {
     /** Interval for updating countdowns */
     private updateCountdownsInterval: ioBroker.Interval | undefined;
+    /** Array of alarm times */
+    private alarmStates: string[] = ["06:00", "06:00", "06:00", "06:00", "06:00", "08:00", "08:30", "10:30", "09:30"];
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -622,6 +624,58 @@ class Alarmclock extends utils.Adapter {
         this.subscribeStates("schedule.vacation");
         this.subscribeStates("schedule.holiday");
 
+        // Speicherung der Weckzeiten in das Array alarmStates
+        {
+            let state: ioBroker.State | null | undefined;
+
+            state = await this.getStateAsync("schedule.monday");
+            if (state && state.val !== "") {
+                this.alarmStates[0] = this.checkValidTime(state.val?.toString(), this.alarmStates[0]);
+            }
+
+            state = await this.getStateAsync("schedule.tuesday");
+            if (state && state.val !== "") {
+                this.alarmStates[1] = this.checkValidTime(state.val?.toString(), this.alarmStates[1]);
+            }
+
+            state = await this.getStateAsync("schedule.wednesday");
+            if (state && state.val !== "") {
+                this.alarmStates[2] = this.checkValidTime(state.val?.toString(), this.alarmStates[2]);
+            }
+
+            state = await this.getStateAsync("schedule.thursday");
+            if (state && state.val !== "") {
+                this.alarmStates[3] = this.checkValidTime(state.val?.toString(), this.alarmStates[3]);
+            }
+
+            state = await this.getStateAsync("schedule.friday");
+            if (state && state.val !== "") {
+                this.alarmStates[4] = this.checkValidTime(state.val?.toString(), this.alarmStates[4]);
+            }
+
+            state = await this.getStateAsync("schedule.saturday");
+            if (state && state.val !== "") {
+                this.alarmStates[5] = this.checkValidTime(state.val?.toString(), this.alarmStates[5]);
+            }
+
+            state = await this.getStateAsync("schedule.sunday");
+            if (state && state.val !== "") {
+                this.alarmStates[6] = this.checkValidTime(state.val?.toString(), this.alarmStates[6]);
+            }
+
+            state = await this.getStateAsync("schedule.vacation");
+            if (state && state.val !== "") {
+                this.alarmStates[7] = this.checkValidTime(state.val?.toString(), this.alarmStates[7]);
+            }
+
+            state = await this.getStateAsync("schedule.holiday");
+            if (state && state.val !== "") {
+                this.alarmStates[8] = this.checkValidTime(state.val?.toString(), this.alarmStates[8]);
+            }
+
+            this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
+        }
+
         /*
 			setState examples
 			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
@@ -682,6 +736,29 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
+     * Prüfung auf korrekte Uhrzeit
+     *
+     * @param time - Uhrzeit im Format "HH:MM"
+     * @param def - Standardwert, der zurückgegeben wird, wenn die Uhrzeit ungültig ist
+     */
+    private checkValidTime(time: string | undefined, def: string = "06:00"): string {
+        this.log.debug(`checkValidTime: ${time}`);
+
+        if (time === undefined || time === null || time.trim() === "") {
+            this.log.warn(`Uhrzeit ist leer oder undefiniert, Standardwert wird verwendet: ${def}`);
+            return def;
+        }
+
+        const isValidTime = /^([01]\d|2[0-3]):([0-5]\d)$/.test(time);
+        if (isValidTime) {
+            return time;
+        }
+
+        this.log.warn(`Ungültige Uhrzeit: ${time}`);
+        return def;
+    }
+
+    /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
      * @param callback - Callback function
@@ -723,7 +800,7 @@ class Alarmclock extends utils.Adapter {
      * @param id - State ID
      * @param state - State object
      */
-    private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
+    private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -734,6 +811,101 @@ class Alarmclock extends utils.Adapter {
                 this.log.info(`User command received for ${id}: ${state.val}`);
 
                 // TODO: Add your control logic here
+            }
+            switch (id) {
+                case `${this.namespace}.schedule.monday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Monday: ${state.val}`);
+                        await this.setState("schedule.monday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[0]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.tuesday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Tuesday: ${state.val}`);
+                        await this.setState("schedule.tuesday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[1]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.wednesday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Wednesday: ${state.val}`);
+                        await this.setState("schedule.wednesday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[2]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.thursday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Thursday: ${state.val}`);
+                        await this.setState("schedule.thursday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[3]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.friday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Friday: ${state.val}`);
+                        await this.setState("schedule.friday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[4]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.saturday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Saturday: ${state.val}`);
+                        await this.setState("schedule.saturday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[5]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.sunday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Sunday: ${state.val}`);
+                        await this.setState("schedule.sunday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[6]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.vacation`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Vacation: ${state.val}`);
+                        await this.setState("schedule.vacation", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[7]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.schedule.holiday`:
+                    if (state.ack === false) {
+                        this.log.debug(`New wake-up time for Holiday: ${state.val}`);
+                        await this.setState("schedule.holiday", {
+                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[8]),
+                            ack: true,
+                        });
+                    }
+                    break;
+                case `${this.namespace}.action.snooze`:
+                    if (state.ack === false) {
+                        this.log.debug("Snooze action triggered");
+                        await this.setState("action.snooze", { val: false, ack: true });
+                    }
+                    break;
+                case `${this.namespace}.action.stop`:
+                    if (state.ack === false) {
+                        this.log.debug("Stop action triggered");
+                        await this.setState("action.stop", { val: false, ack: true });
+                    }
+                    break;
             }
         } else {
             // The object was deleted or the state value has expired
