@@ -31,20 +31,30 @@
             "zh-cn": "闹钟"
         },
         "desc": {
-            "en": "alarmclock",
-            "de": "Wecker",
-            "ru": "будильник",
-            "pt": "despertador",
-            "nl": "wekker",
-            "fr": "réveil",
-            "it": "sveglia",
-            "es": "despertador",
-            "pl": "budzik",
-            "uk": "будильник",
-            "zh-cn": "闹钟"
+            "en": "Adapter to setup an Alarmclock",
+            "de": "Adapter zum Einstellen eines Weckers",
+            "ru": "Адаптер для настройки будильника",
+            "pt": "Adaptador para configurar um despertador",
+            "nl": "Adapter voor het instellen van een wekker",
+            "fr": "Adaptateur pour régler un réveil",
+            "it": "Adattatore per impostare una sveglia",
+            "es": "Adaptador para configurar un reloj despertador",
+            "pl": "Adapter do konfiguracji budzika",
+            "uk": "Адаптер для налаштування будильника",
+            "zh-cn": "用于设置闹钟的适配器"
         },
         "authors": ["Volker Ganswind <volker@ganswind.de>"],
-        "keywords": ["alarm"],
+        "keywords": [
+            "ioBroker",
+            "Smart Home",
+            "home automation",
+            "alarm",
+            "calendar",
+            "holiday",
+            "vacation",
+            "appointment",
+            "wake-up"
+        ],
         "licenseInformation": {
             "type": "free",
             "license": "MIT"
