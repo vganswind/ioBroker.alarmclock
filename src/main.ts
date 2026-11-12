@@ -676,6 +676,32 @@ class Alarmclock extends utils.Adapter {
             this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
         }
 
+        // Urlaubskalender
+        if (
+            this.config.vocationInstance &&
+            this.config.vocationInstance !== "" &&
+            this.config.vocationEvents &&
+            this.config.vocationEvents.length > 0
+        ) {
+            this.subscribeForeignStates(`${this.config.vocationInstance}.data.table`);
+        }
+
+        // Feiertagskalender
+        if (this.config.holidayInstance && this.config.holidayInstance !== "") {
+            this.subscribeForeignStates(`${this.config.holidayInstance}.today.boolean`);
+            this.subscribeForeignStates(`${this.config.holidayInstance}.tomorrow.boolean`);
+        }
+
+        // Weckerkalender
+        if (
+            this.config.appointmentInstance &&
+            this.config.appointmentInstance !== "" &&
+            this.config.appointmentEvents &&
+            this.config.appointmentEvents.length > 0
+        ) {
+            this.subscribeForeignStates(`${this.config.appointmentInstance}.data.table`);
+        }
+
         /*
 			setState examples
 			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
@@ -699,7 +725,10 @@ class Alarmclock extends utils.Adapter {
 
         this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
 
-        this.updateCountdowns();
+        await this.checkNewAlarmTime("onReady");
+        await this.updateCountdowns();
+
+        this.log.info("Adapter is ready and running.");
     }
 
     /** Update countdowns */
@@ -756,6 +785,236 @@ class Alarmclock extends utils.Adapter {
 
         this.log.warn(`Ungültige Uhrzeit: ${time}`);
         return def;
+    }
+
+    /**
+     * Setzten einer Uhrzeit der Weckzeit.
+     *
+     * @param date Die Weckzeit
+     * @param time Uhrzeit im Format "HH:MM"
+     */
+    private calcDateWithTime(date: Date, time: string): void {
+        const [hours, minutes] = time.split(":").map(Number);
+        date.setHours(hours, minutes, 0, 0);
+    }
+
+    /**
+     * Prüfen und Setzten er Zeit des Weckers.
+     *
+     * @param [name=""] Der Grund der Aktualisierung
+     */
+    private async checkNewAlarmTime(name: string = ""): Promise<void> {
+        this.log.debug(`checkNewAlarmTime(${name})`);
+
+        const enabledState = await this.getStateAsync(`${this.namespace}.config.enabled`);
+        if (enabledState && enabledState.val === true) {
+            const now = new Date();
+            const alarm = new Date();
+            alarm.setHours(0, 0, 0, 0);
+
+            await this.checkWeekday(alarm);
+            await this.checkVacationEvents(alarm, true);
+            await this.checkHolidayEvents(alarm, true);
+            await this.checkAppointmentEvents(alarm);
+
+            if (alarm < now) {
+                this.log.debug("Alarm is lower then now. Running calc of tomorrow");
+
+                alarm.setDate(alarm.getDate() + 1);
+
+                await this.checkWeekday(alarm);
+                await this.checkVacationEvents(alarm, false);
+                await this.checkHolidayEvents(alarm, false);
+                await this.checkAppointmentEvents(alarm);
+            }
+
+            this.log.info(`Set new alarm: ${alarm.toLocaleString()}`);
+
+            const pre = new Date(alarm);
+            const preAlarmMinutes = Number(
+                (await this.getStateAsync(`${this.namespace}.config.preAlarmMinutes`))?.val || 0,
+            );
+            pre.setMinutes(pre.getMinutes() - preAlarmMinutes);
+
+            this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
+            this.setState("runtime.nextAlarm", alarm.toISOString(), true);
+        } else {
+            this.log.debug("Alarm is disabled, skipping new alarm time check.");
+            this.setState("runtime.nextPreAlarm", "", true);
+            this.setState("runtime.nextAlarm", "", true);
+            this.setState("runtime.snoozeUntil", "", true);
+        }
+    }
+
+    /**
+     * Setzten des Weckers auf die Tageszeit.
+     *
+     * @param alert Die Weckzeit
+     */
+    private async checkWeekday(alert: Date): Promise<void> {
+        this.log.debug(`checkWeekday(${alert.toLocaleString()})`);
+
+        let key = "unknown";
+        // Setzten des Weckers nach dem Wochentag
+        switch (alert.getDay()) {
+            case 0: // Sonntag
+                key = "schedule.sunday";
+                break;
+            case 1: // Montag
+                key = "schedule.monday";
+                break;
+            case 2: // Dienstag
+                key = "schedule.tuesday";
+                break;
+            case 3: // Mittwoch
+                key = "schedule.wednesday";
+                break;
+            case 4: // Donnerstag
+                key = "schedule.thursday";
+                break;
+            case 5: // Freitag
+                key = "schedule.friday";
+                break;
+            case 6: // Samstag
+                key = "schedule.saturday";
+                break;
+        }
+        this.log.debug(`The alert day is ${alert.toLocaleDateString()}, key: ${key}`);
+
+        const alarmState = await this.getStateAsync(`${this.namespace}.${key}`);
+        if (alarmState && alarmState.val != null && alarmState.val !== "") {
+            this.calcDateWithTime(alert, alarmState.val.toString());
+        } else {
+            this.log.warn(`No alarm time found for ${key}, using default time.`);
+            this.calcDateWithTime(alert, "06:00");
+        }
+    }
+
+    /**
+     * Überprüfung den Urlaubskalender
+     *
+     * @param alert Die Weckzeit
+     * @param [today=true] Prüfung des aktuellen Tags
+     */
+    private async checkVacationEvents(alert: Date, today: boolean = true): Promise<void> {
+        this.log.debug(`checkVacationEvents(${alert.toLocaleString()})`);
+
+        if (
+            this.config.vocationInstance &&
+            this.config.vocationInstance !== "" &&
+            this.config.vocationEvents &&
+            this.config.vocationEvents.length > 0
+        ) {
+            for (const event of this.config.vocationEvents) {
+                if (!event.name || !event.enabled) {
+                    continue;
+                }
+
+                let key = "events.0.today";
+                if (!today) {
+                    key = "events.1";
+                }
+
+                const stateId = `${this.config.vocationInstance}.${key}.${event.name}`;
+                this.log.debug(`vocation check: ${stateId}`);
+
+                const vacationState = await this.getForeignStateAsync(stateId);
+                this.log.debug(`vocation check result: ${JSON.stringify(vacationState)}`);
+
+                if (vacationState?.val === true) {
+                    this.log.debug(`Vacation event '${event.name}' active`);
+                    const alarmState = await this.getStateAsync(`${this.namespace}.schedule.vacation`);
+
+                    if (alarmState?.val) {
+                        this.calcDateWithTime(alert, alarmState.val.toString());
+                    } else {
+                        this.log.warn("No alarm time found for vacation, using default time.");
+                        this.calcDateWithTime(alert, "06:00");
+                    }
+
+                    break;
+                }
+            }
+        } else {
+            this.log.info(
+                `vocation check disabled: ical=${this.config.vocationInstance}, events=${this.config.vocationEvents?.length ?? 0}`,
+            );
+        }
+    }
+
+    /**
+     * Überprüfe den Feiertagskalender.
+     *
+     * @param alert Die Weckzeit
+     * @param [today=true] Prüfung des aktuellen Tags
+     */
+    private async checkHolidayEvents(alert: Date, today: boolean = true): Promise<void> {
+        this.log.debug(`checkHolidayEvents(${alert.toLocaleString()})`);
+
+        if (this.config.holidayInstance && this.config.holidayInstance !== "") {
+            let key = "today";
+            if (!today) {
+                key = "tomorrow";
+            }
+
+            const holidayState = await this.getForeignStateAsync(`${this.config.holidayInstance}.${key}.boolean`);
+            this.log.debug(`holiday check result: ${JSON.stringify(holidayState)}`);
+
+            if (holidayState?.val === true) {
+                this.log.debug(`Holiday is active`);
+                const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+
+                if (alarmState && alarmState.val != null && alarmState.val !== "") {
+                    this.calcDateWithTime(alert, alarmState.val.toString());
+                } else {
+                    this.log.warn(`No alarm time found for holiday, using default time.`);
+                    this.calcDateWithTime(alert, "06:00");
+                }
+            }
+        } else {
+            this.log.info(`holiday check disabled: ical=${this.config.holidayInstance}`);
+        }
+    }
+
+    /**
+     * Überprüfung den Weckerkalender
+     *
+     * @param alert Die Weckzeit
+     */
+    private async checkAppointmentEvents(alert: Date): Promise<void> {
+        this.log.debug(`checkAppointmentEvents(${alert.toLocaleString()})`);
+
+        if (
+            this.config.appointmentInstance &&
+            this.config.appointmentInstance !== "" &&
+            this.config.appointmentEvents &&
+            this.config.appointmentEvents.length > 0
+        ) {
+            const date = alert.toISOString().slice(0, 10);
+            const events = await this.getForeignStateAsync(`${this.config.appointmentInstance}.data.table`);
+
+            if (events && events.val !== "") {
+                const calendarEvents = JSON.parse(events.val as string);
+
+                for (const event of this.config.appointmentEvents) {
+                    if (!event.name || !event.enabled) {
+                        continue;
+                    }
+
+                    this.log.debug(`Appointment check: ${event.name}`);
+                    const eintrag = calendarEvents.find((e: any) => e.event === event.name && e._date.startsWith(date));
+                    if (eintrag !== undefined) {
+                        this.log.debug(`Appointment ${event.name} active`);
+                        this.calcDateWithTime(alert, new Date(eintrag._date).toTimeString().slice(0, 5));
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.log.info(
+                `appointment check disabled: ical=${this.config.appointmentInstance}, events=${this.config.appointmentEvents?.length ?? 0}`,
+            );
+        }
     }
 
     /**
@@ -820,6 +1079,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[0]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.monday");
                     }
                     break;
                 case `${this.namespace}.schedule.tuesday`:
@@ -829,6 +1090,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[1]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.tuesday");
                     }
                     break;
                 case `${this.namespace}.schedule.wednesday`:
@@ -838,6 +1101,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[2]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.wednesday");
                     }
                     break;
                 case `${this.namespace}.schedule.thursday`:
@@ -847,6 +1112,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[3]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.thursday");
                     }
                     break;
                 case `${this.namespace}.schedule.friday`:
@@ -856,6 +1123,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[4]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.friday");
                     }
                     break;
                 case `${this.namespace}.schedule.saturday`:
@@ -865,6 +1134,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[5]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.saturday");
                     }
                     break;
                 case `${this.namespace}.schedule.sunday`:
@@ -874,6 +1145,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[6]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.sunday");
                     }
                     break;
                 case `${this.namespace}.schedule.vacation`:
@@ -883,6 +1156,8 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[7]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.vacation");
                     }
                     break;
                 case `${this.namespace}.schedule.holiday`:
@@ -892,7 +1167,21 @@ class Alarmclock extends utils.Adapter {
                             val: this.checkValidTime(state.val?.toString(), this.alarmStates[8]),
                             ack: true,
                         });
+                    } else {
+                        await this.checkNewAlarmTime("schedule.holiday");
                     }
+                    break;
+                case `${this.config.vocationInstance}.data.table`:
+                    await this.checkNewAlarmTime("vocationInstance");
+                    break;
+                case `${this.config.holidayInstance}.today.boolean`:
+                    await this.checkNewAlarmTime("holidayInstance.today");
+                    break;
+                case `${this.config.holidayInstance}.tomorrow.boolean`:
+                    await this.checkNewAlarmTime("holidayInstance.tomorrow");
+                    break;
+                case `${this.config.appointmentInstance}.data.table`:
+                    await this.checkNewAlarmTime("appointmentInstance");
                     break;
                 case `${this.namespace}.action.snooze`:
                     if (state.ack === false) {
