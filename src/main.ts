@@ -7,7 +7,27 @@
 import * as utils from "@iobroker/adapter-core";
 
 /** Intervall der Countdown-Updates in Millisekunden */
-const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 1 minute
+const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 30 seconds
+/** Intervall des Lichtwecker-Updates in Millisekunden */
+const UPDATESUNRISEINTERVAL: number = 30000; // 30 seconds
+
+/** Wecker-Status */
+const STATE = {
+    /** Wecker ist Deaktiviert */
+    DISABLED: "DISABLED",
+    /** Wecker Wartet */
+    ARMED: "ARMED",
+    /** Wecker in Pre-Alarm */
+    PREALARM: "PREALARM",
+    /** Wecker hat Ausgelöst */
+    TRIGGERED: "TRIGGERED",
+    /** Wecker in Snooze */
+    SNOOZE: "SNOOZE",
+    /** Wecker ist Gestoppt */
+    STOPPED: "STOPPED",
+    /** Fehler */
+    ERROR: "ERROR",
+};
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
@@ -15,6 +35,8 @@ const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 1 minute
 class Alarmclock extends utils.Adapter {
     /** Interval for updating countdowns */
     private updateCountdownsInterval: ioBroker.Interval | undefined;
+    /** Interval for updating sunrise */
+    private updateSunriseInterval: ioBroker.Interval | undefined;
     /** Array of alarm times */
     private alarmStates: string[] = ["06:00", "06:00", "06:00", "06:00", "06:00", "08:00", "08:30", "10:30", "09:30"];
 
@@ -299,8 +321,8 @@ class Alarmclock extends utils.Adapter {
                 role: "indicator.status",
                 read: true,
                 write: false,
-                states: ["DISABLED", "ARMED", "PREALARM", "TRIGGERED", "SNOOZE", "STOPPED", "ERROR"],
-                def: "DISABLED",
+                states: Object.values(STATE),
+                def: STATE.DISABLED,
             },
             native: {},
         });
@@ -309,8 +331,8 @@ class Alarmclock extends utils.Adapter {
             type: "state",
             common: {
                 name: {
-                    de: "Sonnenlicht Helligkeit",
-                    en: "Sunrise Brightness",
+                    de: "Lichtwecker Helligkeit",
+                    en: "Light alarm clock brightness",
                 },
                 type: "number",
                 role: "value",
@@ -326,8 +348,8 @@ class Alarmclock extends utils.Adapter {
             type: "state",
             common: {
                 name: {
-                    de: "Sonnenlicht Fortschritt",
-                    en: "Sunrise Progress",
+                    de: "Lichtwecker Fortschritt",
+                    en: "Light alarm clock progress",
                 },
                 type: "number",
                 role: "value",
@@ -724,9 +746,11 @@ class Alarmclock extends utils.Adapter {
         this.log.info(`check group user admin group admin: ${JSON.stringify(groupResult)}`);
 
         this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
+        this.updateSunriseInterval = this.setInterval(() => this.updateSunrise(), UPDATESUNRISEINTERVAL);
 
         await this.checkNewAlarmTime("onReady");
         await this.updateCountdowns();
+        await this.updateSunrise(true);
 
         this.log.info("Adapter is ready and running.");
     }
@@ -1018,6 +1042,41 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
+     * Berechnen der Helligkeit des Lichtweckers.
+     *
+     * @param force Aktualisirung erzwingen
+     */
+    private async updateSunrise(force = false): Promise<void> {
+        this.log.debug(`updateSunrise(${force})`);
+
+        const state = await this.getStateAsync("runtime.state");
+        if (state?.val !== STATE.PREALARM && !force) {
+            return;
+        }
+
+        const preAlarm = await this.getStateAsync("runtime.nextPreAlarm");
+        const alarm = await this.getStateAsync("runtime.nextAlarm");
+
+        if (!preAlarm || !alarm) {
+            return;
+        }
+        if (preAlarm.val && alarm.val) {
+            const preAlarmDate = new Date(preAlarm.val.toString());
+            const alarmDate = new Date(alarm.val.toString());
+
+            const total = alarmDate.getTime() - preAlarmDate.getTime();
+            const elapsed = Date.now() - preAlarmDate.getTime();
+            let progress = (elapsed / total) * 100;
+
+            progress = Math.max(0, Math.min(progress, 100));
+
+            this.log.debug(`sunriseProgress: ${progress} %`);
+            this.setState("runtime.sunriseProgress", progress, true);
+            this.setState("runtime.sunriseBrightness", Math.round(progress), true);
+        }
+    }
+
+    /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
      * @param callback - Callback function
@@ -1030,6 +1089,7 @@ class Alarmclock extends utils.Adapter {
             // ...
             // clearInterval(interval1);
             this.clearInterval(this.updateCountdownsInterval);
+            this.clearInterval(this.updateSunriseInterval);
 
             callback();
         } catch (error) {
