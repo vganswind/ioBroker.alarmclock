@@ -7,11 +7,11 @@
 import * as utils from "@iobroker/adapter-core";
 
 /** Intervall der Countdown-Updates in Millisekunden */
-const UPDATECOUNTDOWNSINTERVAL: number = 30000; // 30 seconds
+const UPDATECOUNTDOWNSINTERVAL = 30000; // 30 seconds
 /** Intervall des Lichtwecker-Updates in Millisekunden */
-const UPDATESUNRISEINTERVAL: number = 30000; // 30 seconds
+const UPDATESUNRISEINTERVAL = 30000; // 30 seconds
 /** Intervall der Weckzeitüberprüfung in Millisekunden */
-const EVALUATESTATEINTERVAL: number = 10000; // 10 seconds
+const EVALUATESTATEINTERVAL = 10000; // 10 seconds
 
 /** Wecker-Status */
 const STATE = {
@@ -744,28 +744,34 @@ class Alarmclock extends utils.Adapter {
         const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
         if (nextAlarm && nextAlarm?.val != null && nextAlarm?.val !== "") {
             let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
-            if (rest < 0) rest = 0;
+            if (rest < 0) {
+                rest = 0;
+            }
 
             this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
-            this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
+            await this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
         }
 
         const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
         if (nextPreAlarm && nextPreAlarm?.val != null && nextPreAlarm?.val !== "") {
             let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
-            if (rest < 0) rest = 0;
+            if (rest < 0) {
+                rest = 0;
+            }
 
             this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
-            this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
+            await this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
         }
 
         const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
         if (snoozeUntil && snoozeUntil?.val != null && snoozeUntil?.val !== "") {
             let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
-            if (rest < 0) rest = 0;
+            if (rest < 0) {
+                rest = 0;
+            }
 
             this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 60000)} s`);
-            this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 60000), true);
+            await this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 60000), true);
         }
     }
 
@@ -805,7 +811,7 @@ class Alarmclock extends utils.Adapter {
     /**
      * Prüfen und Setzten der Zeit des Weckers.
      *
-     * @param [name=""] Der Grund der Aktualisierung
+     * @param name Der Grund der Aktualisierung
      */
     private async checkNewAlarmTime(name: string = ""): Promise<void> {
         this.log.debug(`checkNewAlarmTime(${name})`);
@@ -840,13 +846,13 @@ class Alarmclock extends utils.Adapter {
             );
             pre.setMinutes(pre.getMinutes() - preAlarmMinutes);
 
-            this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
-            this.setState("runtime.nextAlarm", alarm.toISOString(), true);
+            await this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
+            await this.setState("runtime.nextAlarm", alarm.toISOString(), true);
         } else {
             this.log.debug("Alarm is disabled, skipping new alarm time check.");
-            this.setState("runtime.nextPreAlarm", "", true);
-            this.setState("runtime.nextAlarm", "", true);
-            this.setState("runtime.snoozeUntil", "", true);
+            await this.setState("runtime.nextPreAlarm", "", true);
+            await this.setState("runtime.nextAlarm", "", true);
+            await this.setState("runtime.snoozeUntil", "", true);
         }
     }
 
@@ -898,7 +904,7 @@ class Alarmclock extends utils.Adapter {
      * Überprüfung den Urlaubskalender.
      *
      * @param alert Die Weckzeit
-     * @param [today=true] Prüfung des aktuellen Tags
+     * @param today Prüfung des aktuellen Tags
      */
     private async checkVacationEvents(alert: Date, today: boolean = true): Promise<void> {
         this.log.debug(`checkVacationEvents(${alert.toLocaleString()})`);
@@ -950,7 +956,7 @@ class Alarmclock extends utils.Adapter {
      * Überprüfe den Feiertagskalender.
      *
      * @param alert Die Weckzeit
-     * @param [today=true] Prüfung des aktuellen Tags
+     * @param today Prüfung des aktuellen Tags
      */
     private async checkHolidayEvents(alert: Date, today: boolean = true): Promise<void> {
         this.log.debug(`checkHolidayEvents(${alert.toLocaleString()})`);
@@ -1051,8 +1057,8 @@ class Alarmclock extends utils.Adapter {
             progress = Math.max(0, Math.min(progress, 100));
 
             this.log.debug(`sunriseProgress: ${progress} %`);
-            this.setState("runtime.sunriseProgress", progress, true);
-            this.setState("runtime.sunriseBrightness", Math.round(progress), true);
+            await this.setState("runtime.sunriseProgress", progress, true);
+            await this.setState("runtime.sunriseBrightness", Math.round(progress), true);
         }
     }
 
@@ -1064,9 +1070,9 @@ class Alarmclock extends utils.Adapter {
     private incrementStat(key: string): void {
         this.log.debug(`incrementStat(${key})`);
 
-        this.getState(`statistics.${key}`, (_err, state) => {
+        this.getState(`statistics.${key}`, async (_err, state) => {
             const value = Number(state?.val) || 0;
-            this.setState(`statistics.${key}`, value + 1, true);
+            await this.setState(`statistics.${key}`, value + 1, true);
         });
     }
 
@@ -1075,26 +1081,26 @@ class Alarmclock extends utils.Adapter {
      *
      * @param state Der Status des Weckers
      */
-    private handleState(state: string): void {
+    private async handleState(state: string): Promise<void> {
         switch (state) {
             case STATE.DISABLED:
                 break;
             case STATE.ARMED:
-                this.updateCountdowns();
+                await this.updateCountdowns();
                 break;
             case STATE.PREALARM:
-                this.startPreAlarm();
+                await this.startPreAlarm();
                 break;
             case STATE.TRIGGERED:
-                this.startAlarm();
+                await this.startAlarm();
                 break;
             case STATE.SNOOZE:
-                this.updateCountdowns();
+                await this.updateCountdowns();
                 break;
             case STATE.STOPPED:
-                this.stopAlarm();
+                await this.stopAlarm();
                 this.setAlarmState(STATE.ARMED);
-                this.updateCountdowns();
+                await this.updateCountdowns();
                 break;
             case STATE.ERROR:
                 this.incrementStat("errorCount");
@@ -1105,11 +1111,11 @@ class Alarmclock extends utils.Adapter {
     /**
      * Ausführen des Pre-Alarms.
      */
-    private startPreAlarm(): void {
+    private async startPreAlarm(): Promise<void> {
         this.log.debug("startPreAlarm()");
 
         this.incrementStat("preAlarmCount");
-        this.updateSunrise(true);
+        await this.updateSunrise(true);
 
         this.log.info("PREALARM");
     }
@@ -1117,7 +1123,7 @@ class Alarmclock extends utils.Adapter {
     /**
      * Ausführen des Alarms.
      */
-    private startAlarm(): void {
+    private async startAlarm(): Promise<void> {
         this.log.debug(`startAlarm()`);
 
         if (!this.alarmStartTime) {
@@ -1125,7 +1131,7 @@ class Alarmclock extends utils.Adapter {
         }
 
         this.incrementStat("alarmCount");
-        this.setState("runtime.active", true, true);
+        await this.setState("runtime.active", true, true);
 
         this.log.info("ALARM");
     }
@@ -1133,17 +1139,17 @@ class Alarmclock extends utils.Adapter {
     /**
      * Stoppen des Alarms
      */
-    private stopAlarm(): void {
+    private async stopAlarm(): Promise<void> {
         this.log.debug(`stopAlarm()`);
 
         this.incrementStat("stopCount");
 
         if (this.alarmStartTime) {
             const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 60000);
-            this.setState(`statistics.wakeDelay`, wakeDelay, true);
+            await this.setState(`statistics.wakeDelay`, wakeDelay, true);
         }
 
-        this.setState(`runtime.active`, false, true);
+        await this.setState(`runtime.active`, false, true);
         this.setAlarmState(STATE.STOPPED);
     }
 
@@ -1155,15 +1161,15 @@ class Alarmclock extends utils.Adapter {
     private setAlarmState(newState: string): void {
         this.log.debug(`setAlarmState(${newState})`);
 
-        this.getState("runtime.state", (_err, oldState) => {
+        this.getState("runtime.state", async (_err, oldState) => {
             if (oldState?.val === newState) {
                 return;
             }
 
-            this.setState("runtime.state", newState, true);
+            await this.setState("runtime.state", newState, true);
 
             this.log.debug(`${oldState?.val} -> ${newState}`);
-            this.handleState(newState);
+            await this.handleState(newState);
         });
     }
 
@@ -1221,10 +1227,10 @@ class Alarmclock extends utils.Adapter {
 
         this.getState("runtime.state", (_err, state) => {
             if (state?.val === STATE.TRIGGERED || state?.val === STATE.PREALARM) {
-                this.getState("config.snoozeMinutes", (_err, mins) => {
+                this.getState("config.snoozeMinutes", async (_err, mins) => {
                     const until = new Date(Date.now() + Number(mins?.val) * 60000);
 
-                    this.setState("runtime.snoozeUntil", until.toISOString(), true);
+                    await this.setState("runtime.snoozeUntil", until.toISOString(), true);
 
                     this.incrementStat("snoozeCount");
                     this.setAlarmState(STATE.SNOOZE);
@@ -1240,11 +1246,6 @@ class Alarmclock extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            // Here you must clear all timeouts or intervals that may still be active
-            // clearTimeout(timeout1);
-            // clearTimeout(timeout2);
-            // ...
-            // clearInterval(interval1);
             this.clearInterval(this.updateCountdownsInterval);
             this.clearInterval(this.updateSunriseInterval);
             this.clearInterval(this.evaluateStateInterval);
@@ -1257,7 +1258,7 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
-     * Is called if a subscribed state changes
+     * Is called if a subscribed state changes.
      *
      * @param id State ID
      * @param state State object
