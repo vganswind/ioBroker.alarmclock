@@ -3,12 +3,28 @@
 // Augment the globally declared type ioBroker.AdapterConfig
 declare global {
     namespace ioBroker {
+        /** Adapter-Konfiguration */
         interface AdapterConfig {
+            /** Name der Feiertagskalender-Instance */
             holidayInstance: string;
+            /** Name der Urlaubskalender-Instance */
             vocationInstance: string;
-            vocationEvents: { name: string; enabled: boolean }[];
+            /** Liste der Urlaubskalender-Einträge */
+            vocationEvents: {
+                /** Name des Termins */
+                name: string;
+                /** Der Termin ist aktiviert */
+                enabled: boolean;
+            }[];
+            /** Name der Weckerkalender-Instance */
             appointmentInstance: string;
-            appointmentEvents: { name: string; enabled: boolean }[];
+            /** Liste der Weckerkalender-Einträge */
+            appointmentEvents: {
+                /** Name des Termins */
+                name: string;
+                /** Der Termin ist aktiviert */
+                enabled: boolean;
+            }[];
             0;
         }
     }

@@ -52,6 +52,11 @@ class Alarmclock extends utils.Adapter {
   alarmStates = ["06:00", "06:00", "06:00", "06:00", "06:00", "08:00", "08:30", "10:30", "09:30"];
   /** Time of alert start */
   alarmStartTime = null;
+  /**
+   * Der Klassen Konstruktor.
+   *
+   * @param options Optionen der Klasse
+   */
   constructor(options = {}) {
     super({
       ...options,
@@ -66,8 +71,6 @@ class Alarmclock extends utils.Adapter {
    */
   async onReady() {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-    this.log.debug("config option1: ${this.config.option1}");
-    this.log.debug("config option2: ${this.config.option2}");
     await this.setObjectNotExistsAsync("action", {
       type: "channel",
       common: {
@@ -657,13 +660,6 @@ class Alarmclock extends utils.Adapter {
     if (this.config.appointmentInstance && this.config.appointmentInstance !== "" && this.config.appointmentEvents && this.config.appointmentEvents.length > 0) {
       this.subscribeForeignStates(`${this.config.appointmentInstance}.data.table`);
     }
-    await this.setState("testVariable", true);
-    await this.setState("testVariable", { val: true, ack: true });
-    await this.setState("testVariable", { val: true, ack: true, expire: 30 });
-    const pwdResult = await this.checkPasswordAsync("admin", "iobroker");
-    this.log.info(`check user admin pw iobroker: ${JSON.stringify(pwdResult)}`);
-    const groupResult = await this.checkGroupAsync("admin", "admin");
-    this.log.info(`check group user admin group admin: ${JSON.stringify(groupResult)}`);
     this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
     this.updateSunriseInterval = this.setInterval(() => this.updateSunrise(), UPDATESUNRISEINTERVAL);
     this.evaluateStateInterval = this.setInterval(() => this.evaluateState(), EVALUATESTATEINTERVAL);
@@ -672,9 +668,11 @@ class Alarmclock extends utils.Adapter {
     await this.updateSunrise(true);
     this.log.info("Adapter is ready and running.");
   }
-  /** Update countdowns */
+  /**
+   * Update the countdowns.
+   */
   async updateCountdowns() {
-    this.log.debug("Updating countdowns...");
+    this.log.debug("updateCountdowns()");
     const now = /* @__PURE__ */ new Date();
     const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
     if (nextAlarm && (nextAlarm == null ? void 0 : nextAlarm.val) != null && (nextAlarm == null ? void 0 : nextAlarm.val) !== "") {
@@ -701,11 +699,11 @@ class Alarmclock extends utils.Adapter {
   /**
    * Prüfung auf korrekte Uhrzeit
    *
-   * @param time - Uhrzeit im Format "HH:MM"
-   * @param def - Standardwert, der zurückgegeben wird, wenn die Uhrzeit ungültig ist
+   * @param time Uhrzeit im Format "HH:MM"
+   * @param def Standardwert, der zurückgegeben wird, wenn die Uhrzeit ungültig ist
+   * @returns Die überprüfte Uhrzeit im Format "HH:MM"
    */
   checkValidTime(time, def = "06:00") {
-    this.log.debug(`checkValidTime: ${time}`);
     if (time === void 0 || time === null || time.trim() === "") {
       this.log.warn(`Uhrzeit ist leer oder undefiniert, Standardwert wird verwendet: ${def}`);
       return def;
@@ -728,7 +726,7 @@ class Alarmclock extends utils.Adapter {
     date.setHours(hours, minutes, 0, 0);
   }
   /**
-   * Prüfen und Setzten er Zeit des Weckers.
+   * Prüfen und Setzten der Zeit des Weckers.
    *
    * @param [name=""] Der Grund der Aktualisierung
    */
@@ -808,7 +806,7 @@ class Alarmclock extends utils.Adapter {
     }
   }
   /**
-   * Überprüfung den Urlaubskalender
+   * Überprüfung den Urlaubskalender.
    *
    * @param alert Die Weckzeit
    * @param [today=true] Prüfung des aktuellen Tags
@@ -877,7 +875,7 @@ class Alarmclock extends utils.Adapter {
     }
   }
   /**
-   * Überprüfung den Weckerkalender
+   * Überprüfung den Weckerkalender.
    *
    * @param alert Die Weckzeit
    */
@@ -911,7 +909,7 @@ class Alarmclock extends utils.Adapter {
   /**
    * Berechnen der Helligkeit des Lichtweckers.
    *
-   * @param force Aktualisirung erzwingen
+   * @param force Aktualisierung erzwingen
    */
   async updateSunrise(force = false) {
     this.log.debug(`updateSunrise(${force})`);
@@ -948,6 +946,11 @@ class Alarmclock extends utils.Adapter {
       this.setState(`statistics.${key}`, value + 1, true);
     });
   }
+  /**
+   * Setzten des Status des Weckers.
+   *
+   * @param state Der Status des Weckers
+   */
   handleState(state) {
     switch (state) {
       case STATE.DISABLED:
@@ -974,12 +977,18 @@ class Alarmclock extends utils.Adapter {
         break;
     }
   }
+  /**
+   * Ausführen des Pre-Alarms.
+   */
   startPreAlarm() {
     this.log.debug("startPreAlarm()");
     this.incrementStat("preAlarmCount");
     this.updateSunrise(true);
     this.log.info("PREALARM");
   }
+  /**
+   * Ausführen des Alarms.
+   */
   startAlarm() {
     this.log.debug(`startAlarm()`);
     if (!this.alarmStartTime) {
@@ -989,6 +998,9 @@ class Alarmclock extends utils.Adapter {
     this.setState("runtime.active", true, true);
     this.log.info("ALARM");
   }
+  /**
+   * Stoppen des Alarms
+   */
   stopAlarm() {
     this.log.debug(`stopAlarm()`);
     this.incrementStat("stopCount");
@@ -999,6 +1011,11 @@ class Alarmclock extends utils.Adapter {
     this.setState(`runtime.active`, false, true);
     this.setAlarmState(STATE.STOPPED);
   }
+  /**
+   * Setzten des Status des Weckers.
+   *
+   * @param newState Der neue Status des Weckers
+   */
   setAlarmState(newState) {
     this.log.debug(`setAlarmState(${newState})`);
     this.getState("runtime.state", (_err, oldState) => {
@@ -1010,6 +1027,9 @@ class Alarmclock extends utils.Adapter {
       this.handleState(newState);
     });
   }
+  /**
+   * Überprüfen des Status des Weckers.
+   */
   async evaluateState() {
     try {
       const now = Date.now();
@@ -1034,6 +1054,9 @@ class Alarmclock extends utils.Adapter {
       this.setAlarmState(STATE.ERROR);
     }
   }
+  /**
+   * Aktiviren des Schlummer-Modus.
+   */
   activateSnooze() {
     this.log.debug("activateSnooze()");
     this.getState("runtime.state", (_err, state) => {
@@ -1050,7 +1073,7 @@ class Alarmclock extends utils.Adapter {
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
    *
-   * @param callback - Callback function
+   * @param callback Callback function
    */
   onUnload(callback) {
     try {
@@ -1063,33 +1086,16 @@ class Alarmclock extends utils.Adapter {
       callback();
     }
   }
-  // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-  // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-  // /**
-  //  * Is called if a subscribed object changes
-  //  */
-  // private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-  //     if (obj) {
-  //         // The object was changed
-  //         this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-  //     } else {
-  //         // The object was deleted
-  //         this.log.info(`object ${id} deleted`);
-  //     }
-  // }
   /**
    * Is called if a subscribed state changes
    *
-   * @param id - State ID
-   * @param state - State object
+   * @param id State ID
+   * @param state State object
    */
   async onStateChange(id, state) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     if (state) {
-      this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-      if (state.ack === false) {
-        this.log.info(`User command received for ${id}: ${state.val}`);
-      }
+      this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
       switch (id) {
         case `${this.namespace}.schedule.monday`:
           if (state.ack === false) {
@@ -1216,25 +1222,9 @@ class Alarmclock extends utils.Adapter {
           break;
       }
     } else {
-      this.log.info(`state ${id} deleted`);
+      this.log.debug(`state ${id} deleted`);
     }
   }
-  // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-  // /**
-  //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-  //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-  //  */
-  //
-  // private onMessage(obj: ioBroker.Message): void {
-  //     if (typeof obj === "object" && obj.message) {
-  //         if (obj.command === "send") {
-  //             // e.g. send email or pushover or whatever
-  //             this.log.info("send command");
-  //             // Send response in callback if required
-  //             if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
-  //         }
-  //     }
-  // }
 }
 if (require.main !== module) {
   module.exports = (options) => new Alarmclock(options);

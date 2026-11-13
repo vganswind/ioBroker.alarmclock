@@ -2,6 +2,7 @@
     "enabled": true,
     "language": "de,en",
     "words": [
+        "EVALUATESTATEINTERVAL",
         "friday",
         "ical",
         "iobroker",
@@ -18,6 +19,7 @@
         "Weckerkalender",
         "Weckzeit",
         "Weckzeiten",
+        "Weckzeitüberprüfung",
         "wednesday"
     ]
 }
