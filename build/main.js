@@ -22,25 +22,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
-const UPDATECOUNTDOWNSINTERVAL = 3e4;
-const UPDATESUNRISEINTERVAL = 3e4;
-const EVALUATESTATEINTERVAL = 1e4;
-const STATE = {
-  /** Wecker ist Deaktiviert */
-  DISABLED: "DISABLED",
-  /** Wecker Wartet */
-  ARMED: "ARMED",
-  /** Wecker in Pre-Alarm */
-  PREALARM: "PREALARM",
-  /** Wecker hat Ausgelöst */
-  TRIGGERED: "TRIGGERED",
-  /** Wecker in Snooze */
-  SNOOZE: "SNOOZE",
-  /** Wecker ist Gestoppt */
-  STOPPED: "STOPPED",
-  /** Fehler */
-  ERROR: "ERROR"
-};
+var import_constants = require("./constants");
+var import_createstatesobjects = require("./createstatesobjects");
 class Alarmclock extends utils.Adapter {
   /** Interval for updating countdowns */
   updateCountdownsInterval;
@@ -71,530 +54,7 @@ class Alarmclock extends utils.Adapter {
    */
   async onReady() {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-    await this.setObjectNotExistsAsync("action", {
-      type: "channel",
-      common: {
-        name: {
-          de: "Befehle",
-          en: "Commands"
-        }
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("action.snooze", {
-      type: "state",
-      common: {
-        name: {
-          de: "Alarm pausieren",
-          en: "Pause alarm"
-        },
-        type: "boolean",
-        role: "button",
-        read: false,
-        write: true,
-        def: false
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("action.stop", {
-      type: "state",
-      common: {
-        name: {
-          de: "Alarm beenden",
-          en: "Stop alarm"
-        },
-        type: "boolean",
-        role: "button",
-        read: false,
-        write: true,
-        def: false
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("config", {
-      type: "channel",
-      common: {
-        name: {
-          de: "Konfiguration",
-          en: "Configuration"
-        }
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("config.enabled", {
-      type: "state",
-      common: {
-        name: {
-          de: "Alarm aktiviert",
-          en: "Alarm enabled"
-        },
-        type: "boolean",
-        role: "switch.enable",
-        read: true,
-        write: true,
-        def: true
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("config.preAlarmMinutes", {
-      type: "state",
-      common: {
-        name: {
-          de: "Vorwarnzeit in Minuten",
-          en: "Pre-alarm time in minutes"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: true,
-        def: 20,
-        unit: "minutes"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("config.skipNext", {
-      type: "state",
-      common: {
-        name: {
-          de: "Alarm \xFCberspringen",
-          en: "Ignore alarm"
-        },
-        type: "boolean",
-        role: "switch.enable",
-        read: true,
-        write: true,
-        def: false
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("config.snoozeMinutes", {
-      type: "state",
-      common: {
-        name: {
-          de: "Schlummerzeit in Minuten",
-          en: "Snooze time in minutes"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: true,
-        def: 10,
-        unit: "minutes"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime", {
-      type: "channel",
-      common: {
-        name: {
-          de: "Laufzeitwerte",
-          en: "Runtime values"
-        }
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.countdownAlarm", {
-      type: "state",
-      common: {
-        name: {
-          de: "Laufzeit bis zum Alarm",
-          en: "Countdown to alarm"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "minutes"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.active", {
-      type: "state",
-      common: {
-        name: {
-          de: "Alarm ist aktiv",
-          en: "Alarm is active"
-        },
-        type: "boolean",
-        role: "indicator.activity",
-        read: true,
-        write: false,
-        def: false
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.countdownPreAlarm", {
-      type: "state",
-      common: {
-        name: {
-          de: "Laufzeit bis zum Voralarm",
-          en: "Countdown to pre-alarm"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "minutes"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.countdownSnooze", {
-      type: "state",
-      common: {
-        name: {
-          de: "Countdown bis zum Ende der Schlummerfunktion",
-          en: "Countdown to end snooze"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "minutes"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.nextAlarm", {
-      type: "state",
-      common: {
-        name: {
-          de: "N\xE4chster Alarm",
-          en: "Next alarm"
-        },
-        type: "string",
-        role: "value.time",
-        read: true,
-        write: false,
-        def: ""
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.nextPreAlarm", {
-      type: "state",
-      common: {
-        name: {
-          de: "N\xE4chster Voralarm",
-          en: "Next pre-alarm"
-        },
-        type: "string",
-        role: "value.time",
-        read: true,
-        write: false,
-        def: ""
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.snoozeUntil", {
-      type: "state",
-      common: {
-        name: {
-          de: "Snooze bis",
-          en: "Snooze until"
-        },
-        type: "string",
-        role: "value.time",
-        read: true,
-        write: false,
-        def: ""
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.state", {
-      type: "state",
-      common: {
-        name: {
-          de: "Zustand",
-          en: "State"
-        },
-        type: "string",
-        role: "indicator.status",
-        read: true,
-        write: false,
-        states: Object.values(STATE),
-        def: STATE.DISABLED
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.sunriseBrightness", {
-      type: "state",
-      common: {
-        name: {
-          de: "Lichtwecker Helligkeit",
-          en: "Light alarm clock brightness"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "%"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("runtime.sunriseProgress", {
-      type: "state",
-      common: {
-        name: {
-          de: "Lichtwecker Fortschritt",
-          en: "Light alarm clock progress"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "%"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule", {
-      type: "channel",
-      common: {
-        name: {
-          de: "Weckzeiten",
-          en: "Wake-up times"
-        }
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.monday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Montag",
-          en: "Wake-up time on Monday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "06:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.tuesday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Dienstag",
-          en: "Wake-up time on Tuesday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "06:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.wednesday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Mittwoch",
-          en: "Wake-up time on Wednesday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "06:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.thursday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Donnerstag",
-          en: "Wake-up time on Thursday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "06:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.friday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Freitag",
-          en: "Wake-up time on Friday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "06:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.saturday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Samstag",
-          en: "Wake-up time on Saturday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "08:00"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.sunday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit am Sonntag",
-          en: "Wake-up time on Sunday"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "08:30"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.vacation", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit im Urlaub",
-          en: "Wake-up time on vacation"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "10:30"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("schedule.holiday", {
-      type: "state",
-      common: {
-        name: {
-          de: "Weckzeit an Feiertagen",
-          en: "Wake-up time on holidays"
-        },
-        type: "string",
-        role: "text",
-        read: true,
-        write: true,
-        def: "09:30"
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics", {
-      type: "channel",
-      common: {
-        name: {
-          de: "Statistiken",
-          en: "Statistics"
-        }
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.alarmCount", {
-      type: "state",
-      common: {
-        name: {
-          de: "Anzahl der Wecker",
-          en: "Number of alarms"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.preAlarmCount", {
-      type: "state",
-      common: {
-        name: {
-          de: "Anzahl der Voralarme",
-          en: "Number of pre-alarms"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.snoozeCount", {
-      type: "state",
-      common: {
-        name: {
-          de: "Anzahl der Schlummerzeit",
-          en: "Number of snoozes"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.stopCount", {
-      type: "state",
-      common: {
-        name: {
-          de: "Anzahl der Stopp-Vorg\xE4nge",
-          en: "Number of stop actions"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.errorCount", {
-      type: "state",
-      common: {
-        name: {
-          de: "Anzahl der Fehler",
-          en: "Number of errors"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0
-      },
-      native: {}
-    });
-    await this.setObjectNotExistsAsync("statistics.wakeDelay", {
-      type: "state",
-      common: {
-        name: {
-          de: "Aufwachverz\xF6gerung",
-          en: "Wake delay"
-        },
-        type: "number",
-        role: "value",
-        read: true,
-        write: false,
-        def: 0,
-        unit: "minutes"
-      },
-      native: {}
-    });
+    await (0, import_createstatesobjects.createStatesObjects)(this);
     this.subscribeStates("action.snooze");
     this.subscribeStates("action.stop");
     this.subscribeStates("config.enabled");
@@ -660,9 +120,9 @@ class Alarmclock extends utils.Adapter {
     if (this.config.appointmentInstance && this.config.appointmentInstance !== "" && this.config.appointmentEvents && this.config.appointmentEvents.length > 0) {
       this.subscribeForeignStates(`${this.config.appointmentInstance}.data.table`);
     }
-    this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), UPDATECOUNTDOWNSINTERVAL);
-    this.updateSunriseInterval = this.setInterval(() => this.updateSunrise(), UPDATESUNRISEINTERVAL);
-    this.evaluateStateInterval = this.setInterval(() => this.evaluateState(), EVALUATESTATEINTERVAL);
+    this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), import_constants.UPDATECOUNTDOWNSINTERVAL);
+    this.updateSunriseInterval = this.setInterval(() => this.updateSunrise(), import_constants.UPDATESUNRISEINTERVAL);
+    this.evaluateStateInterval = this.setInterval(() => this.evaluateState(), import_constants.EVALUATESTATEINTERVAL);
     await this.checkNewAlarmTime("onReady");
     await this.updateCountdowns();
     await this.updateSunrise(true);
@@ -920,7 +380,7 @@ class Alarmclock extends utils.Adapter {
   async updateSunrise(force = false) {
     this.log.debug(`updateSunrise(${force})`);
     const state = await this.getStateAsync("runtime.state");
-    if ((state == null ? void 0 : state.val) !== STATE.PREALARM && !force) {
+    if ((state == null ? void 0 : state.val) !== import_constants.STATE.PREALARM && !force) {
       return;
     }
     const preAlarm = await this.getStateAsync("runtime.nextPreAlarm");
@@ -959,26 +419,26 @@ class Alarmclock extends utils.Adapter {
    */
   async handleState(state) {
     switch (state) {
-      case STATE.DISABLED:
+      case import_constants.STATE.DISABLED:
         break;
-      case STATE.ARMED:
+      case import_constants.STATE.ARMED:
         await this.updateCountdowns();
         break;
-      case STATE.PREALARM:
+      case import_constants.STATE.PREALARM:
         await this.startPreAlarm();
         break;
-      case STATE.TRIGGERED:
+      case import_constants.STATE.TRIGGERED:
         await this.startAlarm();
         break;
-      case STATE.SNOOZE:
+      case import_constants.STATE.SNOOZE:
         await this.updateCountdowns();
         break;
-      case STATE.STOPPED:
+      case import_constants.STATE.STOPPED:
         await this.stopAlarm();
-        this.setAlarmState(STATE.ARMED);
+        this.setAlarmState(import_constants.STATE.ARMED);
         await this.updateCountdowns();
         break;
-      case STATE.ERROR:
+      case import_constants.STATE.ERROR:
         this.incrementStat("errorCount");
         break;
     }
@@ -1015,7 +475,7 @@ class Alarmclock extends utils.Adapter {
       await this.setState(`statistics.wakeDelay`, wakeDelay, true);
     }
     await this.setState(`runtime.active`, false, true);
-    this.setAlarmState(STATE.STOPPED);
+    this.setAlarmState(import_constants.STATE.STOPPED);
   }
   /**
    * Setzten des Status des Weckers.
@@ -1044,20 +504,20 @@ class Alarmclock extends utils.Adapter {
       const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
       const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
       const skip = await this.getStateAsync("action.skipNext");
-      if ((state == null ? void 0 : state.val) === STATE.SNOOZE && (snoozeUntil == null ? void 0 : snoozeUntil.val) && now >= new Date(String(snoozeUntil.val)).getTime() && !skip) {
-        this.setAlarmState(STATE.TRIGGERED);
+      if ((state == null ? void 0 : state.val) === import_constants.STATE.SNOOZE && (snoozeUntil == null ? void 0 : snoozeUntil.val) && now >= new Date(String(snoozeUntil.val)).getTime() && !skip) {
+        this.setAlarmState(import_constants.STATE.TRIGGERED);
         return;
       }
-      if ((state == null ? void 0 : state.val) === STATE.ARMED && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) && now >= new Date(String(nextPreAlarm.val)).getTime() && !skip) {
-        this.setAlarmState(STATE.PREALARM);
+      if ((state == null ? void 0 : state.val) === import_constants.STATE.ARMED && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) && now >= new Date(String(nextPreAlarm.val)).getTime() && !skip) {
+        this.setAlarmState(import_constants.STATE.PREALARM);
         return;
       }
-      if (((state == null ? void 0 : state.val) === STATE.ARMED || (state == null ? void 0 : state.val) === STATE.PREALARM) && (nextAlarm == null ? void 0 : nextAlarm.val) && now >= new Date(String(nextAlarm.val)).getTime() && !skip) {
-        this.setAlarmState(STATE.TRIGGERED);
+      if (((state == null ? void 0 : state.val) === import_constants.STATE.ARMED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) && (nextAlarm == null ? void 0 : nextAlarm.val) && now >= new Date(String(nextAlarm.val)).getTime() && !skip) {
+        this.setAlarmState(import_constants.STATE.TRIGGERED);
       }
     } catch (e) {
       console.error(e);
-      this.setAlarmState(STATE.ERROR);
+      this.setAlarmState(import_constants.STATE.ERROR);
     }
   }
   /**
@@ -1066,12 +526,12 @@ class Alarmclock extends utils.Adapter {
   activateSnooze() {
     this.log.debug("activateSnooze()");
     this.getState("runtime.state", (_err, state) => {
-      if ((state == null ? void 0 : state.val) === STATE.TRIGGERED || (state == null ? void 0 : state.val) === STATE.PREALARM) {
+      if ((state == null ? void 0 : state.val) === import_constants.STATE.TRIGGERED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) {
         this.getState("config.snoozeMinutes", async (_err2, mins) => {
           const until = new Date(Date.now() + Number(mins == null ? void 0 : mins.val) * 6e4);
           await this.setState("runtime.snoozeUntil", until.toISOString(), true);
           this.incrementStat("snoozeCount");
-          this.setAlarmState(STATE.SNOOZE);
+          this.setAlarmState(import_constants.STATE.SNOOZE);
         });
       }
     });
@@ -1222,7 +682,7 @@ class Alarmclock extends utils.Adapter {
           break;
         case `${this.namespace}.action.stop`:
           if (state.ack === false) {
-            this.setAlarmState(STATE.STOPPED);
+            this.setAlarmState(import_constants.STATE.STOPPED);
             await this.setState("action.stop", { val: false, ack: true });
           }
           break;
