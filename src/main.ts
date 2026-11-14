@@ -811,6 +811,16 @@ class Alarmclock extends utils.Adapter {
                         await this.setState("action.stop", { val: false, ack: true });
                     }
                     break;
+                case `${this.namespace}.config.enabled`:
+                    if (state.val) {
+                        this.setAlarmState(STATE.ARMED);
+                    } else {
+                        this.setAlarmState(STATE.DISABLED);
+                    }
+                    await this.checkNewAlarmTime("config.enabled");
+                    break;
+                default:
+                    this.log.warn(`id not known: ${id}`);
             }
         } else {
             // The object was deleted or the state value has expired

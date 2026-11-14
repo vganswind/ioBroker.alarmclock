@@ -85,7 +85,7 @@ async function createStatesObjects(adapter) {
       role: "switch.enable",
       read: true,
       write: true,
-      def: true
+      def: false
     },
     native: {}
   });

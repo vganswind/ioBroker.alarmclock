@@ -73,7 +73,7 @@ export async function createStatesObjects(adapter: any): Promise<void> {
             role: "switch.enable",
             read: true,
             write: true,
-            def: true,
+            def: false,
         },
         native: {},
     });
