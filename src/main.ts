@@ -677,6 +677,66 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
+     * Hilfsfunktion zum Überprüfen der Eingabe einer neuen Weckzeit.
+     *
+     * @param id Id der Weckzeit, 'alarmStates[id]'
+     * @param state Der ioBroker.State
+     * @throws {Error} Wenn die Alarm-ID ungültig ist.
+     */
+    private async checkStateUpdateNewAlarmTime(id: number, state: ioBroker.State): Promise<void> {
+        if (id < 0 && id > 8) {
+            throw new Error(`Ungültige Alarm-ID: ${id}`);
+        }
+
+        let key = "";
+        switch (id) {
+            case 0:
+                key = "monday";
+                break;
+            case 1:
+                key = "tuesday";
+                break;
+            case 2:
+                key = "wednesday";
+                break;
+            case 3:
+                key = "thursday";
+                break;
+            case 4:
+                key = "friday";
+                break;
+            case 5:
+                key = "saturday";
+                break;
+            case 6:
+                key = "sunday";
+                break;
+            case 7:
+                key = "vacation";
+                break;
+            case 8:
+                key = "holiday";
+                break;
+        }
+
+        if (key === "") {
+            this.log.error(`Es konnte kein Schüssel für '${id}' gefunden werden.`);
+            return;
+        }
+
+        if (state.ack === false) {
+            this.log.debug(`New wake-up time for ${key}: ${state.val}`);
+            this.alarmStates[id] = this.checkValidTime(state.val?.toString(), this.alarmStates[id]);
+            await this.setState(`schedule.${key}`, {
+                val: this.alarmStates[id],
+                ack: true,
+            });
+        } else {
+            await this.checkNewAlarmTime(`schedule.${key}`);
+        }
+    }
+
+    /**
      * Is called if a subscribed state changes.
      *
      * @param id State ID
@@ -689,103 +749,31 @@ class Alarmclock extends utils.Adapter {
 
             switch (id) {
                 case `${this.namespace}.schedule.monday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Monday: ${state.val}`);
-                        await this.setState("schedule.monday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[0]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.monday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(0, state);
                     break;
                 case `${this.namespace}.schedule.tuesday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Tuesday: ${state.val}`);
-                        await this.setState("schedule.tuesday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[1]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.tuesday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(1, state);
                     break;
                 case `${this.namespace}.schedule.wednesday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Wednesday: ${state.val}`);
-                        await this.setState("schedule.wednesday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[2]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.wednesday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(2, state);
                     break;
                 case `${this.namespace}.schedule.thursday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Thursday: ${state.val}`);
-                        await this.setState("schedule.thursday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[3]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.thursday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(3, state);
                     break;
                 case `${this.namespace}.schedule.friday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Friday: ${state.val}`);
-                        await this.setState("schedule.friday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[4]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.friday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(4, state);
                     break;
                 case `${this.namespace}.schedule.saturday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Saturday: ${state.val}`);
-                        await this.setState("schedule.saturday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[5]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.saturday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(5, state);
                     break;
                 case `${this.namespace}.schedule.sunday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Sunday: ${state.val}`);
-                        await this.setState("schedule.sunday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[6]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.sunday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(6, state);
                     break;
                 case `${this.namespace}.schedule.vacation`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Vacation: ${state.val}`);
-                        await this.setState("schedule.vacation", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[7]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.vacation");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(7, state);
                     break;
                 case `${this.namespace}.schedule.holiday`:
-                    if (state.ack === false) {
-                        this.log.debug(`New wake-up time for Holiday: ${state.val}`);
-                        await this.setState("schedule.holiday", {
-                            val: this.checkValidTime(state.val?.toString(), this.alarmStates[8]),
-                            ack: true,
-                        });
-                    } else {
-                        await this.checkNewAlarmTime("schedule.holiday");
-                    }
+                    await this.checkStateUpdateNewAlarmTime(8, state);
                     break;
                 case `${this.config.vocationInstance}.data.table`:
                     await this.checkNewAlarmTime("vocationInstance");
