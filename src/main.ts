@@ -241,7 +241,7 @@ class Alarmclock extends utils.Adapter {
             const alarm = new Date();
             alarm.setHours(0, 0, 0, 0);
 
-            await this.checkWeekday(alarm);
+            this.checkWeekday(alarm);
             await this.checkVacationEvents(alarm, true);
             await this.checkHolidayEvents(alarm, true);
             await this.checkAppointmentEvents(alarm);
@@ -251,7 +251,7 @@ class Alarmclock extends utils.Adapter {
 
                 alarm.setDate(alarm.getDate() + 1);
 
-                await this.checkWeekday(alarm);
+                this.checkWeekday(alarm);
                 await this.checkVacationEvents(alarm, false);
                 await this.checkHolidayEvents(alarm, false);
                 await this.checkAppointmentEvents(alarm);
@@ -276,47 +276,15 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
-     * Setzten des Weckers auf die Tageszeit.
+     * Setzten des Weckers nach dem Wochentag.
      *
      * @param alert Die Weckzeit
      */
-    private async checkWeekday(alert: Date): Promise<void> {
+    private checkWeekday(alert: Date): void {
         this.log.debug(`checkWeekday(${alert.toLocaleString()})`);
 
-        let key = "unknown";
-        // Setzten des Weckers nach dem Wochentag
-        switch (alert.getDay()) {
-            case 0: // Sonntag
-                key = "schedule.sunday";
-                break;
-            case 1: // Montag
-                key = "schedule.monday";
-                break;
-            case 2: // Dienstag
-                key = "schedule.tuesday";
-                break;
-            case 3: // Mittwoch
-                key = "schedule.wednesday";
-                break;
-            case 4: // Donnerstag
-                key = "schedule.thursday";
-                break;
-            case 5: // Freitag
-                key = "schedule.friday";
-                break;
-            case 6: // Samstag
-                key = "schedule.saturday";
-                break;
-        }
-        this.log.debug(`The alert day is ${alert.toLocaleDateString()}, key: ${key}`);
-
-        const alarmState = await this.getStateAsync(`${this.namespace}.${key}`);
-        if (alarmState && alarmState.val != null && alarmState.val !== "") {
-            this.calcDateWithTime(alert, alarmState.val.toString());
-        } else {
-            this.log.warn(`No alarm time found for ${key}, using default time.`);
-            this.calcDateWithTime(alert, "06:00");
-        }
+        this.calcDateWithTime(alert, this.alarmStates[alert.getDay()]);
+        this.log.debug(`The alert date is ${alert.toLocaleDateString()}, time: ${this.alarmStates[alert.getDay()]}`);
     }
 
     /**
