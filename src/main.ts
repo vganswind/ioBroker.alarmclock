@@ -486,13 +486,11 @@ class Alarmclock extends utils.Adapter {
      *
      * @param key Der Name des Wertes
      */
-    private incrementStat(key: string): void {
+    private async incrementStat(key: string): Promise<void> {
         this.log.debug(`incrementStat(${key})`);
 
-        this.getState(`statistics.${key}`, async (_err, state) => {
-            const value = Number(state?.val) || 0;
-            await this.setState(`statistics.${key}`, value + 1, true);
-        });
+        const value = Number((await this.getStateAsync(`statistics.${key}`))?.val || 0);
+        await this.setState(`statistics.${key}`, value + 1, true);
     }
 
     /**
@@ -522,7 +520,7 @@ class Alarmclock extends utils.Adapter {
                 await this.updateCountdowns();
                 break;
             case STATE.ERROR:
-                this.incrementStat("errorCount");
+                await this.incrementStat("errorCount");
                 break;
         }
     }
@@ -533,7 +531,7 @@ class Alarmclock extends utils.Adapter {
     private async startPreAlarm(): Promise<void> {
         this.log.debug("startPreAlarm()");
 
-        this.incrementStat("preAlarmCount");
+        await this.incrementStat("preAlarmCount");
         await this.updateSunrise(true);
 
         this.log.info("PREALARM");
@@ -549,7 +547,7 @@ class Alarmclock extends utils.Adapter {
             this.alarmStartTime = Date.now();
         }
 
-        this.incrementStat("alarmCount");
+        await this.incrementStat("alarmCount");
         await this.setState("runtime.active", true, true);
 
         this.log.info("ALARM");
@@ -561,7 +559,7 @@ class Alarmclock extends utils.Adapter {
     private async stopAlarm(): Promise<void> {
         this.log.debug(`stopAlarm()`);
 
-        this.incrementStat("stopCount");
+        await this.incrementStat("stopCount");
 
         if (this.alarmStartTime) {
             const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 60000);
@@ -651,7 +649,7 @@ class Alarmclock extends utils.Adapter {
 
                     await this.setState("runtime.snoozeUntil", until.toISOString(), true);
 
-                    this.incrementStat("snoozeCount");
+                    await this.incrementStat("snoozeCount");
                     this.setAlarmState(STATE.SNOOZE);
                 });
             }

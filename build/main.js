@@ -405,12 +405,11 @@ class Alarmclock extends utils.Adapter {
    *
    * @param key Der Name des Wertes
    */
-  incrementStat(key) {
+  async incrementStat(key) {
+    var _a;
     this.log.debug(`incrementStat(${key})`);
-    this.getState(`statistics.${key}`, async (_err, state) => {
-      const value = Number(state == null ? void 0 : state.val) || 0;
-      await this.setState(`statistics.${key}`, value + 1, true);
-    });
+    const value = Number(((_a = await this.getStateAsync(`statistics.${key}`)) == null ? void 0 : _a.val) || 0);
+    await this.setState(`statistics.${key}`, value + 1, true);
   }
   /**
    * Setzten des Status des Weckers.
@@ -439,7 +438,7 @@ class Alarmclock extends utils.Adapter {
         await this.updateCountdowns();
         break;
       case import_constants.STATE.ERROR:
-        this.incrementStat("errorCount");
+        await this.incrementStat("errorCount");
         break;
     }
   }
@@ -448,7 +447,7 @@ class Alarmclock extends utils.Adapter {
    */
   async startPreAlarm() {
     this.log.debug("startPreAlarm()");
-    this.incrementStat("preAlarmCount");
+    await this.incrementStat("preAlarmCount");
     await this.updateSunrise(true);
     this.log.info("PREALARM");
   }
@@ -460,7 +459,7 @@ class Alarmclock extends utils.Adapter {
     if (!this.alarmStartTime) {
       this.alarmStartTime = Date.now();
     }
-    this.incrementStat("alarmCount");
+    await this.incrementStat("alarmCount");
     await this.setState("runtime.active", true, true);
     this.log.info("ALARM");
   }
@@ -469,7 +468,7 @@ class Alarmclock extends utils.Adapter {
    */
   async stopAlarm() {
     this.log.debug(`stopAlarm()`);
-    this.incrementStat("stopCount");
+    await this.incrementStat("stopCount");
     if (this.alarmStartTime) {
       const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 6e4);
       await this.setState(`statistics.wakeDelay`, wakeDelay, true);
@@ -530,7 +529,7 @@ class Alarmclock extends utils.Adapter {
         this.getState("config.snoozeMinutes", async (_err2, mins) => {
           const until = new Date(Date.now() + Number(mins == null ? void 0 : mins.val) * 6e4);
           await this.setState("runtime.snoozeUntil", until.toISOString(), true);
-          this.incrementStat("snoozeCount");
+          await this.incrementStat("snoozeCount");
           this.setAlarmState(import_constants.STATE.SNOOZE);
         });
       }
