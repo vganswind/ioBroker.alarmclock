@@ -466,13 +466,14 @@ class Alarmclock extends utils.Adapter {
    * Überprüfen des Status des Weckers.
    */
   async evaluateState() {
+    var _a;
     try {
       const now = Date.now();
       const state = await this.getStateAsync("runtime.state");
       const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
       const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
       const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
-      const skip = await this.getStateAsync("action.skipNext");
+      const skip = ((_a = await this.getStateAsync("action.skipNext")) == null ? void 0 : _a.val) === true;
       if ((state == null ? void 0 : state.val) === import_constants.STATE.SNOOZE && (snoozeUntil == null ? void 0 : snoozeUntil.val) && now >= new Date(String(snoozeUntil.val)).getTime() && !skip) {
         this.setAlarmState(import_constants.STATE.TRIGGERED);
         return;

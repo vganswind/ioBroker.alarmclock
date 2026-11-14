@@ -568,7 +568,7 @@ class Alarmclock extends utils.Adapter {
             const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
             const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
             const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
-            const skip = await this.getStateAsync("action.skipNext");
+            const skip = (await this.getStateAsync("action.skipNext"))?.val === true;
 
             if (
                 state?.val === STATE.SNOOZE &&
