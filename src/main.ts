@@ -116,12 +116,12 @@ class Alarmclock extends utils.Adapter {
 
         // Prüfen und Abonnieren des Urlaubskalender
         if (
-            this.config.vocationInstance &&
-            this.config.vocationInstance !== "" &&
-            this.config.vocationEvents &&
-            this.config.vocationEvents.length > 0
+            this.config.vacationInstance &&
+            this.config.vacationInstance !== "" &&
+            this.config.vacationEvents &&
+            this.config.vacationEvents.length > 0
         ) {
-            this.subscribeForeignStates(`${this.config.vocationInstance}.data.table`);
+            this.subscribeForeignStates(`${this.config.vacationInstance}.data.table`);
         }
 
         // Prüfen und Abonnieren des Feiertagskalender
@@ -167,7 +167,7 @@ class Alarmclock extends utils.Adapter {
                 rest = 0;
             }
 
-            this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
+            this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 60000)} min`);
             await this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
         }
 
@@ -178,7 +178,7 @@ class Alarmclock extends utils.Adapter {
                 rest = 0;
             }
 
-            this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 60000)} s`);
+            this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 60000)} min`);
             await this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
         }
 
@@ -189,7 +189,7 @@ class Alarmclock extends utils.Adapter {
                 rest = 0;
             }
 
-            this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 60000)} s`);
+            this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 60000)} min`);
             await this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 60000), true);
         }
     }
@@ -297,12 +297,12 @@ class Alarmclock extends utils.Adapter {
         this.log.debug(`checkVacationEvents(${alert.toLocaleString()})`);
 
         if (
-            this.config.vocationInstance &&
-            this.config.vocationInstance !== "" &&
-            this.config.vocationEvents &&
-            this.config.vocationEvents.length > 0
+            this.config.vacationInstance &&
+            this.config.vacationInstance !== "" &&
+            this.config.vacationEvents &&
+            this.config.vacationEvents.length > 0
         ) {
-            for (const event of this.config.vocationEvents) {
+            for (const event of this.config.vacationEvents) {
                 if (!event.name || !event.enabled) {
                     continue;
                 }
@@ -312,11 +312,11 @@ class Alarmclock extends utils.Adapter {
                     key = "events.1";
                 }
 
-                const stateId = `${this.config.vocationInstance}.${key}.${event.name}`;
-                this.log.debug(`vocation check: ${stateId}`);
+                const stateId = `${this.config.vacationInstance}.${key}.${event.name}`;
+                this.log.debug(`vacation check: ${stateId}`);
 
                 const vacationState = await this.getForeignStateAsync(stateId);
-                this.log.debug(`vocation check result: ${JSON.stringify(vacationState)}`);
+                this.log.debug(`vacation check result: ${JSON.stringify(vacationState)}`);
 
                 if (vacationState?.val === true) {
                     this.log.debug(`Vacation event '${event.name}' active`);
@@ -334,7 +334,7 @@ class Alarmclock extends utils.Adapter {
             }
         } else {
             this.log.info(
-                `vocation check disabled: ical=${this.config.vocationInstance}, events=${this.config.vocationEvents?.length ?? 0}`,
+                `vacation check disabled: ical=${this.config.vacationInstance}, events=${this.config.vacationEvents?.length ?? 0}`,
             );
         }
     }
@@ -741,8 +741,8 @@ class Alarmclock extends utils.Adapter {
                 case `${this.namespace}.schedule.holiday`:
                     await this.checkStateUpdateNewAlarmTime(8, state);
                     break;
-                case `${this.config.vocationInstance}.data.table`:
-                    await this.checkNewAlarmTime("vocationInstance");
+                case `${this.config.vacationInstance}.data.table`:
+                    await this.checkNewAlarmTime("vacationInstance");
                     break;
                 case `${this.config.holidayInstance}.today.boolean`:
                     await this.checkNewAlarmTime("holidayInstance.today");

@@ -21,16 +21,16 @@
             "tooltip": "Select the instance that contains the holiday data.",
             "default": ""
         },
-        "vocationHeading": {
+        "vacationHeading": {
             "type": "header",
-            "text": "Vocation Calendar Settings",
+            "text": "Vacation Calendar Settings",
             "size": 4
         },
-        "vocationInfoText": {
+        "vacationInfoText": {
             "type": "staticText",
             "label": "Here you can configure the settings for the vacation calendar of the alarm clock."
         },
-        "vocationInstance": {
+        "vacationInstance": {
             "type": "instance",
             "newLine": true,
             "xs": 12,
@@ -40,7 +40,7 @@
             "tooltip": "Select the instance that contains the vacation calendar data.",
             "default": ""
         },
-        "vocationEvents": {
+        "vacationEvents": {
             "type": "table",
             "xs": 7,
             "label": "The name of the appointment to be checked",

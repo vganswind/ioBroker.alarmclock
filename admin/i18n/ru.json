@@ -6,7 +6,7 @@
     "Select the holidays instance": "Выберите экземпляр календаря праздников",
     "Select the instance that contains the holiday data.": "Выберите экземпляр, содержащий данные о праздниках.",
 
-    "Vocation Calendar Settings": "Настройки календаря отпусков",
+    "Vacation Calendar Settings": "Настройки календаря отпусков",
     "Here you can configure the settings for the vacation calendar of the alarm clock.": "Здесь можно настроить календарь отпусков для будильника.",
     "Select the instance that contains the vacation calendar data.": "Выберите экземпляр, содержащий данные календаря отпусков.",
     "Appointment name (e.g., 'Vacation' or 'Late shift')": "Название события (например, «Отпуск» или «Поздняя смена»)",

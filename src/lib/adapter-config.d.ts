@@ -8,9 +8,9 @@ declare global {
             /** Name der Feiertagskalender-Instance */
             holidayInstance: string;
             /** Name der Urlaubskalender-Instance */
-            vocationInstance: string;
+            vacationInstance: string;
             /** Liste der Urlaubskalender-Einträge */
-            vocationEvents: {
+            vacationEvents: {
                 /** Name des Termins */
                 name: string;
                 /** Der Termin ist aktiviert */

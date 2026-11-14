@@ -6,7 +6,7 @@
     "Select the holidays instance": "Die feiertage-Instanz auswählen",
     "Select the instance that contains the holiday data.": "Wähle die Instanz aus, der die Feiertagsdaten enthält.",
 
-    "Vocation Calendar Settings": "Einstellungen des Urlaubskalender",
+    "Vacation Calendar Settings": "Einstellungen des Urlaubskalender",
     "Here you can configure the settings for the vacation calendar of the alarm clock.": "Hier können Sie die Einstellungen für den Kalender für die Urlaubszeit des Weckers konfigurieren.",
     "Select the instance that contains the vacation calendar data.": "Wähle die Instanz aus, der die Urlaubskalenderdaten enthält.",
     "Appointment name (e.g., 'Vacation' or 'Late shift')": "Terminname (z.B. 'Urlaub' oder 'Spätschicht')",
