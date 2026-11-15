@@ -63,56 +63,10 @@ class Alarmclock extends utils.Adapter {
         this.subscribeStates("schedule.holiday");
 
         // Speicherung der Weckzeiten in das Array alarmStates
-        {
-            let state: ioBroker.State | null | undefined;
-
-            state = await this.getStateAsync("schedule.monday");
-            if (state && state.val !== "") {
-                this.alarmStates[0] = this.checkValidTime(state.val?.toString(), this.alarmStates[0]);
-            }
-
-            state = await this.getStateAsync("schedule.tuesday");
-            if (state && state.val !== "") {
-                this.alarmStates[1] = this.checkValidTime(state.val?.toString(), this.alarmStates[1]);
-            }
-
-            state = await this.getStateAsync("schedule.wednesday");
-            if (state && state.val !== "") {
-                this.alarmStates[2] = this.checkValidTime(state.val?.toString(), this.alarmStates[2]);
-            }
-
-            state = await this.getStateAsync("schedule.thursday");
-            if (state && state.val !== "") {
-                this.alarmStates[3] = this.checkValidTime(state.val?.toString(), this.alarmStates[3]);
-            }
-
-            state = await this.getStateAsync("schedule.friday");
-            if (state && state.val !== "") {
-                this.alarmStates[4] = this.checkValidTime(state.val?.toString(), this.alarmStates[4]);
-            }
-
-            state = await this.getStateAsync("schedule.saturday");
-            if (state && state.val !== "") {
-                this.alarmStates[5] = this.checkValidTime(state.val?.toString(), this.alarmStates[5]);
-            }
-
-            state = await this.getStateAsync("schedule.sunday");
-            if (state && state.val !== "") {
-                this.alarmStates[6] = this.checkValidTime(state.val?.toString(), this.alarmStates[6]);
-            }
-
-            state = await this.getStateAsync("schedule.vacation");
-            if (state && state.val !== "") {
-                this.alarmStates[7] = this.checkValidTime(state.val?.toString(), this.alarmStates[7]);
-            }
-
-            state = await this.getStateAsync("schedule.holiday");
-            if (state && state.val !== "") {
-                this.alarmStates[8] = this.checkValidTime(state.val?.toString(), this.alarmStates[8]);
-            }
-
-            this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
+        for (let i = 0; i <= 8; i++) {
+            await this.readAlarmTime(i);
         }
+        this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
 
         // Prüfen und Abonnieren des Urlaubskalender
         if (
@@ -654,51 +608,58 @@ class Alarmclock extends utils.Adapter {
             throw new Error(`Ungültige Alarm-ID: ${id}`);
         }
 
-        let key = "";
-        switch (id) {
-            case 0:
-                key = "monday";
-                break;
-            case 1:
-                key = "tuesday";
-                break;
-            case 2:
-                key = "wednesday";
-                break;
-            case 3:
-                key = "thursday";
-                break;
-            case 4:
-                key = "friday";
-                break;
-            case 5:
-                key = "saturday";
-                break;
-            case 6:
-                key = "sunday";
-                break;
-            case 7:
-                key = "vacation";
-                break;
-            case 8:
-                key = "holiday";
-                break;
-        }
-
-        if (key === "") {
-            this.log.error(`Es konnte kein Schüssel für '${id}' gefunden werden.`);
-            return;
-        }
+        const days = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+            "vacation",
+            "holiday",
+        ];
 
         if (state.ack === false) {
-            this.log.debug(`New wake-up time for ${key}: ${state.val}`);
+            this.log.debug(`New wake-up time for ${days[id]}: ${state.val}`);
             this.alarmStates[id] = this.checkValidTime(state.val?.toString(), this.alarmStates[id]);
-            await this.setState(`schedule.${key}`, {
+            await this.setState(`schedule.${days[id]}`, {
                 val: this.alarmStates[id],
                 ack: true,
             });
         } else {
-            await this.checkNewAlarmTime(`schedule.${key}`);
+            await this.checkNewAlarmTime(`schedule.${days[id]}`);
+        }
+    }
+
+    /**
+     * Einlesen der Weckzeiten aus den State-Objekten in den lokalen Speicher.
+     *
+     * @param id Id der Weckzeit, 'alarmStates[id]'
+     * @throws {Error} Wenn die Alarm-ID ungültig ist.
+     */
+    private async readAlarmTime(id: number): Promise<void> {
+        this.log.debug(`readAlarmTime(${id})`);
+
+        if (id < 0 && id > 8) {
+            throw new Error(`Ungültige Alarm-ID: ${id}`);
+        }
+
+        const days = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+            "vacation",
+            "holiday",
+        ];
+
+        const state = await this.getStateAsync(`schedule.${days[id]}`);
+        if (state && state.val !== "") {
+            this.alarmStates[id] = this.checkValidTime(state.val?.toString(), this.alarmStates[id]);
         }
     }
 

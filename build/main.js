@@ -53,7 +53,6 @@ class Alarmclock extends utils.Adapter {
    * Is called when databases are connected and adapter received configuration.
    */
   async onReady() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     await (0, import_createstatesobjects.createStatesObjects)(this);
     this.subscribeStates("action.snooze");
     this.subscribeStates("action.stop");
@@ -70,46 +69,10 @@ class Alarmclock extends utils.Adapter {
     this.subscribeStates("schedule.sunday");
     this.subscribeStates("schedule.vacation");
     this.subscribeStates("schedule.holiday");
-    {
-      let state;
-      state = await this.getStateAsync("schedule.monday");
-      if (state && state.val !== "") {
-        this.alarmStates[0] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[0]);
-      }
-      state = await this.getStateAsync("schedule.tuesday");
-      if (state && state.val !== "") {
-        this.alarmStates[1] = this.checkValidTime((_b = state.val) == null ? void 0 : _b.toString(), this.alarmStates[1]);
-      }
-      state = await this.getStateAsync("schedule.wednesday");
-      if (state && state.val !== "") {
-        this.alarmStates[2] = this.checkValidTime((_c = state.val) == null ? void 0 : _c.toString(), this.alarmStates[2]);
-      }
-      state = await this.getStateAsync("schedule.thursday");
-      if (state && state.val !== "") {
-        this.alarmStates[3] = this.checkValidTime((_d = state.val) == null ? void 0 : _d.toString(), this.alarmStates[3]);
-      }
-      state = await this.getStateAsync("schedule.friday");
-      if (state && state.val !== "") {
-        this.alarmStates[4] = this.checkValidTime((_e = state.val) == null ? void 0 : _e.toString(), this.alarmStates[4]);
-      }
-      state = await this.getStateAsync("schedule.saturday");
-      if (state && state.val !== "") {
-        this.alarmStates[5] = this.checkValidTime((_f = state.val) == null ? void 0 : _f.toString(), this.alarmStates[5]);
-      }
-      state = await this.getStateAsync("schedule.sunday");
-      if (state && state.val !== "") {
-        this.alarmStates[6] = this.checkValidTime((_g = state.val) == null ? void 0 : _g.toString(), this.alarmStates[6]);
-      }
-      state = await this.getStateAsync("schedule.vacation");
-      if (state && state.val !== "") {
-        this.alarmStates[7] = this.checkValidTime((_h = state.val) == null ? void 0 : _h.toString(), this.alarmStates[7]);
-      }
-      state = await this.getStateAsync("schedule.holiday");
-      if (state && state.val !== "") {
-        this.alarmStates[8] = this.checkValidTime((_i = state.val) == null ? void 0 : _i.toString(), this.alarmStates[8]);
-      }
-      this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
+    for (let i = 0; i <= 8; i++) {
+      await this.readAlarmTime(i);
     }
+    this.log.debug(`Alarm states: ${JSON.stringify(this.alarmStates)}`);
     if (this.config.vacationInstance && this.config.vacationInstance !== "" && this.config.vacationEvents && this.config.vacationEvents.length > 0) {
       this.subscribeForeignStates(`${this.config.vacationInstance}.data.table`);
     }
@@ -534,49 +497,54 @@ class Alarmclock extends utils.Adapter {
     if (id < 0 && id > 8) {
       throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
     }
-    let key = "";
-    switch (id) {
-      case 0:
-        key = "monday";
-        break;
-      case 1:
-        key = "tuesday";
-        break;
-      case 2:
-        key = "wednesday";
-        break;
-      case 3:
-        key = "thursday";
-        break;
-      case 4:
-        key = "friday";
-        break;
-      case 5:
-        key = "saturday";
-        break;
-      case 6:
-        key = "sunday";
-        break;
-      case 7:
-        key = "vacation";
-        break;
-      case 8:
-        key = "holiday";
-        break;
-    }
-    if (key === "") {
-      this.log.error(`Es konnte kein Sch\xFCssel f\xFCr '${id}' gefunden werden.`);
-      return;
-    }
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+      "vacation",
+      "holiday"
+    ];
     if (state.ack === false) {
-      this.log.debug(`New wake-up time for ${key}: ${state.val}`);
+      this.log.debug(`New wake-up time for ${days[id]}: ${state.val}`);
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
-      await this.setState(`schedule.${key}`, {
+      await this.setState(`schedule.${days[id]}`, {
         val: this.alarmStates[id],
         ack: true
       });
     } else {
-      await this.checkNewAlarmTime(`schedule.${key}`);
+      await this.checkNewAlarmTime(`schedule.${days[id]}`);
+    }
+  }
+  /**
+   * Einlesen der Weckzeiten aus den State-Objekten in den lokalen Speicher.
+   *
+   * @param id Id der Weckzeit, 'alarmStates[id]'
+   * @throws {Error} Wenn die Alarm-ID ungültig ist.
+   */
+  async readAlarmTime(id) {
+    var _a;
+    this.log.debug(`readAlarmTime(${id})`);
+    if (id < 0 && id > 8) {
+      throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
+    }
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+      "vacation",
+      "holiday"
+    ];
+    const state = await this.getStateAsync(`schedule.${days[id]}`);
+    if (state && state.val !== "") {
+      this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
     }
   }
   /**
