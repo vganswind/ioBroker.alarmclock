@@ -392,6 +392,7 @@ class Alarmclock extends utils.Adapter {
     this.log.debug(`startAlarm()`);
     if (!this.alarmStartTime) {
       this.alarmStartTime = Date.now();
+      await this.setState("statistics.lastAlarm", (/* @__PURE__ */ new Date()).toISOString(), true);
     }
     await this.incrementStat("alarmCount");
     await this.setState("runtime.active", true, true);
@@ -405,6 +406,7 @@ class Alarmclock extends utils.Adapter {
     await this.incrementStat("stopCount");
     if (this.alarmStartTime) {
       const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 6e4);
+      await this.setState("statistics.lastWakeup", (/* @__PURE__ */ new Date()).toISOString(), true);
       await this.setState(`statistics.wakeDelay`, wakeDelay, true);
     }
     this.alarmStartTime = null;

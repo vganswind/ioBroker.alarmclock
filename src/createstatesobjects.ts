@@ -567,4 +567,36 @@ export async function createStatesObjects(adapter: any): Promise<void> {
         },
         native: {},
     });
+
+    await adapter.setObjectNotExistsAsync("statistics.lastAlarm", {
+        type: "state",
+        common: {
+            name: {
+                de: "Letzter Alarm",
+                en: "Last alarm",
+            },
+            type: "string",
+            role: "value.time",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("statistics.lastWakeup", {
+        type: "state",
+        common: {
+            name: {
+                de: "Letztes Aufstehen",
+                en: "Last wake-up",
+            },
+            type: "string",
+            role: "value.time",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
 }
