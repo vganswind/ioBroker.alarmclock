@@ -33,6 +33,7 @@
     "@iobroker/testing": "^6.3.2",
     "@tsconfig/node20": "^20.1.10",
     "@types/iobroker": "npm:@iobroker/types@^7.2.5",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.19.43",
     "rimraf": "^6.1.4",
     "source-map-support": "^0.5.21",
