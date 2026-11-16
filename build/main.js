@@ -201,8 +201,9 @@ class Alarmclock extends utils.Adapter {
    */
   checkWeekday(alert) {
     this.log.debug(`checkWeekday(${alert.toLocaleString()})`);
-    this.calcDateWithTime(alert, this.alarmStates[alert.getDay()]);
-    this.log.debug(`The alert date is ${alert.toLocaleDateString()}, time: ${this.alarmStates[alert.getDay()]}`);
+    const id = (alert.getDay() + 6) % 7;
+    this.calcDateWithTime(alert, this.alarmStates[id]);
+    this.log.debug(`The alert date is ${alert.toLocaleDateString()}, time: ${this.alarmStates[id]}`);
   }
   /**
    * Überprüfung den Urlaubskalender.
@@ -406,6 +407,7 @@ class Alarmclock extends utils.Adapter {
       const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 6e4);
       await this.setState(`statistics.wakeDelay`, wakeDelay, true);
     }
+    this.alarmStartTime = null;
     await this.setState(`runtime.active`, false, true);
     this.setAlarmState(import_constants.STATE.STOPPED);
   }
@@ -494,7 +496,8 @@ class Alarmclock extends utils.Adapter {
    */
   async checkStateUpdateNewAlarmTime(id, state) {
     var _a;
-    if (id < 0 && id > 8) {
+    this.log.debug(`checkStateUpdateNewAlarmTime(${id}, ${JSON.stringify(state)})`);
+    if (id < 0 || id > 8) {
       throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
     }
     const days = [
@@ -528,7 +531,7 @@ class Alarmclock extends utils.Adapter {
   async readAlarmTime(id) {
     var _a;
     this.log.debug(`readAlarmTime(${id})`);
-    if (id < 0 && id > 8) {
+    if (id < 0 || id > 8) {
       throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
     }
     const days = [

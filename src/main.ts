@@ -237,8 +237,9 @@ class Alarmclock extends utils.Adapter {
     private checkWeekday(alert: Date): void {
         this.log.debug(`checkWeekday(${alert.toLocaleString()})`);
 
-        this.calcDateWithTime(alert, this.alarmStates[alert.getDay()]);
-        this.log.debug(`The alert date is ${alert.toLocaleDateString()}, time: ${this.alarmStates[alert.getDay()]}`);
+        const id = (alert.getDay() + 6) % 7;
+        this.calcDateWithTime(alert, this.alarmStates[id]);
+        this.log.debug(`The alert date is ${alert.toLocaleDateString()}, time: ${this.alarmStates[id]}`);
     }
 
     /**
@@ -488,6 +489,7 @@ class Alarmclock extends utils.Adapter {
             await this.setState(`statistics.wakeDelay`, wakeDelay, true);
         }
 
+        this.alarmStartTime = null;
         await this.setState(`runtime.active`, false, true);
         this.setAlarmState(STATE.STOPPED);
     }
@@ -604,7 +606,9 @@ class Alarmclock extends utils.Adapter {
      * @throws {Error} Wenn die Alarm-ID ungültig ist.
      */
     private async checkStateUpdateNewAlarmTime(id: number, state: ioBroker.State): Promise<void> {
-        if (id < 0 && id > 8) {
+        this.log.debug(`checkStateUpdateNewAlarmTime(${id}, ${JSON.stringify(state)})`);
+
+        if (id < 0 || id > 8) {
             throw new Error(`Ungültige Alarm-ID: ${id}`);
         }
 
@@ -641,7 +645,7 @@ class Alarmclock extends utils.Adapter {
     private async readAlarmTime(id: number): Promise<void> {
         this.log.debug(`readAlarmTime(${id})`);
 
-        if (id < 0 && id > 8) {
+        if (id < 0 || id > 8) {
             throw new Error(`Ungültige Alarm-ID: ${id}`);
         }
 
