@@ -104,6 +104,7 @@ class Alarmclock extends utils.Adapter {
         await this.updateCountdowns();
         await this.updateSunrise(true);
 
+        // Überprüfe der Konfiguration der Länge der Historie der Aufwachverzögerung
         if (!this.config.maxWakeDelayHistory || this.config.maxWakeDelayHistory < 7) {
             this.config.maxWakeDelayHistory = 30;
         }
@@ -118,6 +119,7 @@ class Alarmclock extends utils.Adapter {
         this.log.debug("updateCountdowns()");
         const now = new Date();
 
+        // Berechnen der Laufzeit bis zum Alarm
         const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
         if (nextAlarm && nextAlarm?.val != null && nextAlarm?.val !== "") {
             let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
@@ -129,6 +131,7 @@ class Alarmclock extends utils.Adapter {
             await this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 60000), true);
         }
 
+        // Berechnen der Laufzeit bis zum Voralarm
         const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
         if (nextPreAlarm && nextPreAlarm?.val != null && nextPreAlarm?.val !== "") {
             let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
@@ -140,6 +143,7 @@ class Alarmclock extends utils.Adapter {
             await this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 60000), true);
         }
 
+        // Berechnen der Laufzeit bis Ende der Schlummerfunktion
         const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
         if (snoozeUntil && snoozeUntil?.val != null && snoozeUntil?.val !== "") {
             let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
@@ -204,6 +208,7 @@ class Alarmclock extends utils.Adapter {
             await this.checkHolidayEvents(alarm, true);
             await this.checkAppointmentEvents(alarm);
 
+            // Alarm ist kleiner als Jetzt
             if (alarm < now) {
                 this.log.debug("Alarm is lower then now. Running calc of tomorrow");
 
@@ -217,6 +222,7 @@ class Alarmclock extends utils.Adapter {
 
             this.log.info(`Set new alarm: ${alarm.toLocaleString()}`);
 
+            // Berechnung des Voralarms
             const pre = new Date(alarm);
             const preAlarmMinutes = Number(
                 (await this.getStateAsync(`${this.namespace}.config.preAlarmMinutes`))?.val || 0,
@@ -271,10 +277,10 @@ class Alarmclock extends utils.Adapter {
                     key = "events.1";
                 }
 
-                const stateId = `${this.config.vacationInstance}.${key}.${event.name}`;
-                this.log.debug(`vacation check: ${stateId}`);
-
-                const vacationState = await this.getForeignStateAsync(stateId);
+                // Einlesen des Event-Status
+                const vacationState = await this.getForeignStateAsync(
+                    `${this.config.vacationInstance}.${key}.${event.name}`,
+                );
                 this.log.debug(`vacation check result: ${JSON.stringify(vacationState)}`);
 
                 if (vacationState?.val === true) {
@@ -495,6 +501,7 @@ class Alarmclock extends utils.Adapter {
             await this.setState("statistics.lastWakeup", new Date().toISOString(), true);
 
             let history: number[] = [];
+            // Einlesen der Historie der Aufwachverzögerungen
             const historyState = await this.getStateAsync("statistics.wakeDelayHistory");
             if (historyState?.val) {
                 try {
@@ -510,6 +517,7 @@ class Alarmclock extends utils.Adapter {
                 }
             }
 
+            // Letzte Zeit hinzufügen und die Historie auf die Konfigurierte Länge kürzen
             history.push(wakeDelay);
             while (history.length > this.config.maxWakeDelayHistory) {
                 history.shift();
@@ -563,6 +571,7 @@ class Alarmclock extends utils.Adapter {
             const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
             const skip = (await this.getStateAsync("action.skipNext"))?.val === true;
 
+            // Die Schlummerzeit abgelaufen
             if (
                 state?.val === STATE.SNOOZE &&
                 snoozeUntil?.val &&
@@ -573,6 +582,7 @@ class Alarmclock extends utils.Adapter {
                 return;
             }
 
+            // Die Voralarmzeit ist erreicht
             if (
                 state?.val === STATE.ARMED &&
                 nextPreAlarm?.val &&
@@ -583,6 +593,7 @@ class Alarmclock extends utils.Adapter {
                 return;
             }
 
+            // Die Alarmzeit ist erreicht
             if (
                 (state?.val === STATE.ARMED || state?.val === STATE.PREALARM) &&
                 nextAlarm?.val &&
@@ -624,6 +635,7 @@ class Alarmclock extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
+            // Löschen der benutzten Timer
             this.clearInterval(this.updateCountdownsInterval);
             this.clearInterval(this.updateSunriseInterval);
             this.clearInterval(this.evaluateStateInterval);
@@ -645,10 +657,12 @@ class Alarmclock extends utils.Adapter {
     private async checkStateUpdateNewAlarmTime(id: number, state: ioBroker.State): Promise<void> {
         this.log.debug(`checkStateUpdateNewAlarmTime(${id}, ${JSON.stringify(state)})`);
 
+        // Prüfung der Alarm-ID
         if (id < 0 || id > 8) {
             throw new Error(`Ungültige Alarm-ID: ${id}`);
         }
 
+        // Liste der Namen der Objekte für die Weckzeit
         const days = [
             "monday",
             "tuesday",
@@ -682,10 +696,12 @@ class Alarmclock extends utils.Adapter {
     private async readAlarmTime(id: number): Promise<void> {
         this.log.debug(`readAlarmTime(${id})`);
 
+        // Prüfung der Alarm-ID
         if (id < 0 || id > 8) {
             throw new Error(`Ungültige Alarm-ID: ${id}`);
         }
 
+        // Liste der Namen der Objekte für die Weckzeit
         const days = [
             "monday",
             "tuesday",

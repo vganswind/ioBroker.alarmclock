@@ -226,9 +226,9 @@ class Alarmclock extends utils.Adapter {
         if (!today) {
           key = "events.1";
         }
-        const stateId = `${this.config.vacationInstance}.${key}.${event.name}`;
-        this.log.debug(`vacation check: ${stateId}`);
-        const vacationState = await this.getForeignStateAsync(stateId);
+        const vacationState = await this.getForeignStateAsync(
+          `${this.config.vacationInstance}.${key}.${event.name}`
+        );
         this.log.debug(`vacation check result: ${JSON.stringify(vacationState)}`);
         if ((vacationState == null ? void 0 : vacationState.val) === true) {
           this.log.debug(`Vacation event '${event.name}' active`);

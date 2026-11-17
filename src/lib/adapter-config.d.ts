@@ -25,7 +25,7 @@ declare global {
                 /** Der Termin ist aktiviert */
                 enabled: boolean;
             }[];
-            0;
+            // Länge der Historie der Aufwachverzögerung
             maxWakeDelayHistory: number;
         }
     }
