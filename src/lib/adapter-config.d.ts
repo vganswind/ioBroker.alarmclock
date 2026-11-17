@@ -26,6 +26,7 @@ declare global {
                 enabled: boolean;
             }[];
             0;
+            maxWakeDelayHistory: number;
         }
     }
 }

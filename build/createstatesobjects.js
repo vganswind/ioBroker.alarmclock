@@ -532,12 +532,12 @@ async function createStatesObjects(adapter) {
     },
     native: {}
   });
-  await adapter.setObjectNotExistsAsync("statistics.wakeDelay", {
+  await adapter.setObjectNotExistsAsync("statistics.lastWakeDelay", {
     type: "state",
     common: {
       name: {
-        de: "Aufwachverz\xF6gerung",
-        en: "Wake delay"
+        de: "Letzte Aufwachverz\xF6gerung",
+        en: "Last wake-up delay"
       },
       type: "number",
       role: "value",
@@ -545,6 +545,69 @@ async function createStatesObjects(adapter) {
       write: false,
       def: 0,
       unit: "minutes"
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("statistics.averageWakeDelay", {
+    type: "state",
+    common: {
+      name: {
+        de: "Durchschnittliche Aufwachverz\xF6gerung",
+        en: "Average wake-up delay"
+      },
+      type: "number",
+      role: "value",
+      read: true,
+      write: false,
+      def: 0,
+      unit: "minutes"
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("statistics.bestWakeDelay", {
+    type: "state",
+    common: {
+      name: {
+        de: "Beste Aufwachverz\xF6gerung",
+        en: "Best wake-up delay"
+      },
+      type: "number",
+      role: "value",
+      read: true,
+      write: false,
+      def: 0,
+      unit: "minutes"
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("statistics.worstWakeDelay", {
+    type: "state",
+    common: {
+      name: {
+        de: "Schlechteste Aufwachverz\xF6gerung",
+        en: "Worst wake-up delay"
+      },
+      type: "number",
+      role: "value",
+      read: true,
+      write: false,
+      def: 0,
+      unit: "minutes"
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("statistics.wakeDelayHistory", {
+    type: "state",
+    common: {
+      name: {
+        de: "Historie der Aufwachverz\xF6gerungen",
+        en: "History of wake-up delays"
+      },
+      type: "string",
+      role: "json",
+      read: true,
+      write: false,
+      def: ""
     },
     native: {}
   });

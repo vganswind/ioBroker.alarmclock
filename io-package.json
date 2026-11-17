@@ -86,8 +86,7 @@
         ]
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "maxWakeDelayHistory": 30
     },
     "objects": [],
     "instanceObjects": []

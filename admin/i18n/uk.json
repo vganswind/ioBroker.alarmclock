@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "Виберіть джерело iCal",
     "The name of the appointment to be checked": "Назва події, яку потрібно перевірити",
-    "Active?": "активно?"
+    "Active?": "активно?",
+
+    "Other settings": "Інші налаштування",
+    "Here you can configure other settings for the alarm clock.": "Тут ви можете налаштувати інші параметри будильника.",
+    "Maximum number of days for the wake-up delay history": "Максимальна кількість днів для історії затримки пробудження"
 }

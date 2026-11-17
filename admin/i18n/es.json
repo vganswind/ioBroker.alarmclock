@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "Elektu la iCal-fonton",
     "The name of the appointment to be checked": "La nomo de la kontrolenda evento",
-    "Active?": "aktiva?"
+    "Active?": "aktiva?",
+
+    "Other settings": "Otros ajustes",
+    "Here you can configure other settings for the alarm clock.": "Aquí puedes configurar otros ajustes para el despertador.",
+    "Maximum number of days for the wake-up delay history": "Número máximo de días para el historial de retraso de la alarma"
 }

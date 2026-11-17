@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "Selecteer de iCal-instantie",
     "The name of the appointment to be checked": "De naam van de afspraak die gecontroleerd moet worden",
-    "Active?": "actief?"
+    "Active?": "actief?",
+
+    "Other settings": "Overige instellingen",
+    "Here you can configure other settings for the alarm clock.": "Hier kunt u andere instellingen voor de wekker configureren.",
+    "Maximum number of days for the wake-up delay history": "Maximaal aantal dagen voor de geschiedenis van de wekvertraging"
 }

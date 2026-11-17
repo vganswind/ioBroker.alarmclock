@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "Wybierz instancję iCal",
     "The name of the appointment to be checked": "Nazwa wydarzenia, które ma być sprawdzane",
-    "Active?": "aktywne?"
+    "Active?": "aktywne?",
+
+    "Other settings": "Inne ustawienia",
+    "Here you can configure other settings for the alarm clock.": "Tutaj możesz skonfigurować inne ustawienia budzika.",
+    "Maximum number of days for the wake-up delay history": "Maksymalna liczba dni dla historii opóźnień wybudzania"
 }

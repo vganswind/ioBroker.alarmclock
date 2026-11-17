@@ -102,6 +102,27 @@
                 }
             ],
             "default": []
+        },
+        "otherHeading": {
+            "type": "header",
+            "text": "Other settings",
+            "size": 4
+        },
+        "otherInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure other settings for the alarm clock."
+        },
+        "maxWakeDelayHistory": {
+            "type": "number",
+            "xs": 12,
+            "sm": 12,
+            "md": 4,
+            "lg": 4,
+            "label": "Max Wake-up delay history",
+            "tooltip": "Maximum number of entries in the wake-up delay history",
+            "min": 7,
+            "max": 3650,
+            "step": 1
         }
     }
 }

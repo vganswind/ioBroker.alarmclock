@@ -551,12 +551,12 @@ export async function createStatesObjects(adapter: any): Promise<void> {
         native: {},
     });
 
-    await adapter.setObjectNotExistsAsync("statistics.wakeDelay", {
+    await adapter.setObjectNotExistsAsync("statistics.lastWakeDelay", {
         type: "state",
         common: {
             name: {
-                de: "Aufwachverzögerung",
-                en: "Wake delay",
+                de: "Letzte Aufwachverzögerung",
+                en: "Last wake-up delay",
             },
             type: "number",
             role: "value",
@@ -564,6 +564,73 @@ export async function createStatesObjects(adapter: any): Promise<void> {
             write: false,
             def: 0,
             unit: "minutes",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("statistics.averageWakeDelay", {
+        type: "state",
+        common: {
+            name: {
+                de: "Durchschnittliche Aufwachverzögerung",
+                en: "Average wake-up delay",
+            },
+            type: "number",
+            role: "value",
+            read: true,
+            write: false,
+            def: 0,
+            unit: "minutes",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("statistics.bestWakeDelay", {
+        type: "state",
+        common: {
+            name: {
+                de: "Beste Aufwachverzögerung",
+                en: "Best wake-up delay",
+            },
+            type: "number",
+            role: "value",
+            read: true,
+            write: false,
+            def: 0,
+            unit: "minutes",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("statistics.worstWakeDelay", {
+        type: "state",
+        common: {
+            name: {
+                de: "Schlechteste Aufwachverzögerung",
+                en: "Worst wake-up delay",
+            },
+            type: "number",
+            role: "value",
+            read: true,
+            write: false,
+            def: 0,
+            unit: "minutes",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("statistics.wakeDelayHistory", {
+        type: "state",
+        common: {
+            name: {
+                de: "Historie der Aufwachverzögerungen",
+                en: "History of wake-up delays",
+            },
+            type: "string",
+            role: "json",
+            read: true,
+            write: false,
+            def: "",
         },
         native: {},
     });

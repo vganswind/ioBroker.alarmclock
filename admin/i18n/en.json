@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "Select the iCal instance",
     "The name of the appointment to be checked": "The name of the appointment to be checked",
-    "Active?": "active?"
+    "Active?": "active?",
+
+    "Other settings": "Other settings",
+    "Here you can configure other settings for the alarm clock.": "Here you can configure other settings for the alarm clock.",
+    "Max Wake-up delay history": "Max wake-up delay history (days)"
 }

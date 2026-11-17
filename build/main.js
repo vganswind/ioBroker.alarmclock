@@ -89,6 +89,9 @@ class Alarmclock extends utils.Adapter {
     await this.checkNewAlarmTime("onReady");
     await this.updateCountdowns();
     await this.updateSunrise(true);
+    if (!this.config.maxWakeDelayHistory || this.config.maxWakeDelayHistory < 7) {
+      this.config.maxWakeDelayHistory = 30;
+    }
     this.log.info("Adapter is ready and running.");
   }
   /**
@@ -408,7 +411,31 @@ class Alarmclock extends utils.Adapter {
     if (this.alarmStartTime) {
       const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 6e4);
       await this.setState("statistics.lastWakeup", (/* @__PURE__ */ new Date()).toISOString(), true);
-      await this.setState(`statistics.wakeDelay`, wakeDelay, true);
+      let history = [];
+      const historyState = await this.getStateAsync("statistics.wakeDelayHistory");
+      if (historyState == null ? void 0 : historyState.val) {
+        try {
+          history = JSON.parse(historyState.val.toString());
+          if (!Array.isArray(history)) {
+            history = [];
+          }
+          history = history.filter((value) => typeof value === "number" && value >= 0);
+        } catch {
+          history = [];
+        }
+      }
+      history.push(wakeDelay);
+      while (history.length > this.config.maxWakeDelayHistory) {
+        history.shift();
+      }
+      const averageWakeDelay = history.reduce((a, b) => a + b, 0) / history.length;
+      const bestWakeDelay = history.reduce((min, value) => Math.min(min, value), Number.MAX_SAFE_INTEGER);
+      const worstWakeDelay = history.reduce((max, value) => Math.max(max, value), 0);
+      await this.setState(`statistics.wakeDelayHistory`, JSON.stringify(history), true);
+      await this.setState(`statistics.averageWakeDelay`, averageWakeDelay, true);
+      await this.setState(`statistics.lastWakeDelay`, wakeDelay, true);
+      await this.setState(`statistics.bestWakeDelay`, bestWakeDelay, true);
+      await this.setState(`statistics.worstWakeDelay`, worstWakeDelay, true);
     }
     this.alarmStartTime = null;
     await this.setState(`runtime.active`, false, true);

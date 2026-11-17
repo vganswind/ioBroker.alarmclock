@@ -18,5 +18,9 @@
 
     "Select the iCal instance": "选择 iCal 实例",
     "The name of the appointment to be checked": "要检查的日程名称",
-    "Active?": "是否启用？"
+    "Active?": "是否启用？",
+
+    "Other settings": "其他设置",
+    "Here you can configure other settings for the alarm clock.": "您可以在这里配置闹钟的其他设置。",
+    "Maximum number of days for the wake-up delay history": "最长起床延迟记录天数"
 }
