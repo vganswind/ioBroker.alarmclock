@@ -355,6 +355,7 @@ class Alarmclock extends utils.Adapter {
       case import_constants.STATE.DISABLED:
         break;
       case import_constants.STATE.ARMED:
+        await this.checkNewAlarmTime("STATE.ARMED");
         await this.updateCountdowns();
         break;
       case import_constants.STATE.PREALARM:

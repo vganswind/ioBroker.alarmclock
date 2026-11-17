@@ -426,6 +426,7 @@ class Alarmclock extends utils.Adapter {
             case STATE.DISABLED:
                 break;
             case STATE.ARMED:
+                await this.checkNewAlarmTime("STATE.ARMED");
                 await this.updateCountdowns();
                 break;
             case STATE.PREALARM:
