@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "alarmclock",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "news": {
+            "0.0.2": {
+                "en": "Second version",
+                "de": "Zweite Version",
+                "ru": "Вторая версия",
+                "pt": "Segunda versão",
+                "nl": "Tweede versie",
+                "fr": "Deuxième version",
+                "it": "Seconda versione",
+                "es": "Segunda versión",
+                "pl": "Druga wersja",
+                "uk": "Друга версія",
+                "zh-cn": "第二版"
+            },
             "0.0.1": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",

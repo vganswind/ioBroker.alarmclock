@@ -169,7 +169,11 @@ Alle Uhrzeiten sind im Format HH:mm
     ### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.0.2 (2026-11-18)
+
+- (Volker Ganswind) Second version
+
+### 0.0.1 (2026-11-17)
 
 - (Volker Ganswind) initial release
 
