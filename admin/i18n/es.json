@@ -22,5 +22,5 @@
 
     "Other settings": "Otros ajustes",
     "Here you can configure other settings for the alarm clock.": "Aquí puedes configurar otros ajustes para el despertador.",
-    "Maximum number of days for the wake-up delay history": "Número máximo de días para el historial de retraso de la alarma"
+    "Maximum number of entries in the wake-up delay history": "Número máximo de entradas en el historial de retardo de activación"
 }

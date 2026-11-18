@@ -9,13 +9,21 @@
         },
         "holidayInfoText": {
             "type": "staticText",
-            "label": "Here you can configure the settings for the holiday calendar of the alarm clock."
+            "label": "Here you can configure the settings for the holiday calendar of the alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
         "holidayInstance": {
             "type": "instance",
             "newLine": true,
             "xs": 12,
-            "sm": 6,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
             "label": "Select the holidays instance",
             "adapter": "feiertage",
             "tooltip": "Select the instance that contains the holiday data.",
@@ -28,21 +36,34 @@
         },
         "vacationInfoText": {
             "type": "staticText",
-            "label": "Here you can configure the settings for the vacation calendar of the alarm clock."
+            "label": "Here you can configure the settings for the vacation calendar of the alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
         "vacationInstance": {
             "type": "instance",
             "newLine": true,
             "xs": 12,
-            "sm": 6,
-            "label": "Select the vacation calendar instance",
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
+            "label": "Select the iCal instance",
             "adapter": "ical",
             "tooltip": "Select the instance that contains the vacation calendar data.",
             "default": ""
         },
         "vacationEvents": {
             "type": "table",
-            "xs": 7,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 10,
+            "lg": 7,
+            "xl": 7,
             "label": "The name of the appointment to be checked",
             "noDelete": false,
             "items": [
@@ -69,13 +90,21 @@
         },
         "appointmentInfoText": {
             "type": "staticText",
-            "label": "Here you can configure the settings for the appointment calendar of the alarm clock."
+            "label": "Here you can configure the settings for the appointment calendar of the alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
         "appointmentInstance": {
             "type": "instance",
             "newLine": true,
             "xs": 12,
-            "sm": 6,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
             "label": "Select the iCal instance",
             "adapter": "ical",
             "tooltip": "Select the instance that contains the wake-up times.",
@@ -83,7 +112,12 @@
         },
         "appointmentEvents": {
             "type": "table",
-            "xs": 7,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 10,
+            "lg": 7,
+            "xl": 7,
             "label": "The name of the appointment to be checked",
             "noDelete": false,
             "items": [
@@ -110,14 +144,21 @@
         },
         "otherInfoText": {
             "type": "staticText",
-            "label": "Here you can configure other settings for the alarm clock."
+            "label": "Here you can configure other settings for the alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
         "maxWakeDelayHistory": {
             "type": "number",
+            "newLine": true,
             "xs": 12,
             "sm": 12,
             "md": 4,
             "lg": 4,
+            "xl": 3,
             "label": "Max Wake-up delay history",
             "tooltip": "Maximum number of entries in the wake-up delay history",
             "min": 7,

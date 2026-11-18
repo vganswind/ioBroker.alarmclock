@@ -22,5 +22,5 @@
 
     "Other settings": "Інші налаштування",
     "Here you can configure other settings for the alarm clock.": "Тут ви можете налаштувати інші параметри будильника.",
-    "Maximum number of days for the wake-up delay history": "Максимальна кількість днів для історії затримки пробудження"
+    "Maximum number of entries in the wake-up delay history": "Максимальна кількість записів в історії затримки пробудження"
 }
