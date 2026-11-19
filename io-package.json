@@ -1,109 +1,131 @@
 {
-    "common": {
-        "name": "alarmclock",
-        "version": "0.0.3",
-        "news": {
-            "0.0.3": {
-                "en": "Formatted remaining time added",
-                "de": "Formatierte Restzeit hinzugefügt",
-                "ru": "Добавлено отформатированное оставшееся время",
-                "pt": "Tempo restante formatado",
-                "nl": "Geformatteerde resterende tijd toegevoegd",
-                "fr": "Temps restant formaté ajouté",
-                "it": "Tempo residuo formattato",
-                "es": "Tiempo restante formateado añadido",
-                "pl": "Dodano sformatowany pozostały czas",
-                "uk": "Додано відформатований час, що залишився",
-                "zh-cn": "已添加格式化剩余时间"
-            },
-            "0.0.2": {
-                "en": "Second version",
-                "de": "Zweite Version",
-                "ru": "Вторая версия",
-                "pt": "Segunda versão",
-                "nl": "Tweede versie",
-                "fr": "Deuxième version",
-                "it": "Seconda versione",
-                "es": "Segunda versión",
-                "pl": "Druga wersja",
-                "uk": "Друга версія",
-                "zh-cn": "第二版"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "AlarmClock",
-            "de": "Wecker",
-            "ru": "БудильникЧасы",
-            "pt": "Despertador",
-            "nl": "Wekker",
-            "fr": "Réveil",
-            "it": "Sveglia",
-            "es": "Despertador",
-            "pl": "Budzik",
-            "uk": "Будильник",
-            "zh-cn": "闹钟"
-        },
-        "desc": {
-            "en": "Adapter to setup an Alarmclock",
-            "de": "Adapter zum Einstellen eines Weckers",
-            "ru": "Адаптер для настройки будильника",
-            "pt": "Adaptador para configurar um despertador",
-            "nl": "Adapter voor het instellen van een wekker",
-            "fr": "Adaptateur pour régler un réveil",
-            "it": "Adattatore per impostare una sveglia",
-            "es": "Adaptador para configurar un reloj despertador",
-            "pl": "Adapter do konfiguracji budzika",
-            "uk": "Адаптер для налаштування будильника",
-            "zh-cn": "用于设置闹钟的适配器"
-        },
-        "authors": ["Volker Ganswind <volker@ganswind.de>"],
-        "keywords": ["alarm", "calendar", "holiday", "vacation", "appointment", "wake-up"],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "alarmclock.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/vganswind/ioBroker.alarmclock/main/admin/alarmclock.png",
-        "readme": "https://github.com/vganswind/ioBroker.alarmclock/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "alarm",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.6.20"
-            }
-        ]
+  "common": {
+    "name": "alarmclock",
+    "version": "0.0.4",
+    "news": {
+      "0.0.4": {
+        "en": "Sentry deaktiviert",
+        "de": "Sentry deaktiviert",
+        "ru": "Часовой деактивирован",
+        "pt": "Sentry desativado",
+        "nl": "Sentry is gedeactiveerd",
+        "fr": "Sentry désactivé",
+        "it": "Sentry disattivato",
+        "es": "Sentry desactivado",
+        "pl": "Sentry wyłączony",
+        "uk": "Сентрі вимкнено",
+        "zh-cn": "Sentry 已停用"
+      },
+      "0.0.3": {
+        "en": "Formatted remaining time added",
+        "de": "Formatierte Restzeit hinzugefügt",
+        "ru": "Добавлено отформатированное оставшееся время",
+        "pt": "Tempo restante formatado",
+        "nl": "Geformatteerde resterende tijd toegevoegd",
+        "fr": "Temps restant formaté ajouté",
+        "it": "Tempo residuo formattato",
+        "es": "Tiempo restante formateado añadido",
+        "pl": "Dodano sformatowany pozostały czas",
+        "uk": "Додано відформатований час, що залишився",
+        "zh-cn": "已添加格式化剩余时间"
+      },
+      "0.0.2": {
+        "en": "Second version",
+        "de": "Zweite Version",
+        "ru": "Вторая версия",
+        "pt": "Segunda versão",
+        "nl": "Tweede versie",
+        "fr": "Deuxième version",
+        "it": "Seconda versione",
+        "es": "Segunda versión",
+        "pl": "Druga wersja",
+        "uk": "Друга версія",
+        "zh-cn": "第二版"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "maxWakeDelayHistory": 30
+    "titleLang": {
+      "en": "AlarmClock",
+      "de": "Wecker",
+      "ru": "БудильникЧасы",
+      "pt": "Despertador",
+      "nl": "Wekker",
+      "fr": "Réveil",
+      "it": "Sveglia",
+      "es": "Despertador",
+      "pl": "Budzik",
+      "uk": "Будильник",
+      "zh-cn": "闹钟"
     },
-    "objects": [],
-    "instanceObjects": []
+    "desc": {
+      "en": "Adapter to setup an Alarmclock",
+      "de": "Adapter zum Einstellen eines Weckers",
+      "ru": "Адаптер для настройки будильника",
+      "pt": "Adaptador para configurar um despertador",
+      "nl": "Adapter voor het instellen van een wekker",
+      "fr": "Adaptateur pour régler un réveil",
+      "it": "Adattatore per impostare una sveglia",
+      "es": "Adaptador para configurar un reloj despertador",
+      "pl": "Adapter do konfiguracji budzika",
+      "uk": "Адаптер для налаштування будильника",
+      "zh-cn": "用于设置闹钟的适配器"
+    },
+    "authors": [
+      "Volker Ganswind <volker@ganswind.de>"
+    ],
+    "keywords": [
+      "alarm",
+      "calendar",
+      "holiday",
+      "vacation",
+      "appointment",
+      "wake-up"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "alarmclock.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/vganswind/ioBroker.alarmclock/main/admin/alarmclock.png",
+    "readme": "https://github.com/vganswind/ioBroker.alarmclock/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "alarm",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.20"
+      }
+    ]
+  },
+  "native": {
+    "maxWakeDelayHistory": 30
+  },
+  "objects": [],
+  "instanceObjects": []
 }
