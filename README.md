@@ -168,6 +168,10 @@ All times are in HH:mm format
     ### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+- (Volker Ganswind) Formatted remaining time added
+
 ### 0.0.2 (2026-11-18)
 
 - (Volker Ganswind) Second version
