@@ -22,5 +22,6 @@
 
     "Other settings": "Autres paramètres",
     "Here you can configure other settings for the alarm clock.": "Ici, vous pouvez configurer d'autres paramètres du réveil.",
+    "Progression of wake-up delays": "Progression des retards au réveil",
     "Maximum number of entries in the wake-up delay history": "Nombre maximal d'entrées dans l'historique du délai de réveil"
 }

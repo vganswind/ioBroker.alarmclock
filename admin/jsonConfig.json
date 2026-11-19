@@ -159,7 +159,7 @@
             "md": 4,
             "lg": 4,
             "xl": 3,
-            "label": "Max Wake-up delay history",
+            "label": "Progression of wake-up delays",
             "tooltip": "Maximum number of entries in the wake-up delay history",
             "min": 7,
             "max": 3650,

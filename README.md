@@ -13,7 +13,7 @@
 
 ## alarmclock adapter for ioBroker
 
-Ein Adapter für die Einrichtung eines Weckers
+An adapter for setting up an alarm clock.
 
 ## Installation
 
@@ -23,16 +23,16 @@ Please use the "adapter list" in ioBroker to install a stable version of this ad
 iobroker add alarmclock
 ```
 
-## Dokumentation
+## Documentation
 
-Die Reihenfolge der Weckzeiten, das letzte gewinnt:
+The order of precedence for alarm times (the last one applied takes priority):
 
-1. Tageszeit
-2. Urlaub
-3. Feiertage
-4. Termine
+1. Time of day
+2. Vacation
+3. Public holidays
+4. Appointments
 
-Der Ablauf des Weckers
+The Alarm clock workflow:
 
 ```plain
        IDLE
@@ -48,119 +48,118 @@ Der Ablauf des Weckers
 STOPPED   SNOOZE ─────┘
     │
     ▼
-  IDLE (nächster Tag)
+  IDLE (next day)
 ```
 
-### Die Adapter Konfiguration
+### Adapter configuration
 
-Die Konfiguration des Adapters
+Configuring the adapter
 
-#### Feiertagskalender
+#### Public holiday calendar
 
-Hier kann die Instanz des feiertage-Adapter gewählt werden.
-Dieser wird dann für die Überprüfung des Feiertag-Alarms genutzt.
+Here you can select the instance of the "feiertage" (public holidays) adapter.
+This is then used to check for the holiday alarm.
 
-#### Urlaubskalender
+#### Vacation calendar
 
-Hier kann die Instanz des iCal-Adapter gewählt werden.
-Dieser wird für Termine für die Prüfung des Urlaub-Alarms genutzt.
+Here, you can select the iCal adapter instance.
+This is used to check for calendar events that trigger the vacation alarm.
 
-Über die Liste wird gesteuert auf welche Termine reagiert werden soll.
+The list determines which events should be acted upon.
+e.g., vacation, time off, sick leave, etc.
 
-z.B.: Urlaub, Rückfeier, Krankenschein ...
+#### Wake-up time calendar
 
-#### Weckzeiten-Kalender
+Here, you can select the iCal adapter instance.
+This is used to check for calendar events that define the wake-up time.
 
-Hier kann die Instanz des iCal-Adapter gewählt werden.
-Dieser wird für Termine für die Weckzeit genutzt.
+The start time of the event is set as the wake-up time.
 
-Die Startzeit des Termins wird dann als Weckzeit eingestellt.
+The list determines which events should be acted upon.
 
-Über die Liste wird gesteuert auf welche Termine reagiert werden soll.
+e.g., alarm, wake-up call, etc.
 
-z.B.: Wecker, Alarm ...
+#### Miscellaneous
 
-#### Sonstiges
+Here, you can set the duration of the wake-up delay history.
 
-Hier kann die Länge des Verlaufs der Aufwachverzögerung eingestellt werden.
-
-### Objekte
+### Objects
 
 #### Actions
 
-| Name   | Funktion        |
-| ------ | --------------- |
-| snooze | Alarm Pausieren |
-| stop   | Alarm Stoppen   |
+| Name   | Function    |
+| ------ | ----------- |
+| snooze | Pause alarm |
+| stop   | Stop alarm  |
 
-#### Konfiguration
+#### Configuration
 
-| Name            | Funktion                    | Default    |
-| --------------- | --------------------------- | ---------- |
-| enabled         | Alarm Aktiviert             | false      |
-| preAlarmMinutes | Voralarmzeit in Minuten     | 20 Minuten |
-| skipNext        | Nächster Alarm überspringen | false      |
-| snoozeMinutes   | Schlummerzeit in Minuten    | 10 Minuten |
+| Name            | Function                   | Default    |
+| --------------- | -------------------------- | ---------- |
+| enabled         | Alarm enabled              | false      |
+| preAlarmMinutes | Pre-alarm time in minutes  | 20 minutes |
+| skipNext        | Skip next alarm            | false      |
+| snoozeMinutes   | Snooze duration in minutes | 10 minutes |
 
-#### Laufzeitwerte
+#### Runtime Values
 
-countdownPreAlarm, countdownAlarm, countdownSnooze, sunriseBrightness und sunriseProgress werden alle 30 Sekunden aktualisiert.
+`countdownPreAlarm`, `countdownAlarm`, `countdownSnooze`, `sunriseBrightness`, and `sunriseProgress` are updated every 30 seconds.
 
-| Name              | Funktion                                     | Beispiel                 |
+| Name              | Function                                     | Example                  |
 | ----------------- | -------------------------------------------- | ------------------------ |
-| active            | Alarm ist aktiv                              | false                    |
-| countdownAlarm    | Laufzeit bis zum Alarm                       | 512 Minuten              |
-| countdownPreAlarm | Laufzeit bis zum Voralarm                    | 492 Minuten              |
-| countdownSnooze   | Countdown bis zum Ende der Schlummerfunktion | 8 Minuten                |
-| nextAlarm         | Nächster Alarm                               | 2026-11-18T07:00:00.000Z |
-| nextPreAlarm      | Nächster Voralarm                            | 2026-11-18T06:40:00.000Z |
-| snoozeUntil       | Snooze bis                                   | 2026-11-16T18:37:15.554Z |
-| state             | Zustand                                      | ARMED                    |
-| sunriseBrightness | Lichtwecker Helligkeit                       | 21 %                     |
-| sunriseProgress   | Lichtwecker Fortschritt                      | 20,598 %                 |
+| active            | Alarm is active                              | false                    |
+| countdownAlarm    | Time remaining until alarm                   | 512 minutes              |
+| countdownPreAlarm | Time remaining until pre-alarm               | 492 minutes              |
+| countdownSnooze   | Countdown until the end of the snooze period | 8 minutes                |
+| nextAlarm         | Next alarm                                   | 2026-11-18T07:00:00.000Z |
+| nextPreAlarm      | Next pre-alarm                               | 2026-11-18T06:40:00.000Z |
+| snoozeUntil       | Snooze until                                 | 2026-11-16T18:37:15.554Z |
+| state             | State                                        | ARMED                    |
+| sunriseBrightness | Sunrise alarm brightness                     | 21%                      |
+| sunriseProgress   | Sunrise alarm progress                       | 20.598%                  |
 
-Der Zustand des Weckers kann folgende Werte annehmen:
+The state of the alarm clock can take on the following values:
 
-- **DISABLED**: Der Wecker ist deaktiviert
-- **ARMED**: Der Wecker wartet
-- **PREALARM**: Der Wecker ist im Voralarm
-- **TRIGGERED**: Der Wecker hat Ausgelöst
-- **SNOOZE**: Der Wecker ist im Schlummermodus
-- **STOPPED**: Der Wecker ist gestoppt
-- **ERROR**: Fehler
+- **DISABLED**: The alarm clock is disabled
+- **ARMED**: The alarm clock is waiting
+- **PREALARM**: The alarm clock is in the pre-alarm phase
+- **TRIGGERED**: The alarm clock has been triggered
+- **SNOOZE**: The alarm clock is in snooze mode
+- **STOPPED**: The alarm clock has been stopped
+- **ERROR**: Error
 
-#### Die Weckzeiten
+#### Wake-up times
 
-Alle Uhrzeiten sind im Format HH:mm
+All times are in HH:mm format
 
-| Name      | Funktion               | Default |
-| --------- | ---------------------- | ------- |
-| monday    | Weckzeit am Montag     | 06:00   |
-| tuesday   | Weckzeit am Dienstag   | 06:00   |
-| wednesday | Weckzeit am Mittwoch   | 06:00   |
-| thursday  | Weckzeit am Donnerstag | 06:00   |
-| friday    | Weckzeit am Freitag    | 06:00   |
-| saturday  | Weckzeit am Samstag    | 08:00   |
-| sunday    | Weckzeit am Sonntag    | 08:30   |
-| vacation  | Weckzeit im Urlaub     | 10:30   |
-| holiday   | Weckzeit an Feiertagen | 09:30   |
+| Name      | Function                     | Default |
+| --------- | ---------------------------- | ------- |
+| monday    | Wake-up time on monday       | 06:00   |
+| tuesday   | Wake-up time on tuesday      | 06:00   |
+| wednesday | Wake-up time on wednesday    | 06:00   |
+| thursday  | Wake-up time on thursday     | 06:00   |
+| friday    | Wake-up time on friday       | 06:00   |
+| saturday  | Wake-up time on saturday     | 08:00   |
+| sunday    | Wake-up time on sunday       | 08:30   |
+| vacation  | Wake-up time during vacation | 10:30   |
+| holiday   | Wake-up time on holidays     | 09:30   |
 
-#### Statistiken
+#### Statistics
 
-| Name             | Funktion                             |
-| ---------------- | ------------------------------------ |
-| alarmCount       | Anzahl der Alarme                    |
-| preAlarmCount    | Anzahl der Voralarme                 |
-| snoozeCount      | Anzahl der Schlummerzeit             |
-| stopCount        | Anzahl der Stopp-Vorgänge            |
-| errorCount       | Anzahl der Fehler                    |
-| lastWakeDelay    | Letzte Aufwachverzögerung            |
-| averageWakeDelay | Durchschnittliche Aufwachverzögerung |
-| bestWakeDelay    | Beste Aufwachverzögerung             |
-| worstWakeDelay   | Schlechteste Aufwachverzögerung      |
-| wakeDelayHistory | Historie der Aufwachverzögerungen    |
-| lastAlarm        | Letzter Alarm                        |
-| lastWakeup       | Letztes Aufstehen                    |
+| Name             | Function                  |
+| ---------------- | ------------------------- |
+| alarmCount       | Number of alarms          |
+| preAlarmCount    | Number of pre-alarms      |
+| snoozeCount      | Number of times snoozed   |
+| stopCount        | Number of times stopped   |
+| errorCount       | Number of errors          |
+| lastWakeDelay    | Last wake-up delay        |
+| averageWakeDelay | Average wake-up delay     |
+| bestWakeDelay    | Best wake-up delay        |
+| worstWakeDelay   | Worst wake-up delay       |
+| wakeDelayHistory | History of wake-up delays |
+| lastAlarm        | Last alarm                |
+| lastWakeup       | Last wake-up time         |
 
 ## Changelog
 

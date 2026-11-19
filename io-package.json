@@ -57,17 +57,7 @@
             "zh-cn": "用于设置闹钟的适配器"
         },
         "authors": ["Volker Ganswind <volker@ganswind.de>"],
-        "keywords": [
-            "ioBroker",
-            "Smart Home",
-            "home automation",
-            "alarm",
-            "calendar",
-            "holiday",
-            "vacation",
-            "appointment",
-            "wake-up"
-        ],
+        "keywords": ["alarm", "calendar", "holiday", "vacation", "appointment", "wake-up"],
         "licenseInformation": {
             "type": "free",
             "license": "MIT"
