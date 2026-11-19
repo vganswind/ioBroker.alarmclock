@@ -246,6 +246,31 @@ export async function createStatesObjects(adapter: any): Promise<void> {
         native: {},
     });
 
+    await adapter.setObjectNotExistsAsync("runtime.countdownAlarmText", {
+        type: "state",
+        common: {
+            name: {
+                en: "Formatted countdown to the alarm",
+                de: "Formatierter Countdown bis zum Alarm",
+                ru: "Форматированный обратный отсчет до срабатывания будильника",
+                pt: "Contagem regressiva formatada para o alarme",
+                nl: "Opmaak aftelling tot het alarm",
+                fr: "Compte à rebours formaté jusqu'à l'alarme",
+                it: "Conto alla rovescia formattato per la sveglia",
+                es: "Cuenta regresiva formateada para la alarma",
+                pl: "Sformatowane odliczanie do alarmu",
+                uk: "Форматований зворотний відлік до будильника",
+                "zh-cn": "闹钟倒计时（已格式化）",
+            },
+            type: "string",
+            role: "text",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
     await adapter.setObjectNotExistsAsync("runtime.active", {
         type: "state",
         common: {
@@ -297,6 +322,31 @@ export async function createStatesObjects(adapter: any): Promise<void> {
         native: {},
     });
 
+    await adapter.setObjectNotExistsAsync("runtime.countdownPreAlarmText", {
+        type: "state",
+        common: {
+            name: {
+                en: "Formatted countdown to the pre-alarm",
+                de: "Formatierter Countdown bis zum Voralarm",
+                ru: "Форматированный обратный отсчет до срабатывания предварительного сигнала тревоги",
+                pt: "Contagem regressiva formatada para o pré-alarme",
+                nl: "Geformatteerde aftelling naar het vooralarm",
+                fr: "Compte à rebours formaté avant la pré-alarme",
+                it: "Conto alla rovescia formattato per il preallarme",
+                es: "Cuenta regresiva formateada para la prealarma",
+                pl: "Sformatowane odliczanie do alarmu wstępnego",
+                uk: "Форматований зворотний відлік до попереднього сигналу тривоги",
+                "zh-cn": "格式化的预警倒计时",
+            },
+            type: "string",
+            role: "text",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
     await adapter.setObjectNotExistsAsync("runtime.countdownSnooze", {
         type: "state",
         common: {
@@ -319,6 +369,31 @@ export async function createStatesObjects(adapter: any): Promise<void> {
             write: false,
             def: 0,
             unit: "minutes",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("runtime.countdownSnoozeText", {
+        type: "state",
+        common: {
+            name: {
+                en: "Formatted countdown to the end snooze time",
+                de: "Formatierter Countdown bis zum Ende der Schlummerzeit",
+                ru: "Форматированный обратный отсчет до окончания времени отложенного будильника",
+                pt: "Contagem regressiva formatada para o fim do tempo de soneca",
+                nl: "Opgemaakte aftelling tot het einde van de snooze-tijd",
+                fr: "Compte à rebours formaté jusqu'à la fin de la fonction snooze",
+                it: "Conto alla rovescia formattato per la fine del tempo di posticipo",
+                es: "Cuenta regresiva formateada hasta el final del tiempo de posposición",
+                pl: "Sformatowane odliczanie do końca drzemki",
+                uk: "Форматований зворотний відлік до кінця часу повторення будильника",
+                "zh-cn": "格式化的午睡结束倒计时",
+            },
+            type: "string",
+            role: "text",
+            read: true,
+            write: false,
+            def: "",
         },
         native: {},
     });

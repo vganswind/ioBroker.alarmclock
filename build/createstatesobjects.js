@@ -252,6 +252,30 @@ async function createStatesObjects(adapter) {
     },
     native: {}
   });
+  await adapter.setObjectNotExistsAsync("runtime.countdownAlarmText", {
+    type: "state",
+    common: {
+      name: {
+        en: "Formatted countdown to the alarm",
+        de: "Formatierter Countdown bis zum Alarm",
+        ru: "\u0424\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043E\u0431\u0440\u0430\u0442\u043D\u044B\u0439 \u043E\u0442\u0441\u0447\u0435\u0442 \u0434\u043E \u0441\u0440\u0430\u0431\u0430\u0442\u044B\u0432\u0430\u043D\u0438\u044F \u0431\u0443\u0434\u0438\u043B\u044C\u043D\u0438\u043A\u0430",
+        pt: "Contagem regressiva formatada para o alarme",
+        nl: "Opmaak aftelling tot het alarm",
+        fr: "Compte \xE0 rebours format\xE9 jusqu'\xE0 l'alarme",
+        it: "Conto alla rovescia formattato per la sveglia",
+        es: "Cuenta regresiva formateada para la alarma",
+        pl: "Sformatowane odliczanie do alarmu",
+        uk: "\u0424\u043E\u0440\u043C\u0430\u0442\u043E\u0432\u0430\u043D\u0438\u0439 \u0437\u0432\u043E\u0440\u043E\u0442\u043D\u0438\u0439 \u0432\u0456\u0434\u043B\u0456\u043A \u0434\u043E \u0431\u0443\u0434\u0438\u043B\u044C\u043D\u0438\u043A\u0430",
+        "zh-cn": "\u95F9\u949F\u5012\u8BA1\u65F6\uFF08\u5DF2\u683C\u5F0F\u5316\uFF09"
+      },
+      type: "string",
+      role: "text",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
   await adapter.setObjectNotExistsAsync("runtime.active", {
     type: "state",
     common: {
@@ -301,6 +325,30 @@ async function createStatesObjects(adapter) {
     },
     native: {}
   });
+  await adapter.setObjectNotExistsAsync("runtime.countdownPreAlarmText", {
+    type: "state",
+    common: {
+      name: {
+        en: "Formatted countdown to the pre-alarm",
+        de: "Formatierter Countdown bis zum Voralarm",
+        ru: "\u0424\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043E\u0431\u0440\u0430\u0442\u043D\u044B\u0439 \u043E\u0442\u0441\u0447\u0435\u0442 \u0434\u043E \u0441\u0440\u0430\u0431\u0430\u0442\u044B\u0432\u0430\u043D\u0438\u044F \u043F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\u0430\u043B\u0430 \u0442\u0440\u0435\u0432\u043E\u0433\u0438",
+        pt: "Contagem regressiva formatada para o pr\xE9-alarme",
+        nl: "Geformatteerde aftelling naar het vooralarm",
+        fr: "Compte \xE0 rebours format\xE9 avant la pr\xE9-alarme",
+        it: "Conto alla rovescia formattato per il preallarme",
+        es: "Cuenta regresiva formateada para la prealarma",
+        pl: "Sformatowane odliczanie do alarmu wst\u0119pnego",
+        uk: "\u0424\u043E\u0440\u043C\u0430\u0442\u043E\u0432\u0430\u043D\u0438\u0439 \u0437\u0432\u043E\u0440\u043E\u0442\u043D\u0438\u0439 \u0432\u0456\u0434\u043B\u0456\u043A \u0434\u043E \u043F\u043E\u043F\u0435\u0440\u0435\u0434\u043D\u044C\u043E\u0433\u043E \u0441\u0438\u0433\u043D\u0430\u043B\u0443 \u0442\u0440\u0438\u0432\u043E\u0433\u0438",
+        "zh-cn": "\u683C\u5F0F\u5316\u7684\u9884\u8B66\u5012\u8BA1\u65F6"
+      },
+      type: "string",
+      role: "text",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
   await adapter.setObjectNotExistsAsync("runtime.countdownSnooze", {
     type: "state",
     common: {
@@ -323,6 +371,30 @@ async function createStatesObjects(adapter) {
       write: false,
       def: 0,
       unit: "minutes"
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("runtime.countdownSnoozeText", {
+    type: "state",
+    common: {
+      name: {
+        en: "Formatted countdown to the end snooze time",
+        de: "Formatierter Countdown bis zum Ende der Schlummerzeit",
+        ru: "\u0424\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043E\u0431\u0440\u0430\u0442\u043D\u044B\u0439 \u043E\u0442\u0441\u0447\u0435\u0442 \u0434\u043E \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043E\u0442\u043B\u043E\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u0431\u0443\u0434\u0438\u043B\u044C\u043D\u0438\u043A\u0430",
+        pt: "Contagem regressiva formatada para o fim do tempo de soneca",
+        nl: "Opgemaakte aftelling tot het einde van de snooze-tijd",
+        fr: "Compte \xE0 rebours format\xE9 jusqu'\xE0 la fin de la fonction snooze",
+        it: "Conto alla rovescia formattato per la fine del tempo di posticipo",
+        es: "Cuenta regresiva formateada hasta el final del tiempo de posposici\xF3n",
+        pl: "Sformatowane odliczanie do ko\u0144ca drzemki",
+        uk: "\u0424\u043E\u0440\u043C\u0430\u0442\u043E\u0432\u0430\u043D\u0438\u0439 \u0437\u0432\u043E\u0440\u043E\u0442\u043D\u0438\u0439 \u0432\u0456\u0434\u043B\u0456\u043A \u0434\u043E \u043A\u0456\u043D\u0446\u044F \u0447\u0430\u0441\u0443 \u043F\u043E\u0432\u0442\u043E\u0440\u0435\u043D\u043D\u044F \u0431\u0443\u0434\u0438\u043B\u044C\u043D\u0438\u043A\u0430",
+        "zh-cn": "\u683C\u5F0F\u5316\u7684\u5348\u7761\u7ED3\u675F\u5012\u8BA1\u65F6"
+      },
+      type: "string",
+      role: "text",
+      read: true,
+      write: false,
+      def: ""
     },
     native: {}
   });

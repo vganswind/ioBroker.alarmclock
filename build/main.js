@@ -108,6 +108,11 @@ class Alarmclock extends utils.Adapter {
       }
       this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 6e4)} min`);
       await this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 6e4), true);
+      await this.setState(
+        `${this.namespace}.runtime.countdownAlarmText`,
+        this.formatMinutes2TimeString(rest / 6e4),
+        true
+      );
     }
     const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
     if (nextPreAlarm && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) != null && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) !== "") {
@@ -117,6 +122,11 @@ class Alarmclock extends utils.Adapter {
       }
       this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 6e4)} min`);
       await this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 6e4), true);
+      await this.setState(
+        `${this.namespace}.runtime.countdownPreAlarmText`,
+        this.formatMinutes2TimeString(rest / 6e4),
+        true
+      );
     }
     const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
     if (snoozeUntil && (snoozeUntil == null ? void 0 : snoozeUntil.val) != null && (snoozeUntil == null ? void 0 : snoozeUntil.val) !== "") {
@@ -126,6 +136,11 @@ class Alarmclock extends utils.Adapter {
       }
       this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 6e4)} min`);
       await this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 6e4), true);
+      await this.setState(
+        `${this.namespace}.runtime.countdownSnoozeText`,
+        this.formatMinutes2TimeString(rest / 6e4),
+        true
+      );
     }
   }
   /**
@@ -579,6 +594,21 @@ class Alarmclock extends utils.Adapter {
     if (state && state.val !== "") {
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
     }
+  }
+  /**
+   * Formatieren eines Zeitwerts anhand der Minuten.
+   *
+   * @param min Die Minutenanzahl
+   * @returns Der Formatierte Zeitwert (HH:mm)
+   */
+  formatMinutes2TimeString(min) {
+    if (typeof min !== "number" || isNaN(min)) {
+      throw new Error("Input must be a valid number.");
+    }
+    const sec = Math.abs(min) * 60;
+    const hours = Math.floor(sec / 3600);
+    const minutes = Math.floor(sec % 3600 / 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
   }
   /**
    * Is called if a subscribed state changes.
