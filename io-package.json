@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "alarmclock",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "news": {
+            "0.0.3": {
+                "en": "Formatted remaining time added",
+                "de": "Formatierte Restzeit hinzugefügt",
+                "ru": "Добавлено отформатированное оставшееся время",
+                "pt": "Tempo restante formatado",
+                "nl": "Geformatteerde resterende tijd toegevoegd",
+                "fr": "Temps restant formaté ajouté",
+                "it": "Tempo residuo formattato",
+                "es": "Tiempo restante formateado añadido",
+                "pl": "Dodano sformatowany pozostały czas",
+                "uk": "Додано відформатований час, що залишився",
+                "zh-cn": "已添加格式化剩余时间"
+            },
             "0.0.2": {
                 "en": "Second version",
                 "de": "Zweite Version",
