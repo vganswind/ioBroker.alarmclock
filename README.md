@@ -167,6 +167,11 @@ All times are in HH:mm format
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (Volker Ganswind) Sentry deaktiviert
+
 ### 0.0.3 (2026-11-19)
 
 - (Volker Ganswind) Formatted remaining time added
