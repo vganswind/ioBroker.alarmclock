@@ -7,6 +7,8 @@ declare global {
         interface AdapterConfig {
             /** Name der Feiertagskalender-Instance */
             holidayInstance: string;
+            /** Name der public-holiday-Instance */
+            publicHolidaysInstance: string;
             /** Name der Urlaubskalender-Instance */
             vacationInstance: string;
             /** Liste der Urlaubskalender-Einträge */

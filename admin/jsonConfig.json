@@ -29,6 +29,18 @@
             "tooltip": "Select the instance that contains the holiday data.",
             "default": ""
         },
+        "publicHolidaysInstance": {
+            "type": "instance",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
+            "label": "Select the public-holidays instance",
+            "adapter": "public-holidays",
+            "tooltip": "Select the instance that contains the holiday data.",
+            "default": ""
+        },
         "vacationHeading": {
             "type": "header",
             "text": "Vacation Calendar Settings",

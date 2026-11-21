@@ -80,6 +80,10 @@ class Alarmclock extends utils.Adapter {
       this.subscribeForeignStates(`${this.config.holidayInstance}.today.boolean`);
       this.subscribeForeignStates(`${this.config.holidayInstance}.tomorrow.boolean`);
     }
+    if (this.config.publicHolidaysInstance && this.config.publicHolidaysInstance !== "") {
+      this.subscribeForeignStates(`${this.config.publicHolidaysInstance}.today.isHoliday`);
+      this.subscribeForeignStates(`${this.config.publicHolidaysInstance}.tomorrow.isHoliday`);
+    }
     if (this.config.appointmentInstance && this.config.appointmentInstance !== "" && this.config.appointmentEvents && this.config.appointmentEvents.length > 0) {
       this.subscribeForeignStates(`${this.config.appointmentInstance}.data.table`);
     }
@@ -188,6 +192,7 @@ class Alarmclock extends utils.Adapter {
       this.checkWeekday(alarm);
       await this.checkVacationEvents(alarm, true);
       await this.checkHolidayEvents(alarm, true);
+      await this.checkPublicHolidayEvents(alarm, true);
       await this.checkAppointmentEvents(alarm);
       if (alarm < now) {
         this.log.debug("Alarm is lower then now. Running calc of tomorrow");
@@ -195,6 +200,7 @@ class Alarmclock extends utils.Adapter {
         this.checkWeekday(alarm);
         await this.checkVacationEvents(alarm, false);
         await this.checkHolidayEvents(alarm, false);
+        await this.checkPublicHolidayEvents(alarm, false);
         await this.checkAppointmentEvents(alarm);
       }
       this.log.info(`Set new alarm: ${alarm.toLocaleString()}`);
@@ -290,6 +296,37 @@ class Alarmclock extends utils.Adapter {
       }
     } else {
       this.log.info(`holiday check disabled: ical=${this.config.holidayInstance}`);
+    }
+  }
+  /**
+   * Überprüfe den public-holidays-Kalender.
+   *
+   * @param alert Die Weckzeit
+   * @param today Prüfung des aktuellen Tags
+   */
+  async checkPublicHolidayEvents(alert, today = true) {
+    this.log.debug(`checkPublicHolidayEvents(${alert.toLocaleString()})`);
+    if (this.config.publicHolidaysInstance && this.config.publicHolidaysInstance !== "") {
+      let key = "today";
+      if (!today) {
+        key = "tomorrow";
+      }
+      const holidayState = await this.getForeignStateAsync(
+        `${this.config.publicHolidaysInstance}.${key}.isHoliday`
+      );
+      this.log.debug(`holiday check result: ${JSON.stringify(holidayState)}`);
+      if ((holidayState == null ? void 0 : holidayState.val) === true) {
+        this.log.debug(`Holiday is active`);
+        const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+        if (alarmState && alarmState.val != null && alarmState.val !== "") {
+          this.calcDateWithTime(alert, alarmState.val.toString());
+        } else {
+          this.log.warn(`No alarm time found for holiday, using default time.`);
+          this.calcDateWithTime(alert, "06:00");
+        }
+      }
+    } else {
+      this.log.info(`public-holidays check disabled: ical=${this.config.publicHolidaysInstance}`);
     }
   }
   /**
@@ -678,6 +715,12 @@ class Alarmclock extends utils.Adapter {
             this.setAlarmState(import_constants.STATE.DISABLED);
           }
           await this.checkNewAlarmTime("config.enabled");
+          break;
+        case `${this.config.publicHolidaysInstance}.today.isHoliday`:
+          await this.checkNewAlarmTime("holidayInstance.tomorrow");
+          break;
+        case `${this.config.publicHolidaysInstance}.tomorrow.isHoliday`:
+          await this.checkNewAlarmTime("holidayInstance.tomorrow");
           break;
         default:
           this.log.warn(`id not known: ${id}`);

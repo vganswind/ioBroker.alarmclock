@@ -173,7 +173,7 @@ All times are in HH:mm format
 
 ### **WORK IN PROGRESS**
 
-- (Volker Ganswind) ???
+- (Volker Ganswind) Added support for public-holidays-Adapter
 
 ### 0.0.4 (2026-11-19)
 
