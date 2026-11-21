@@ -105,18 +105,21 @@ Here, you can set the duration of the wake-up delay history.
 
 `countdownPreAlarm`, `countdownAlarm`, `countdownSnooze`, `sunriseBrightness`, and `sunriseProgress` are updated every 30 seconds.
 
-| Name              | Function                                     | Example                  |
-| ----------------- | -------------------------------------------- | ------------------------ |
-| active            | Alarm is active                              | false                    |
-| countdownAlarm    | Time remaining until alarm                   | 512 minutes              |
-| countdownPreAlarm | Time remaining until pre-alarm               | 492 minutes              |
-| countdownSnooze   | Countdown until the end of the snooze period | 8 minutes                |
-| nextAlarm         | Next alarm                                   | 2026-11-18T07:00:00.000Z |
-| nextPreAlarm      | Next pre-alarm                               | 2026-11-18T06:40:00.000Z |
-| snoozeUntil       | Snooze until                                 | 2026-11-16T18:37:15.554Z |
-| state             | State                                        | ARMED                    |
-| sunriseBrightness | Sunrise alarm brightness                     | 21%                      |
-| sunriseProgress   | Sunrise alarm progress                       | 20.598%                  |
+| Name                  | Function                                                        | Example                  |
+| --------------------- | --------------------------------------------------------------- | ------------------------ |
+| active                | Alarm is active                                                 | false                    |
+| countdownAlarm        | Time remaining until alarm                                      | 512 minutes              |
+| countdownAlarmText    | Time remaining until alarm formatted as HH:mm                   | 13:47                    |
+| countdownPreAlarm     | Time remaining until pre-alarm                                  | 492 minutes              |
+| countdownPreAlarmText | Time remaining until pre-alarm formatted as HH:mm               | 25:59                    |
+| countdownSnooze       | Countdown until the end of the snooze period                    | 8 minutes                |
+| countdownSnoozeText   | Countdown until the end of the snooze period formatted as HH:mm | 08:22                    |
+| nextAlarm             | Next alarm                                                      | 2026-11-18T07:00:00.000Z |
+| nextPreAlarm          | Next pre-alarm                                                  | 2026-11-18T06:40:00.000Z |
+| snoozeUntil           | Snooze until                                                    | 2026-11-16T18:37:15.554Z |
+| state                 | State                                                           | ARMED                    |
+| sunriseBrightness     | Sunrise alarm brightness                                        | 21%                      |
+| sunriseProgress       | Sunrise alarm progress                                          | 20.598%                  |
 
 The state of the alarm clock can take on the following values:
 
@@ -167,6 +170,11 @@ All times are in HH:mm format
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (Volker Ganswind) ???
+
 ### 0.0.4 (2026-11-19)
 
 - (Volker Ganswind) Sentry deaktiviert
