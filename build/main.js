@@ -335,18 +335,24 @@ class Alarmclock extends utils.Adapter {
       const date = alert.toISOString().slice(0, 10);
       const events = await this.getForeignStateAsync(`${this.config.appointmentInstance}.data.table`);
       if (events && events.val !== "") {
-        const calendarEvents = JSON.parse(events.val);
-        for (const event of this.config.appointmentEvents) {
-          if (!event.name || !event.enabled) {
-            continue;
+        try {
+          const calendarEvents = JSON.parse(events.val);
+          for (const event of this.config.appointmentEvents) {
+            if (!event.name || !event.enabled) {
+              continue;
+            }
+            this.log.debug(`Appointment check: ${event.name}`);
+            const eintrag = calendarEvents.find(
+              (e) => e.event === event.name && e._date.startsWith(date)
+            );
+            if (eintrag !== void 0) {
+              this.log.debug(`Appointment ${event.name} active`);
+              this.calcDateWithTime(alert, new Date(eintrag._date).toTimeString().slice(0, 5));
+              break;
+            }
           }
-          this.log.debug(`Appointment check: ${event.name}`);
-          const eintrag = calendarEvents.find((e) => e.event === event.name && e._date.startsWith(date));
-          if (eintrag !== void 0) {
-            this.log.debug(`Appointment ${event.name} active`);
-            this.calcDateWithTime(alert, new Date(eintrag._date).toTimeString().slice(0, 5));
-            break;
-          }
+        } catch (error) {
+          this.log.error(`Invalid appointment calendar JSON: ${error.message}`);
         }
       }
     } else {
