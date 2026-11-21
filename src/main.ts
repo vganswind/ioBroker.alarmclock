@@ -319,9 +319,7 @@ class Alarmclock extends utils.Adapter {
                 }
             }
         } else {
-            this.log.info(
-                `vacation check disabled: ical=${this.config.vacationInstance}, events=${this.config.vacationEvents?.length ?? 0}`,
-            );
+            this.log.debug("vacation check disabled");
         }
     }
 
@@ -355,7 +353,7 @@ class Alarmclock extends utils.Adapter {
                 }
             }
         } else {
-            this.log.info(`holiday check disabled: ical=${this.config.holidayInstance}`);
+            this.log.debug("holiday check disabled");
         }
     }
 
@@ -391,7 +389,7 @@ class Alarmclock extends utils.Adapter {
                 }
             }
         } else {
-            this.log.info(`public-holidays check disabled: ical=${this.config.publicHolidaysInstance}`);
+            this.log.debug("public-holidays check disabled");
         }
     }
 
@@ -430,9 +428,7 @@ class Alarmclock extends utils.Adapter {
                 }
             }
         } else {
-            this.log.info(
-                `appointment check disabled: ical=${this.config.appointmentInstance}, events=${this.config.appointmentEvents?.length ?? 0}`,
-            );
+            this.log.debug("appointment check disabled");
         }
     }
 

@@ -234,7 +234,6 @@ class Alarmclock extends utils.Adapter {
    * @param today Prüfung des aktuellen Tags
    */
   async checkVacationEvents(alert, today = true) {
-    var _a, _b;
     this.log.debug(`checkVacationEvents(${alert.toLocaleString()})`);
     if (this.config.vacationInstance && this.config.vacationInstance !== "" && this.config.vacationEvents && this.config.vacationEvents.length > 0) {
       for (const event of this.config.vacationEvents) {
@@ -262,9 +261,7 @@ class Alarmclock extends utils.Adapter {
         }
       }
     } else {
-      this.log.info(
-        `vacation check disabled: ical=${this.config.vacationInstance}, events=${(_b = (_a = this.config.vacationEvents) == null ? void 0 : _a.length) != null ? _b : 0}`
-      );
+      this.log.debug("vacation check disabled");
     }
   }
   /**
@@ -293,7 +290,7 @@ class Alarmclock extends utils.Adapter {
         }
       }
     } else {
-      this.log.info(`holiday check disabled: ical=${this.config.holidayInstance}`);
+      this.log.debug("holiday check disabled");
     }
   }
   /**
@@ -324,7 +321,7 @@ class Alarmclock extends utils.Adapter {
         }
       }
     } else {
-      this.log.info(`public-holidays check disabled: ical=${this.config.publicHolidaysInstance}`);
+      this.log.debug("public-holidays check disabled");
     }
   }
   /**
@@ -333,7 +330,6 @@ class Alarmclock extends utils.Adapter {
    * @param alert Die Weckzeit
    */
   async checkAppointmentEvents(alert) {
-    var _a, _b;
     this.log.debug(`checkAppointmentEvents(${alert.toLocaleString()})`);
     if (this.config.appointmentInstance && this.config.appointmentInstance !== "" && this.config.appointmentEvents && this.config.appointmentEvents.length > 0) {
       const date = alert.toISOString().slice(0, 10);
@@ -354,9 +350,7 @@ class Alarmclock extends utils.Adapter {
         }
       }
     } else {
-      this.log.info(
-        `appointment check disabled: ical=${this.config.appointmentInstance}, events=${(_b = (_a = this.config.appointmentEvents) == null ? void 0 : _a.length) != null ? _b : 0}`
-      );
+      this.log.debug("appointment check disabled");
     }
   }
   /**
