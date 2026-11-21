@@ -802,6 +802,182 @@ class Alarmclock extends utils.Adapter {
     }
 
     /**
+     * onStateChange des AlarmClock-Adapters.
+     *
+     * @param id State ID
+     * @param state State object
+     * @returns Ob die State-ID gefunden wurde
+     */
+    private async onAlarmClockStateChange(id: string, state: ioBroker.State): Promise<boolean> {
+        this.log.debug(`onAlarmClockStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+        let found = true;
+
+        switch (id) {
+            case `${this.namespace}.schedule.monday`:
+                await this.checkStateUpdateNewAlarmTime(0, state);
+                break;
+            case `${this.namespace}.schedule.tuesday`:
+                await this.checkStateUpdateNewAlarmTime(1, state);
+                break;
+            case `${this.namespace}.schedule.wednesday`:
+                await this.checkStateUpdateNewAlarmTime(2, state);
+                break;
+            case `${this.namespace}.schedule.thursday`:
+                await this.checkStateUpdateNewAlarmTime(3, state);
+                break;
+            case `${this.namespace}.schedule.friday`:
+                await this.checkStateUpdateNewAlarmTime(4, state);
+                break;
+            case `${this.namespace}.schedule.saturday`:
+                await this.checkStateUpdateNewAlarmTime(5, state);
+                break;
+            case `${this.namespace}.schedule.sunday`:
+                await this.checkStateUpdateNewAlarmTime(6, state);
+                break;
+            case `${this.namespace}.schedule.vacation`:
+                await this.checkStateUpdateNewAlarmTime(7, state);
+                break;
+            case `${this.namespace}.schedule.holiday`:
+                await this.checkStateUpdateNewAlarmTime(8, state);
+                break;
+
+            case `${this.namespace}.action.snooze`:
+                if (state.ack === false) {
+                    this.activateSnooze();
+                    await this.setState("action.snooze", { val: false, ack: true });
+                }
+                break;
+            case `${this.namespace}.action.stop`:
+                if (state.ack === false) {
+                    this.setAlarmState(STATE.STOPPED);
+                    await this.setState("action.stop", { val: false, ack: true });
+                }
+                break;
+
+            case `${this.namespace}.config.enabled`:
+                if (state.val) {
+                    this.setAlarmState(STATE.ARMED);
+                } else {
+                    this.setAlarmState(STATE.DISABLED);
+                }
+                await this.checkNewAlarmTime("config.enabled");
+                break;
+            case `${this.namespace}.config.preAlarmMinutes`:
+                await this.checkNewAlarmTime("config.preAlarmMinutes");
+                break;
+            case `${this.namespace}.config.skipNext`:
+                await this.checkNewAlarmTime("config.skipNext");
+                break;
+            case `${this.namespace}.config.snoozeMinutes`:
+                await this.checkNewAlarmTime("config.snoozeMinutes");
+                break;
+
+            default:
+                found = false;
+        }
+
+        return found;
+    }
+
+    /**
+     * onStateChange des Feiertagskalender-Adapters.
+     *
+     * @param id State ID
+     * @param state State object
+     * @returns Ob die State-ID gefunden wurde
+     */
+    private async onHolidayStateChange(id: string, state: ioBroker.State): Promise<boolean> {
+        this.log.debug(`onHolidayStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+        let found = true;
+
+        switch (id) {
+            case `${this.config.holidayInstance}.today.boolean`:
+                await this.checkNewAlarmTime("holidayInstance.today");
+                break;
+            case `${this.config.holidayInstance}.tomorrow.boolean`:
+                await this.checkNewAlarmTime("holidayInstance.tomorrow");
+                break;
+
+            default:
+                found = false;
+        }
+
+        return found;
+    }
+
+    /**
+     * onStateChange des public-holidays-Adapters.
+     *
+     * @param id State ID
+     * @param state State object
+     * @returns Ob die State-ID gefunden wurde
+     */
+    private async onPublicHolidayStateChange(id: string, state: ioBroker.State): Promise<boolean> {
+        this.log.debug(`onPublicHolidayStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+        let found = true;
+
+        switch (id) {
+            case `${this.config.publicHolidaysInstance}.today.isHoliday`:
+                await this.checkNewAlarmTime("publicHolidaysInstance.today");
+                break;
+            case `${this.config.publicHolidaysInstance}.tomorrow.isHoliday`:
+                await this.checkNewAlarmTime("publicHolidaysInstance.tomorrow");
+                break;
+
+            default:
+                found = false;
+        }
+
+        return found;
+    }
+
+    /**
+     * onStateChange des Urlaubskalenders.
+     *
+     * @param id State ID
+     * @param state State object
+     * @returns Ob die State-ID gefunden wurde
+     */
+    private async onVacationStateChange(id: string, state: ioBroker.State): Promise<boolean> {
+        this.log.debug(`onVacationStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+        let found = true;
+
+        switch (id) {
+            case `${this.config.vacationInstance}.data.table`:
+                await this.checkNewAlarmTime("vacationInstance");
+                break;
+
+            default:
+                found = false;
+        }
+
+        return found;
+    }
+
+    /**
+     * onStateChange des Weckerkalender.
+     *
+     * @param id State ID
+     * @param state State object
+     * @returns Ob die State-ID gefunden wurde
+     */
+    private async onAppointmentStateChange(id: string, state: ioBroker.State): Promise<boolean> {
+        this.log.debug(`onAppointmentStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+        let found = true;
+
+        switch (id) {
+            case `${this.config.appointmentInstance}.data.table`:
+                await this.checkNewAlarmTime("appointmentInstance");
+                break;
+
+            default:
+                found = false;
+        }
+
+        return found;
+    }
+
+    /**
      * Is called if a subscribed state changes.
      *
      * @param id State ID
@@ -811,75 +987,43 @@ class Alarmclock extends utils.Adapter {
         if (state) {
             // The state was changed
             this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            let found = false;
 
-            switch (id) {
-                case `${this.namespace}.schedule.monday`:
-                    await this.checkStateUpdateNewAlarmTime(0, state);
-                    break;
-                case `${this.namespace}.schedule.tuesday`:
-                    await this.checkStateUpdateNewAlarmTime(1, state);
-                    break;
-                case `${this.namespace}.schedule.wednesday`:
-                    await this.checkStateUpdateNewAlarmTime(2, state);
-                    break;
-                case `${this.namespace}.schedule.thursday`:
-                    await this.checkStateUpdateNewAlarmTime(3, state);
-                    break;
-                case `${this.namespace}.schedule.friday`:
-                    await this.checkStateUpdateNewAlarmTime(4, state);
-                    break;
-                case `${this.namespace}.schedule.saturday`:
-                    await this.checkStateUpdateNewAlarmTime(5, state);
-                    break;
-                case `${this.namespace}.schedule.sunday`:
-                    await this.checkStateUpdateNewAlarmTime(6, state);
-                    break;
-                case `${this.namespace}.schedule.vacation`:
-                    await this.checkStateUpdateNewAlarmTime(7, state);
-                    break;
-                case `${this.namespace}.schedule.holiday`:
-                    await this.checkStateUpdateNewAlarmTime(8, state);
-                    break;
-                case `${this.config.vacationInstance}.data.table`:
-                    await this.checkNewAlarmTime("vacationInstance");
-                    break;
-                case `${this.config.holidayInstance}.today.boolean`:
-                    await this.checkNewAlarmTime("holidayInstance.today");
-                    break;
-                case `${this.config.holidayInstance}.tomorrow.boolean`:
-                    await this.checkNewAlarmTime("holidayInstance.tomorrow");
-                    break;
-                case `${this.config.appointmentInstance}.data.table`:
-                    await this.checkNewAlarmTime("appointmentInstance");
-                    break;
-                case `${this.namespace}.action.snooze`:
-                    if (state.ack === false) {
-                        this.activateSnooze();
-                        await this.setState("action.snooze", { val: false, ack: true });
-                    }
-                    break;
-                case `${this.namespace}.action.stop`:
-                    if (state.ack === false) {
-                        this.setAlarmState(STATE.STOPPED);
-                        await this.setState("action.stop", { val: false, ack: true });
-                    }
-                    break;
-                case `${this.namespace}.config.enabled`:
-                    if (state.val) {
-                        this.setAlarmState(STATE.ARMED);
-                    } else {
-                        this.setAlarmState(STATE.DISABLED);
-                    }
-                    await this.checkNewAlarmTime("config.enabled");
-                    break;
-                case `${this.config.publicHolidaysInstance}.today.isHoliday`:
-                    await this.checkNewAlarmTime("holidayInstance.tomorrow");
-                    break;
-                case `${this.config.publicHolidaysInstance}.tomorrow.isHoliday`:
-                    await this.checkNewAlarmTime("holidayInstance.tomorrow");
-                    break;
-                default:
-                    this.log.warn(`id not known: ${id}`);
+            // Prüfen der States des Adapters
+            if (await this.onAlarmClockStateChange(id, state)) {
+                found = true;
+            }
+
+            // Prüfen des Feiertagskalender
+            if (this.config.holidayInstance && this.config.holidayInstance !== "") {
+                if (await this.onHolidayStateChange(id, state)) {
+                    found = true;
+                }
+            }
+
+            // Prüfen des public-holidays-Kalender
+            if (this.config.publicHolidaysInstance && this.config.publicHolidaysInstance !== "") {
+                if (await this.onPublicHolidayStateChange(id, state)) {
+                    found = true;
+                }
+            }
+
+            // Prüfen des Urlaubskalender
+            if (this.config.vacationInstance && this.config.vacationInstance !== "") {
+                if (await this.onVacationStateChange(id, state)) {
+                    found = true;
+                }
+            }
+
+            // Prüfen des Weckerkalender
+            if (this.config.appointmentInstance && this.config.appointmentInstance !== "") {
+                if (await this.onAppointmentStateChange(id, state)) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                this.log.warn(`state id not known: ${id}`);
             }
         } else {
             // The object was deleted or the state value has expired
