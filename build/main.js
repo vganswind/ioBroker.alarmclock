@@ -422,7 +422,7 @@ class Alarmclock extends utils.Adapter {
         break;
       case import_constants.STATE.STOPPED:
         await this.stopAlarm();
-        this.setAlarmState(import_constants.STATE.ARMED);
+        await this.setAlarmState(import_constants.STATE.ARMED);
         await this.updateCountdowns();
         break;
       case import_constants.STATE.ERROR:
@@ -489,23 +489,22 @@ class Alarmclock extends utils.Adapter {
     }
     this.alarmStartTime = null;
     await this.setState(`runtime.active`, false, true);
-    this.setAlarmState(import_constants.STATE.STOPPED);
+    await this.setAlarmState(import_constants.STATE.STOPPED);
   }
   /**
    * Setzten des Status des Weckers.
    *
    * @param newState Der neue Status des Weckers
    */
-  setAlarmState(newState) {
+  async setAlarmState(newState) {
     this.log.debug(`setAlarmState(${newState})`);
-    this.getState("runtime.state", async (_err, oldState) => {
-      if ((oldState == null ? void 0 : oldState.val) === newState) {
-        return;
-      }
-      await this.setState("runtime.state", newState, true);
-      this.log.debug(`${oldState == null ? void 0 : oldState.val} -> ${newState}`);
-      await this.handleState(newState);
-    });
+    const oldState = await this.getStateAsync("runtime.state");
+    if ((oldState == null ? void 0 : oldState.val) === newState) {
+      return;
+    }
+    await this.setState("runtime.state", newState, true);
+    this.log.debug(`${oldState == null ? void 0 : oldState.val} -> ${newState}`);
+    await this.handleState(newState);
   }
   /**
    * Überprüfen des Status des Weckers.
@@ -520,19 +519,19 @@ class Alarmclock extends utils.Adapter {
       const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
       const skip = ((_a = await this.getStateAsync("config.skipNext")) == null ? void 0 : _a.val) === true;
       if ((state == null ? void 0 : state.val) === import_constants.STATE.SNOOZE && (snoozeUntil == null ? void 0 : snoozeUntil.val) && now >= new Date(String(snoozeUntil.val)).getTime() && !skip) {
-        this.setAlarmState(import_constants.STATE.TRIGGERED);
+        await this.setAlarmState(import_constants.STATE.TRIGGERED);
         return;
       }
       if ((state == null ? void 0 : state.val) === import_constants.STATE.ARMED && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) && now >= new Date(String(nextPreAlarm.val)).getTime() && !skip) {
-        this.setAlarmState(import_constants.STATE.PREALARM);
+        await this.setAlarmState(import_constants.STATE.PREALARM);
         return;
       }
       if (((state == null ? void 0 : state.val) === import_constants.STATE.ARMED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) && (nextAlarm == null ? void 0 : nextAlarm.val) && now >= new Date(String(nextAlarm.val)).getTime() && !skip) {
-        this.setAlarmState(import_constants.STATE.TRIGGERED);
+        await this.setAlarmState(import_constants.STATE.TRIGGERED);
       }
     } catch (e) {
       console.error(e);
-      this.setAlarmState(import_constants.STATE.ERROR);
+      await this.setAlarmState(import_constants.STATE.ERROR);
     }
   }
   /**
@@ -546,7 +545,7 @@ class Alarmclock extends utils.Adapter {
           const until = new Date(Date.now() + Number(mins == null ? void 0 : mins.val) * 6e4);
           await this.setState("runtime.snoozeUntil", until.toISOString(), true);
           await this.incrementStat("snoozeCount");
-          this.setAlarmState(import_constants.STATE.SNOOZE);
+          await this.setAlarmState(import_constants.STATE.SNOOZE);
         });
       }
     });
@@ -691,15 +690,15 @@ class Alarmclock extends utils.Adapter {
         break;
       case `${this.namespace}.action.stop`:
         if (state.ack === false) {
-          this.setAlarmState(import_constants.STATE.STOPPED);
+          await this.setAlarmState(import_constants.STATE.STOPPED);
           await this.setState("action.stop", { val: false, ack: true });
         }
         break;
       case `${this.namespace}.config.enabled`:
         if (state.val) {
-          this.setAlarmState(import_constants.STATE.ARMED);
+          await this.setAlarmState(import_constants.STATE.ARMED);
         } else {
-          this.setAlarmState(import_constants.STATE.DISABLED);
+          await this.setAlarmState(import_constants.STATE.DISABLED);
         }
         await this.checkNewAlarmTime("config.enabled");
         break;
