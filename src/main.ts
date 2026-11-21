@@ -126,7 +126,7 @@ class Alarmclock extends utils.Adapter {
         const now = new Date();
 
         // Berechnen der Laufzeit bis zum Alarm
-        const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
+        const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
         if (nextAlarm && nextAlarm?.val != null && nextAlarm?.val !== "") {
             let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
             if (rest < 0) {
@@ -143,7 +143,7 @@ class Alarmclock extends utils.Adapter {
         }
 
         // Berechnen der Laufzeit bis zum Voralarm
-        const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
+        const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
         if (nextPreAlarm && nextPreAlarm?.val != null && nextPreAlarm?.val !== "") {
             let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
             if (rest < 0) {
@@ -160,7 +160,7 @@ class Alarmclock extends utils.Adapter {
         }
 
         // Berechnen der Laufzeit bis Ende der Schlummerfunktion
-        const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
+        const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
         if (snoozeUntil && snoozeUntil?.val != null && snoozeUntil?.val !== "") {
             let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
             if (rest < 0) {
@@ -218,7 +218,7 @@ class Alarmclock extends utils.Adapter {
     private async checkNewAlarmTime(name: string = ""): Promise<void> {
         this.log.debug(`checkNewAlarmTime(${name})`);
 
-        const enabledState = await this.getStateAsync(`${this.namespace}.config.enabled`);
+        const enabledState = await this.getStateAsync("config.enabled");
         if (enabledState && enabledState.val === true) {
             const now = new Date();
             const alarm = new Date();
@@ -247,9 +247,7 @@ class Alarmclock extends utils.Adapter {
 
             // Berechnung des Voralarms
             const pre = new Date(alarm);
-            const preAlarmMinutes = Number(
-                (await this.getStateAsync(`${this.namespace}.config.preAlarmMinutes`))?.val || 0,
-            );
+            const preAlarmMinutes = Number((await this.getStateAsync("config.preAlarmMinutes"))?.val || 0);
             pre.setMinutes(pre.getMinutes() - preAlarmMinutes);
 
             await this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
@@ -308,7 +306,7 @@ class Alarmclock extends utils.Adapter {
 
                 if (vacationState?.val === true) {
                     this.log.debug(`Vacation event '${event.name}' active`);
-                    const alarmState = await this.getStateAsync(`${this.namespace}.schedule.vacation`);
+                    const alarmState = await this.getStateAsync("schedule.vacation");
 
                     if (alarmState?.val) {
                         this.calcDateWithTime(alert, alarmState.val.toString());
@@ -347,7 +345,7 @@ class Alarmclock extends utils.Adapter {
 
             if (holidayState?.val === true) {
                 this.log.debug(`Holiday is active`);
-                const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+                const alarmState = await this.getStateAsync("schedule.holiday");
 
                 if (alarmState && alarmState.val != null && alarmState.val !== "") {
                     this.calcDateWithTime(alert, alarmState.val.toString());
@@ -383,7 +381,7 @@ class Alarmclock extends utils.Adapter {
 
             if (holidayState?.val === true) {
                 this.log.debug(`Holiday is active`);
-                const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+                const alarmState = await this.getStateAsync("schedule.holiday");
 
                 if (alarmState && alarmState.val != null && alarmState.val !== "") {
                     this.calcDateWithTime(alert, alarmState.val.toString());
@@ -628,7 +626,7 @@ class Alarmclock extends utils.Adapter {
             const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
             const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
             const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
-            const skip = (await this.getStateAsync("action.skipNext"))?.val === true;
+            const skip = (await this.getStateAsync("config.skipNext"))?.val === true;
 
             // Die Schlummerzeit abgelaufen
             if (

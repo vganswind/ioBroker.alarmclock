@@ -104,7 +104,7 @@ class Alarmclock extends utils.Adapter {
   async updateCountdowns() {
     this.log.debug("updateCountdowns()");
     const now = /* @__PURE__ */ new Date();
-    const nextAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextAlarm`);
+    const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
     if (nextAlarm && (nextAlarm == null ? void 0 : nextAlarm.val) != null && (nextAlarm == null ? void 0 : nextAlarm.val) !== "") {
       let rest = new Date(nextAlarm.val.toString()).getTime() - now.getTime();
       if (rest < 0) {
@@ -118,7 +118,7 @@ class Alarmclock extends utils.Adapter {
         true
       );
     }
-    const nextPreAlarm = await this.getStateAsync(`${this.namespace}.runtime.nextPreAlarm`);
+    const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
     if (nextPreAlarm && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) != null && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) !== "") {
       let rest = new Date(nextPreAlarm.val.toString()).getTime() - now.getTime();
       if (rest < 0) {
@@ -132,7 +132,7 @@ class Alarmclock extends utils.Adapter {
         true
       );
     }
-    const snoozeUntil = await this.getStateAsync(`${this.namespace}.runtime.snoozeUntil`);
+    const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
     if (snoozeUntil && (snoozeUntil == null ? void 0 : snoozeUntil.val) != null && (snoozeUntil == null ? void 0 : snoozeUntil.val) !== "") {
       let rest = new Date(snoozeUntil.val.toString()).getTime() - now.getTime();
       if (rest < 0) {
@@ -184,7 +184,7 @@ class Alarmclock extends utils.Adapter {
   async checkNewAlarmTime(name = "") {
     var _a;
     this.log.debug(`checkNewAlarmTime(${name})`);
-    const enabledState = await this.getStateAsync(`${this.namespace}.config.enabled`);
+    const enabledState = await this.getStateAsync("config.enabled");
     if (enabledState && enabledState.val === true) {
       const now = /* @__PURE__ */ new Date();
       const alarm = /* @__PURE__ */ new Date();
@@ -205,9 +205,7 @@ class Alarmclock extends utils.Adapter {
       }
       this.log.info(`Set new alarm: ${alarm.toLocaleString()}`);
       const pre = new Date(alarm);
-      const preAlarmMinutes = Number(
-        ((_a = await this.getStateAsync(`${this.namespace}.config.preAlarmMinutes`)) == null ? void 0 : _a.val) || 0
-      );
+      const preAlarmMinutes = Number(((_a = await this.getStateAsync("config.preAlarmMinutes")) == null ? void 0 : _a.val) || 0);
       pre.setMinutes(pre.getMinutes() - preAlarmMinutes);
       await this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
       await this.setState("runtime.nextAlarm", alarm.toISOString(), true);
@@ -253,7 +251,7 @@ class Alarmclock extends utils.Adapter {
         this.log.debug(`vacation check result: ${JSON.stringify(vacationState)}`);
         if ((vacationState == null ? void 0 : vacationState.val) === true) {
           this.log.debug(`Vacation event '${event.name}' active`);
-          const alarmState = await this.getStateAsync(`${this.namespace}.schedule.vacation`);
+          const alarmState = await this.getStateAsync("schedule.vacation");
           if (alarmState == null ? void 0 : alarmState.val) {
             this.calcDateWithTime(alert, alarmState.val.toString());
           } else {
@@ -286,7 +284,7 @@ class Alarmclock extends utils.Adapter {
       this.log.debug(`holiday check result: ${JSON.stringify(holidayState)}`);
       if ((holidayState == null ? void 0 : holidayState.val) === true) {
         this.log.debug(`Holiday is active`);
-        const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+        const alarmState = await this.getStateAsync("schedule.holiday");
         if (alarmState && alarmState.val != null && alarmState.val !== "") {
           this.calcDateWithTime(alert, alarmState.val.toString());
         } else {
@@ -317,7 +315,7 @@ class Alarmclock extends utils.Adapter {
       this.log.debug(`holiday check result: ${JSON.stringify(holidayState)}`);
       if ((holidayState == null ? void 0 : holidayState.val) === true) {
         this.log.debug(`Holiday is active`);
-        const alarmState = await this.getStateAsync(`${this.namespace}.schedule.holiday`);
+        const alarmState = await this.getStateAsync("schedule.holiday");
         if (alarmState && alarmState.val != null && alarmState.val !== "") {
           this.calcDateWithTime(alert, alarmState.val.toString());
         } else {
@@ -520,7 +518,7 @@ class Alarmclock extends utils.Adapter {
       const nextAlarm = await this.getStateAsync("runtime.nextAlarm");
       const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
       const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
-      const skip = ((_a = await this.getStateAsync("action.skipNext")) == null ? void 0 : _a.val) === true;
+      const skip = ((_a = await this.getStateAsync("config.skipNext")) == null ? void 0 : _a.val) === true;
       if ((state == null ? void 0 : state.val) === import_constants.STATE.SNOOZE && (snoozeUntil == null ? void 0 : snoozeUntil.val) && now >= new Date(String(snoozeUntil.val)).getTime() && !skip) {
         this.setAlarmState(import_constants.STATE.TRIGGERED);
         return;
