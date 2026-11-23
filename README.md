@@ -34,22 +34,7 @@ The order of precedence for alarm times (the last one applied takes priority):
 
 The Alarm clock workflow:
 
-```plain
-       IDLE
-        │
-        ▼
-     PREALARM
-        │
-        ▼
-      ALARM ◄ ────────┐
-      │   │           │
- Stop ┤   ├── Snooze  │
-      ▼   ▼           │
-STOPPED   SNOOZE ─────┘
-    │
-    ▼
-  IDLE (next day)
-```
+![AlarmClock workflow](./docs/workflow.svg)
 
 ### Adapter configuration
 
