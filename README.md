@@ -216,8 +216,7 @@ Controlling the alarm clock via the MQTT-Broker.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.0.5 (2026-11-24)
 
 - (Volker Ganswind) Added support for public-holidays-Adapter
 - (Volker Ganswind) Added support for MQTT-Client-Adapter

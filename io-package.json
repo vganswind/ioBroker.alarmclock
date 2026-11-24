@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alarmclock",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "news": {
+      "0.0.5": {
+        "en": "Added support for public-holidays-Adapter\nAdded support for MQTT-Client-Adapter\nMinor bug fixes",
+        "de": "Support für public-holidays-Adapter hinzugefügt\nSupport für MQTT-Client-Adapter\nKleine Bugfixes",
+        "ru": "Добавлена поддержка адаптера для государственных праздников\nДобавлена поддержка клиент-адаптера MQTT\nНезначительные исправления ошибок",
+        "pt": "Adicionado suporte ao adaptador de férias\nAdicionado suporte ao MQTT-Client-Adapter\nPequenos bugs",
+        "nl": "Ondersteuning toegevoegd voor Public-Holidays-adapter\nOndersteuning toegevoegd voor de MQTT-Client-adapter\nKleine bugfixes",
+        "fr": "Ajout du support pour Public-Holidays-Adapter\nAjout du support pour MQTT-Client-Adapter\nCorrections de bugs",
+        "it": "Aggiunto supporto per Public-Holidays-Adapter\nAggiunto supporto per MQTT Client\nBug fix minori",
+        "es": "Se ha añadido soporte para el adaptador de días festivos\nSe agregó soporte para MQTT-Client-Adapter\nCorrecciones menores",
+        "pl": "Dodano obsługę adaptera dla Public-Holidays-Adapter\nDodano obsługę MQTT-Client-Adapter\nDrobne poprawki błędów",
+        "uk": "Додана підтримка адаптера для публічних свят\nДодана підтримка MQTT-клієнт-адаптера\nНезначні виправлення помилок",
+        "zh-cn": "增加了对公共假日适配器的支持\n增加了对 MQTT-Client-Adapter 的支持\n小错误修复"
+      },
       "0.0.4": {
         "en": "Sentry deaktiviert",
         "de": "Sentry deaktiviert",
