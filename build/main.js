@@ -357,6 +357,10 @@ class Alarmclock extends utils.Adapter {
       if (events && events.val !== "") {
         try {
           const calendarEvents = JSON.parse(events.val);
+          if (!Array.isArray(calendarEvents)) {
+            this.log.debug(`Appointment calendar is not an array`);
+            return;
+          }
           for (const event of this.config.appointmentEvents) {
             if (!event.name || !event.enabled) {
               continue;
@@ -367,7 +371,7 @@ class Alarmclock extends utils.Adapter {
             );
             if (eintrag !== void 0) {
               this.log.debug(`Appointment ${event.name} active`);
-              this.calcDateWithTime(alert, new Date(eintrag._date).toTimeString().slice(0, 5));
+              this.calcDateWithTime(alert, new Date(eintrag._date).toLocaleTimeString().slice(0, 5));
               break;
             }
           }
@@ -400,7 +404,10 @@ class Alarmclock extends utils.Adapter {
       const alarmDate = new Date(alarm.val.toString());
       const total = alarmDate.getTime() - preAlarmDate.getTime();
       const elapsed = Date.now() - preAlarmDate.getTime();
-      let progress = elapsed / total * 100;
+      let progress = 100;
+      if (total > 0) {
+        progress = elapsed / total * 100;
+      }
       progress = Math.max(0, Math.min(progress, 100));
       this.log.debug(`sunriseProgress: ${progress} %`);
       await this.setState("runtime.sunriseProgress", progress, true);
@@ -519,7 +526,6 @@ class Alarmclock extends utils.Adapter {
     this.alarmStartTime = null;
     await this.setState(`runtime.active`, false, true);
     this.sendToMqtt(`runtime.active`, false);
-    await this.setAlarmState(import_constants.STATE.STOPPED);
   }
   /**
    * Setzten des Status des Weckers.
@@ -560,27 +566,26 @@ class Alarmclock extends utils.Adapter {
       if (((state == null ? void 0 : state.val) === import_constants.STATE.ARMED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) && (nextAlarm == null ? void 0 : nextAlarm.val) && now >= new Date(String(nextAlarm.val)).getTime() && !skip) {
         await this.setAlarmState(import_constants.STATE.TRIGGERED);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      this.log.error(`Error during evaluateState: ${error.message}`);
       await this.setAlarmState(import_constants.STATE.ERROR);
     }
   }
   /**
    * Aktiviren des Schlummer-Modus.
    */
-  activateSnooze() {
+  async activateSnooze() {
     this.log.debug("activateSnooze()");
-    this.getState("runtime.state", (_err, state) => {
-      if ((state == null ? void 0 : state.val) === import_constants.STATE.TRIGGERED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) {
-        this.getState("config.snoozeMinutes", async (_err2, mins) => {
-          const until = new Date(Date.now() + Number(mins == null ? void 0 : mins.val) * 6e4);
-          await this.setState("runtime.snoozeUntil", until.toISOString(), true);
-          this.sendToMqtt("runtime.snoozeUntil", until.toLocaleString());
-          await this.incrementStat("snoozeCount");
-          await this.setAlarmState(import_constants.STATE.SNOOZE);
-        });
-      }
-    });
+    const state = await this.getStateAsync("runtime.state");
+    if ((state == null ? void 0 : state.val) === import_constants.STATE.TRIGGERED || (state == null ? void 0 : state.val) === import_constants.STATE.PREALARM) {
+      const mins = await this.getStateAsync("config.snoozeMinutes");
+      const minutes = Math.max(1, Number(mins == null ? void 0 : mins.val) || 9);
+      const until = new Date(Date.now() + minutes * 6e4);
+      await this.setState("runtime.snoozeUntil", until.toISOString(), true);
+      this.sendToMqtt("runtime.snoozeUntil", until.toLocaleString());
+      await this.incrementStat("snoozeCount");
+      await this.setAlarmState(import_constants.STATE.SNOOZE);
+    }
   }
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -670,9 +675,9 @@ class Alarmclock extends utils.Adapter {
     if (typeof min !== "number" || isNaN(min)) {
       throw new Error("Input must be a valid number.");
     }
-    const sec = Math.abs(min) * 60;
-    const hours = Math.floor(sec / 3600);
-    const minutes = Math.floor(sec % 3600 / 60);
+    const seconds = Math.abs(min) * 60;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds % 3600 / 60);
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
   }
   /**
@@ -715,7 +720,7 @@ class Alarmclock extends utils.Adapter {
         break;
       case `${this.namespace}.action.snooze`:
         if (state.ack === false) {
-          this.activateSnooze();
+          await this.activateSnooze();
           await this.setState("action.snooze", false, true);
         }
         break;

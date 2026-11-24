@@ -221,6 +221,7 @@ Controlling the alarm clock via the MQTT-Broker.
 
 - (Volker Ganswind) Added support for public-holidays-Adapter
 - (Volker Ganswind) Added support for MQTT-Client-Adapter
+- (Volker Ganswind) Minor bug fixes
 
 ### 0.0.4 (2026-11-19)
 

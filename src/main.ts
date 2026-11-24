@@ -444,6 +444,11 @@ class Alarmclock extends utils.Adapter {
                 try {
                     const calendarEvents = JSON.parse(events.val as string);
 
+                    if (!Array.isArray(calendarEvents)) {
+                        this.log.debug(`Appointment calendar is not an array`);
+                        return;
+                    }
+
                     for (const event of this.config.appointmentEvents) {
                         if (!event.name || !event.enabled) {
                             continue;
@@ -455,7 +460,7 @@ class Alarmclock extends utils.Adapter {
                         );
                         if (eintrag !== undefined) {
                             this.log.debug(`Appointment ${event.name} active`);
-                            this.calcDateWithTime(alert, new Date(eintrag._date).toTimeString().slice(0, 5));
+                            this.calcDateWithTime(alert, new Date(eintrag._date).toLocaleTimeString().slice(0, 5));
                             break;
                         }
                     }
@@ -493,8 +498,10 @@ class Alarmclock extends utils.Adapter {
 
             const total = alarmDate.getTime() - preAlarmDate.getTime();
             const elapsed = Date.now() - preAlarmDate.getTime();
-            let progress = (elapsed / total) * 100;
-
+            let progress = 100;
+            if (total > 0) {
+                progress = (elapsed / total) * 100;
+            }
             progress = Math.max(0, Math.min(progress, 100));
 
             this.log.debug(`sunriseProgress: ${progress} %`);
@@ -635,7 +642,6 @@ class Alarmclock extends utils.Adapter {
         this.alarmStartTime = null;
         await this.setState(`runtime.active`, false, true);
         this.sendToMqtt(`runtime.active`, false);
-        await this.setAlarmState(STATE.STOPPED);
     }
 
     /**
@@ -701,8 +707,8 @@ class Alarmclock extends utils.Adapter {
             ) {
                 await this.setAlarmState(STATE.TRIGGERED);
             }
-        } catch (e) {
-            console.error(e);
+        } catch (error) {
+            this.log.error(`Error during evaluateState: ${(error as Error).message}`);
             await this.setAlarmState(STATE.ERROR);
         }
     }
@@ -710,22 +716,21 @@ class Alarmclock extends utils.Adapter {
     /**
      * Aktiviren des Schlummer-Modus.
      */
-    private activateSnooze(): void {
+    private async activateSnooze(): Promise<void> {
         this.log.debug("activateSnooze()");
 
-        this.getState("runtime.state", (_err, state) => {
-            if (state?.val === STATE.TRIGGERED || state?.val === STATE.PREALARM) {
-                this.getState("config.snoozeMinutes", async (_err, mins) => {
-                    const until = new Date(Date.now() + Number(mins?.val) * 60000);
+        const state = await this.getStateAsync("runtime.state");
+        if (state?.val === STATE.TRIGGERED || state?.val === STATE.PREALARM) {
+            const mins = await this.getStateAsync("config.snoozeMinutes");
+            const minutes = Math.max(1, Number(mins?.val) || 9);
+            const until = new Date(Date.now() + minutes * 60000);
 
-                    await this.setState("runtime.snoozeUntil", until.toISOString(), true);
-                    this.sendToMqtt("runtime.snoozeUntil", until.toLocaleString());
+            await this.setState("runtime.snoozeUntil", until.toISOString(), true);
+            this.sendToMqtt("runtime.snoozeUntil", until.toLocaleString());
 
-                    await this.incrementStat("snoozeCount");
-                    await this.setAlarmState(STATE.SNOOZE);
-                });
-            }
-        });
+            await this.incrementStat("snoozeCount");
+            await this.setAlarmState(STATE.SNOOZE);
+        }
     }
 
     /**
@@ -831,11 +836,11 @@ class Alarmclock extends utils.Adapter {
         }
 
         // Calculate minutes to seconds
-        const sec = Math.abs(min) * 60;
+        const seconds = Math.abs(min) * 60;
 
         // Calculate hours, minutes
-        const hours = Math.floor(sec / 3600); // 1 hour = 3600 s
-        const minutes = Math.floor((sec % 3600) / 60); // 1 min = 60 s
+        const hours = Math.floor(seconds / 3600); // 1 hour = 3600 s
+        const minutes = Math.floor((seconds % 3600) / 60); // 1 min = 60 s
 
         // Format with leading zeros
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
@@ -883,7 +888,7 @@ class Alarmclock extends utils.Adapter {
 
             case `${this.namespace}.action.snooze`:
                 if (state.ack === false) {
-                    this.activateSnooze();
+                    await this.activateSnooze();
                     await this.setState("action.snooze", false, true);
                 }
                 break;
