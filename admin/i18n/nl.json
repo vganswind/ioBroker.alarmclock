@@ -24,5 +24,12 @@
     "Other settings": "Overige instellingen",
     "Here you can configure other settings for the alarm clock.": "Hier kunt u andere instellingen voor de wekker configureren.",
     "Progression of wake-up delays": "Verloop van de wekvertraging",
-    "Maximum number of entries in the wake-up delay history": "Maximaal aantal vermeldingen in de geschiedenis van de wekvertraging"
+    "Maximum number of entries in the wake-up delay history": "Maximaal aantal vermeldingen in de geschiedenis van de wekvertraging",
+
+    "MQTT-Broker Settings": "MQTT-brokerinstellingen",
+    "Here you can configure the settings for the mqtt of the alarm clock.": "Hier kunt u de MQTT-instellingen voor de wekker configureren.",
+    "Select the MQTT instance": "Selecteer de MQTT-instantie",
+    "Select the instance that publish the MQTT data.": "Selecteer de instantie die de MQTT-gegevens publiceert.",
+    "The MQTT-publish Topic": "Het MQTT-publicatieonderwerp",
+    "Input the Topic for the publish the values": "Voer het onderwerp in voor het publiceren van de waarden."
 }

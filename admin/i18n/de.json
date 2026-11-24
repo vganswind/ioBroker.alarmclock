@@ -24,5 +24,12 @@
     "Other settings": "Sonstige Einstellungen",
     "Here you can configure other settings for the alarm clock.": "Hier können Sie weitere Einstellungen für den Wecker vornehmen.",
     "Progression of wake-up delays": "Verlauf der Aufwachverzögerungen",
-    "Maximum number of entries in the wake-up delay history": "Maximale Anzahl von Einträgen im Verlauf der Aufwachverzögerung"
+    "Maximum number of entries in the wake-up delay history": "Maximale Anzahl von Einträgen im Verlauf der Aufwachverzögerung",
+
+    "MQTT-Broker Settings": "MQTT-Broker-Einstellungen",
+    "Here you can configure the settings for the mqtt of the alarm clock.": "Hier können Sie die Einstellungen für MQTT des Weckers konfigurieren.",
+    "Select the MQTT instance": "Die MQTT-Instanz auswählen",
+    "Select the instance that publish the MQTT data.": "Wählen Sie die Instanz aus, die die MQTT-Daten veröffentlicht.",
+    "The MQTT-publish Topic": "Das MQTT-Publish Topic",
+    "Input the Topic for the publish the values": "Geben Sie das Topic für die Veröffentlichung der Werte ein."
 }

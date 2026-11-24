@@ -64,6 +64,11 @@ The list determines which events should be acted upon.
 
 e.g., alarm, wake-up call, etc.
 
+#### MQTT-Broker
+
+Here you can select the instance and the name of the topic for the mqtt adapter.
+This is then used to publish and subscribe the mqtt values.
+
 #### Miscellaneous
 
 Here, you can set the duration of the wake-up delay history.
@@ -149,6 +154,62 @@ All times are in HH:mm format
 | lastAlarm        | Last alarm                |
 | lastWakeup       | Last wake-up time         |
 
+### MQTT
+
+The alarm clock's MQTT interface.
+
+[An example template for FHEM is available here.](./docs/fhem.cfg).
+
+#### MQTT publish
+
+Publishing alarm clock data to the MQTT-Broker.
+
+| Topic                                       | Function                                 |
+| ------------------------------------------- | ---------------------------------------- |
+| &lt;TOPIC&gt;/config/enabled                | Alarm enabled                            |
+| &lt;TOPIC&gt;/config/preAlarmMinutes        | Pre-alarm time in minutes                |
+| &lt;TOPIC&gt;/config/skipNext               | Skip next alarm                          |
+| &lt;TOPIC&gt;/config/snoozeMinutes          | Snooze duration in minutes               |
+| &lt;TOPIC&gt;/runtime/countdownAlarm        | Time remaining until                     |
+| &lt;TOPIC&gt;/runtime/countdownAlarmText    | Formatted time remaining until alarm     |
+| &lt;TOPIC&gt;/runtime/countdownPreAlarm     | Time remaining until pre-alarm           |
+| &lt;TOPIC&gt;/runtime/countdownPreAlarmText | Formatted Time remaining until pre-alarm |
+| &lt;TOPIC&gt;/runtime/nextAlarm             | Next alarm                               |
+| &lt;TOPIC&gt;/runtime/nextPreAlarm          | Next pre-alarm                           |
+| &lt;TOPIC&gt;/runtime/state                 | State                                    |
+| &lt;TOPIC&gt;/runtime/sunriseBrightness     | Sunrise alarm brightness                 |
+| &lt;TOPIC&gt;/schedule/monday               | Wake-up time on monday                   |
+| &lt;TOPIC&gt;/schedule/tuesday              | Wake-up time on tuesday                  |
+| &lt;TOPIC&gt;/schedule/wednesday            | Wake-up time on wednesday                |
+| &lt;TOPIC&gt;/schedule/thursday             | Wake-up time on thursday                 |
+| &lt;TOPIC&gt;/schedule/friday               | Wake-up time on friday                   |
+| &lt;TOPIC&gt;/schedule/saturday             | Wake-up time on saturday                 |
+| &lt;TOPIC&gt;/schedule/sunday               | Wake-up time on sunday                   |
+| &lt;TOPIC&gt;/schedule/holiday              | Wake-up time on holidays                 |
+| &lt;TOPIC&gt;/schedule/vacation             | Wake-up time during vacation             |
+
+#### MQTT subscribe
+
+Controlling the alarm clock via the MQTT-Broker.
+
+| Topic                                | Function                     | Values      |
+| ------------------------------------ | ---------------------------- | ----------- |
+| &lt;TOPIC&gt;/action/enabled         | Enable alarm                 | true, false |
+| &lt;TOPIC&gt;/action/snooze          | Enable snooze                | true        |
+| &lt;TOPIC&gt;/action/stop            | Stop alarm                   | true        |
+| &lt;TOPIC&gt;/action/preAlarmMinutes | Pre-alarm time               | 25          |
+| &lt;TOPIC&gt;/action/skipNext        | Skip next alarm              | true, false |
+| &lt;TOPIC&gt;/action/snoozeMinutes   | Snooze duration              | 11          |
+| &lt;TOPIC&gt;/action/monday          | Wake-up time on monday       | 07:00       |
+| &lt;TOPIC&gt;/action/tuesday         | Wake-up time on tuesday      | 07:05       |
+| &lt;TOPIC&gt;/action/wednesday       | Wake-up time on wednesday    | 07:10       |
+| &lt;TOPIC&gt;/action/thursday        | Wake-up time on thursday     | 07:15       |
+| &lt;TOPIC&gt;/action/friday          | Wake-up time on friday       | 07:20       |
+| &lt;TOPIC&gt;/action/saturday        | Wake-up time on saturday     | 08:30       |
+| &lt;TOPIC&gt;/action/sunday          | Wake-up time on sunday       | 09:30       |
+| &lt;TOPIC&gt;/action/holiday         | Wake-up time on holidays     | 10:30       |
+| &lt;TOPIC&gt;/action/vacation        | Wake-up time during vacation | 10:00       |
+
 ## Changelog
 
 <!--
@@ -159,6 +220,7 @@ All times are in HH:mm format
 ### **WORK IN PROGRESS**
 
 - (Volker Ganswind) Added support for public-holidays-Adapter
+- (Volker Ganswind) Added support for MQTT-Client-Adapter
 
 ### 0.0.4 (2026-11-19)
 

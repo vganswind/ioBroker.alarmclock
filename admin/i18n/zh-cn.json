@@ -24,5 +24,12 @@
     "Other settings": "其他设置",
     "Here you can configure other settings for the alarm clock.": "您可以在这里配置闹钟的其他设置。",
     "Progression of wake-up delays": "觉醒延迟的进展",
-    "Maximum number of entries in the wake-up delay history": "唤醒延迟历史记录中的最大条目数"
+    "Maximum number of entries in the wake-up delay history": "唤醒延迟历史记录中的最大条目数",
+
+    "MQTT-Broker Settings": "MQTT代理设置",
+    "Here you can configure the settings for the mqtt of the alarm clock.": "在这里您可以配置闹钟的 MQTT 设置。",
+    "Select the MQTT instance": "选择 MQTT 实例",
+    "Select the instance that publish the MQTT data.": "选择发布 MQTT 数据的实例。",
+    "The MQTT-publish Topic": "MQTT 发布主题",
+    "Input the Topic for the publish the values": "输入要发布值的主题"
 }

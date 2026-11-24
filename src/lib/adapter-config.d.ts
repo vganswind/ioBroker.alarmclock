@@ -27,8 +27,12 @@ declare global {
                 /** Der Termin ist aktiviert */
                 enabled: boolean;
             }[];
-            // Länge der Historie der Aufwachverzögerung
+            /** Länge der Historie der Aufwachverzögerung */
             maxWakeDelayHistory: number;
+            /** Name der MQTT-Instance */
+            mqttInstance: string;
+            /** Name des MQTT-Topics */
+            mqttTopic: string;
         }
     }
 }

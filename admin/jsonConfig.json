@@ -149,6 +149,44 @@
             ],
             "default": []
         },
+        "mqttHeading": {
+            "type": "header",
+            "text": "MQTT-Broker Settings",
+            "size": 4
+        },
+        "mqttInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the MQTT of the alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "mqttInstance": {
+            "type": "instance",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
+            "label": "Select the MQTT instance",
+            "adapter": "mqtt",
+            "tooltip": "Select the instance that publish the MQTT data.",
+            "default": ""
+        },
+        "mqttTopic": {
+            "type": "text",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 3,
+            "label": "The mqtt-publish Topic",
+            "tooltip": "Input the Topic for the publish the values",
+            "default": ""
+        },
         "otherHeading": {
             "type": "header",
             "text": "Other settings",

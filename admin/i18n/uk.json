@@ -24,5 +24,12 @@
     "Other settings": "Інші налаштування",
     "Here you can configure other settings for the alarm clock.": "Тут ви можете налаштувати інші параметри будильника.",
     "Progression of wake-up delays": "Прогресування затримок пробудження",
-    "Maximum number of entries in the wake-up delay history": "Максимальна кількість записів в історії затримки пробудження"
+    "Maximum number of entries in the wake-up delay history": "Максимальна кількість записів в історії затримки пробудження",
+
+    "MQTT-Broker Settings": "Налаштування MQTT-брокера",
+    "Here you can configure the settings for the mqtt of the alarm clock.": "Тут ви можете налаштувати параметри MQTT будильника.",
+    "Select the MQTT instance": "Виберіть екземпляр MQTT",
+    "Select the instance that publish the MQTT data.": "Виберіть екземпляр, який публікує дані MQTT.",
+    "The MQTT-publish Topic": "Тема публікації MQTT",
+    "Input the Topic for the publish the values": "Введіть тему для публікації значень"
 }

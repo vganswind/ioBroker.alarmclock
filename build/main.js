@@ -69,6 +69,9 @@ class Alarmclock extends utils.Adapter {
     this.subscribeStates("schedule.sunday");
     this.subscribeStates("schedule.vacation");
     this.subscribeStates("schedule.holiday");
+    if (!this.config.mqttTopic || this.config.mqttTopic === "") {
+      this.config.mqttTopic = this.namespace;
+    }
     for (let i = 0; i <= 8; i++) {
       await this.readAlarmTime(i);
     }
@@ -86,6 +89,24 @@ class Alarmclock extends utils.Adapter {
     }
     if (this.config.appointmentInstance && this.config.appointmentInstance !== "" && this.config.appointmentEvents && this.config.appointmentEvents.length > 0) {
       this.subscribeForeignStates(`${this.config.appointmentInstance}.data.table`);
+    }
+    if (this.config.mqttInstance && this.config.mqttInstance !== "" && this.config.mqttTopic && this.config.mqttTopic !== "") {
+      const key = `${this.config.mqttInstance}.${this.config.mqttTopic}`.replaceAll("/", ".");
+      this.subscribeForeignStates(`${key}.action.enabled`);
+      this.subscribeForeignStates(`${key}.action.skipNext`);
+      this.subscribeForeignStates(`${key}.action.snooze`);
+      this.subscribeForeignStates(`${key}.action.stop`);
+      this.subscribeForeignStates(`${key}.action.preAlarmMinutes`);
+      this.subscribeForeignStates(`${key}.action.snoozeMinutes`);
+      this.subscribeForeignStates(`${key}.action.monday`);
+      this.subscribeForeignStates(`${key}.action.tuesday`);
+      this.subscribeForeignStates(`${key}.action.wednesday`);
+      this.subscribeForeignStates(`${key}.action.thursday`);
+      this.subscribeForeignStates(`${key}.action.friday`);
+      this.subscribeForeignStates(`${key}.action.saturday`);
+      this.subscribeForeignStates(`${key}.action.sunday`);
+      this.subscribeForeignStates(`${key}.action.holiday`);
+      this.subscribeForeignStates(`${key}.action.vacation`);
     }
     this.updateCountdownsInterval = this.setInterval(() => this.updateCountdowns(), import_constants.UPDATECOUNTDOWNSINTERVAL);
     this.updateSunriseInterval = this.setInterval(() => this.updateSunrise(), import_constants.UPDATESUNRISEINTERVAL);
@@ -111,12 +132,10 @@ class Alarmclock extends utils.Adapter {
         rest = 0;
       }
       this.log.debug(`Next alarm: ${nextAlarm.val}, rest: ${Math.floor(rest / 6e4)} min`);
-      await this.setState(`${this.namespace}.runtime.countdownAlarm`, Math.floor(rest / 6e4), true);
-      await this.setState(
-        `${this.namespace}.runtime.countdownAlarmText`,
-        this.formatMinutes2TimeString(rest / 6e4),
-        true
-      );
+      await this.setState("runtime.countdownAlarm", Math.floor(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownAlarm", Math.floor(rest / 6e4));
+      await this.setState("runtime.countdownAlarmText", this.formatMinutes2TimeString(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownAlarmText", this.formatMinutes2TimeString(rest / 6e4));
     }
     const nextPreAlarm = await this.getStateAsync("runtime.nextPreAlarm");
     if (nextPreAlarm && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) != null && (nextPreAlarm == null ? void 0 : nextPreAlarm.val) !== "") {
@@ -125,12 +144,10 @@ class Alarmclock extends utils.Adapter {
         rest = 0;
       }
       this.log.debug(`Next pre-alarm: ${nextPreAlarm.val}, rest: ${Math.floor(rest / 6e4)} min`);
-      await this.setState(`${this.namespace}.runtime.countdownPreAlarm`, Math.floor(rest / 6e4), true);
-      await this.setState(
-        `${this.namespace}.runtime.countdownPreAlarmText`,
-        this.formatMinutes2TimeString(rest / 6e4),
-        true
-      );
+      await this.setState("runtime.countdownPreAlarm", Math.floor(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownPreAlarm", Math.floor(rest / 6e4));
+      await this.setState("runtime.countdownPreAlarmText", this.formatMinutes2TimeString(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownPreAlarmText", this.formatMinutes2TimeString(rest / 6e4));
     }
     const snoozeUntil = await this.getStateAsync("runtime.snoozeUntil");
     if (snoozeUntil && (snoozeUntil == null ? void 0 : snoozeUntil.val) != null && (snoozeUntil == null ? void 0 : snoozeUntil.val) !== "") {
@@ -139,12 +156,10 @@ class Alarmclock extends utils.Adapter {
         rest = 0;
       }
       this.log.debug(`Snooze until: ${snoozeUntil.val}, rest: ${Math.floor(rest / 6e4)} min`);
-      await this.setState(`${this.namespace}.runtime.countdownSnooze`, Math.floor(rest / 6e4), true);
-      await this.setState(
-        `${this.namespace}.runtime.countdownSnoozeText`,
-        this.formatMinutes2TimeString(rest / 6e4),
-        true
-      );
+      await this.setState("runtime.countdownSnooze", Math.floor(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownSnooze", Math.floor(rest / 6e4));
+      await this.setState("runtime.countdownSnoozeText", this.formatMinutes2TimeString(rest / 6e4), true);
+      this.sendToMqtt("runtime.countdownSnoozeText", this.formatMinutes2TimeString(rest / 6e4));
     }
   }
   /**
@@ -208,12 +223,17 @@ class Alarmclock extends utils.Adapter {
       const preAlarmMinutes = Number(((_a = await this.getStateAsync("config.preAlarmMinutes")) == null ? void 0 : _a.val) || 0);
       pre.setMinutes(pre.getMinutes() - preAlarmMinutes);
       await this.setState("runtime.nextPreAlarm", pre.toISOString(), true);
+      this.sendToMqtt("runtime.nextPreAlarm", pre.toLocaleString());
       await this.setState("runtime.nextAlarm", alarm.toISOString(), true);
+      this.sendToMqtt("runtime.nextAlarm", alarm.toLocaleString());
     } else {
       this.log.debug("Alarm is disabled, skipping new alarm time check.");
       await this.setState("runtime.nextPreAlarm", "", true);
+      this.sendToMqtt("runtime.nextPreAlarm", "");
       await this.setState("runtime.nextAlarm", "", true);
+      this.sendToMqtt("runtime.nextAlarm", "");
       await this.setState("runtime.snoozeUntil", "", true);
+      this.sendToMqtt("runtime.snoozeUntil", "");
     }
   }
   /**
@@ -385,6 +405,7 @@ class Alarmclock extends utils.Adapter {
       this.log.debug(`sunriseProgress: ${progress} %`);
       await this.setState("runtime.sunriseProgress", progress, true);
       await this.setState("runtime.sunriseBrightness", Math.round(progress), true);
+      this.sendToMqtt("runtime.sunriseBrightness", Math.round(progress));
     }
   }
   /**
@@ -397,6 +418,7 @@ class Alarmclock extends utils.Adapter {
     this.log.debug(`incrementStat(${key})`);
     const value = Number(((_a = await this.getStateAsync(`statistics.${key}`)) == null ? void 0 : _a.val) || 0);
     await this.setState(`statistics.${key}`, value + 1, true);
+    this.sendToMqtt(`statistics.${key}`, value + 1);
   }
   /**
    * Setzten des Status des Weckers.
@@ -447,9 +469,11 @@ class Alarmclock extends utils.Adapter {
     if (!this.alarmStartTime) {
       this.alarmStartTime = Date.now();
       await this.setState("statistics.lastAlarm", (/* @__PURE__ */ new Date()).toISOString(), true);
+      this.sendToMqtt("statistics.lastAlarm", (/* @__PURE__ */ new Date()).toLocaleString());
     }
     await this.incrementStat("alarmCount");
     await this.setState("runtime.active", true, true);
+    this.sendToMqtt("runtime.active", true);
     this.log.info("ALARM");
   }
   /**
@@ -461,6 +485,7 @@ class Alarmclock extends utils.Adapter {
     if (this.alarmStartTime) {
       const wakeDelay = Math.round((Date.now() - this.alarmStartTime) / 6e4);
       await this.setState("statistics.lastWakeup", (/* @__PURE__ */ new Date()).toISOString(), true);
+      this.sendToMqtt("statistics.lastWakeup", (/* @__PURE__ */ new Date()).toLocaleString());
       let history = [];
       const historyState = await this.getStateAsync("statistics.wakeDelayHistory");
       if (historyState == null ? void 0 : historyState.val) {
@@ -483,12 +508,17 @@ class Alarmclock extends utils.Adapter {
       const worstWakeDelay = history.reduce((max, value) => Math.max(max, value), 0);
       await this.setState(`statistics.wakeDelayHistory`, JSON.stringify(history), true);
       await this.setState(`statistics.averageWakeDelay`, averageWakeDelay, true);
+      this.sendToMqtt(`statistics.averageWakeDelay`, averageWakeDelay);
       await this.setState(`statistics.lastWakeDelay`, wakeDelay, true);
+      this.sendToMqtt(`statistics.lastWakeDelay`, wakeDelay);
       await this.setState(`statistics.bestWakeDelay`, bestWakeDelay, true);
+      this.sendToMqtt(`statistics.bestWakeDelay`, bestWakeDelay);
       await this.setState(`statistics.worstWakeDelay`, worstWakeDelay, true);
+      this.sendToMqtt(`statistics.worstWakeDelay`, worstWakeDelay);
     }
     this.alarmStartTime = null;
     await this.setState(`runtime.active`, false, true);
+    this.sendToMqtt(`runtime.active`, false);
     await this.setAlarmState(import_constants.STATE.STOPPED);
   }
   /**
@@ -503,6 +533,7 @@ class Alarmclock extends utils.Adapter {
       return;
     }
     await this.setState("runtime.state", newState, true);
+    this.sendToMqtt("runtime.state", newState);
     this.log.debug(`${oldState == null ? void 0 : oldState.val} -> ${newState}`);
     await this.handleState(newState);
   }
@@ -544,6 +575,7 @@ class Alarmclock extends utils.Adapter {
         this.getState("config.snoozeMinutes", async (_err2, mins) => {
           const until = new Date(Date.now() + Number(mins == null ? void 0 : mins.val) * 6e4);
           await this.setState("runtime.snoozeUntil", until.toISOString(), true);
+          this.sendToMqtt("runtime.snoozeUntil", until.toLocaleString());
           await this.incrementStat("snoozeCount");
           await this.setAlarmState(import_constants.STATE.SNOOZE);
         });
@@ -593,10 +625,8 @@ class Alarmclock extends utils.Adapter {
     if (state.ack === false) {
       this.log.debug(`New wake-up time for ${days[id]}: ${state.val}`);
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
-      await this.setState(`schedule.${days[id]}`, {
-        val: this.alarmStates[id],
-        ack: true
-      });
+      await this.setState(`schedule.${days[id]}`, this.alarmStates[id], true);
+      this.sendToMqtt(`schedule.${days[id]}`, this.alarmStates[id]);
     } else {
       await this.checkNewAlarmTime(`schedule.${days[id]}`);
     }
@@ -627,6 +657,7 @@ class Alarmclock extends utils.Adapter {
     const state = await this.getStateAsync(`schedule.${days[id]}`);
     if (state && state.val !== "") {
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
+      this.sendToMqtt(`schedule.${days[id]}`, this.alarmStates[id]);
     }
   }
   /**
@@ -685,13 +716,13 @@ class Alarmclock extends utils.Adapter {
       case `${this.namespace}.action.snooze`:
         if (state.ack === false) {
           this.activateSnooze();
-          await this.setState("action.snooze", { val: false, ack: true });
+          await this.setState("action.snooze", false, true);
         }
         break;
       case `${this.namespace}.action.stop`:
         if (state.ack === false) {
           await this.setAlarmState(import_constants.STATE.STOPPED);
-          await this.setState("action.stop", { val: false, ack: true });
+          await this.setState("action.stop", false, true);
         }
         break;
       case `${this.namespace}.config.enabled`:
@@ -701,15 +732,19 @@ class Alarmclock extends utils.Adapter {
           await this.setAlarmState(import_constants.STATE.DISABLED);
         }
         await this.checkNewAlarmTime("config.enabled");
+        this.sendToMqtt("config.enabled", state.val);
         break;
       case `${this.namespace}.config.preAlarmMinutes`:
         await this.checkNewAlarmTime("config.preAlarmMinutes");
+        this.sendToMqtt("config.preAlarmMinutes", state.val);
         break;
       case `${this.namespace}.config.skipNext`:
         await this.checkNewAlarmTime("config.skipNext");
+        this.sendToMqtt("config.skipNext", state.val);
         break;
       case `${this.namespace}.config.snoozeMinutes`:
         await this.checkNewAlarmTime("config.snoozeMinutes");
+        this.sendToMqtt("config.snoozeMinutes", state.val);
         break;
       default:
         found = false;
@@ -799,6 +834,94 @@ class Alarmclock extends utils.Adapter {
     return found;
   }
   /**
+   * onStateChange des MQTT-Broker.
+   *
+   * @param id State ID
+   * @param state State object
+   * @returns Ob die State-ID gefunden wurde
+   */
+  async onMqttBrokerStateChange(id, state) {
+    this.log.debug(`onMqttBrokerStateChange: ${id} changed: ${state.val} (ack = ${state.ack})`);
+    const key = `${this.config.mqttInstance}.${this.config.mqttTopic}`.replaceAll("/", ".");
+    let found = true;
+    const mqttState = {
+      ...state,
+      ack: false
+    };
+    switch (id) {
+      case `${key}.action.monday`:
+        await this.checkStateUpdateNewAlarmTime(0, mqttState);
+        break;
+      case `${key}.action.tuesday`:
+        await this.checkStateUpdateNewAlarmTime(1, mqttState);
+        break;
+      case `${key}.action.wednesday`:
+        await this.checkStateUpdateNewAlarmTime(2, mqttState);
+        break;
+      case `${key}.action.thursday`:
+        await this.checkStateUpdateNewAlarmTime(3, mqttState);
+        break;
+      case `${key}.action.friday`:
+        await this.checkStateUpdateNewAlarmTime(4, mqttState);
+        break;
+      case `${key}.action.saturday`:
+        await this.checkStateUpdateNewAlarmTime(5, mqttState);
+        break;
+      case `${key}.action.sunday`:
+        await this.checkStateUpdateNewAlarmTime(6, mqttState);
+        break;
+      case `${key}.action.vacation`:
+        await this.checkStateUpdateNewAlarmTime(7, mqttState);
+        break;
+      case `${key}.action.holiday`:
+        await this.checkStateUpdateNewAlarmTime(8, mqttState);
+        break;
+      case `${key}.action.enabled`:
+        await this.setState("config.enabled", state.val);
+        break;
+      case `${key}.action.skipNext`:
+        await this.setState("config.skipNext", state.val);
+        break;
+      case `${key}.action.stop`:
+        if (state.val) {
+          await this.setState("action.stop", true);
+          this.sendToMqtt("action.stop", false);
+        }
+        break;
+      case `${key}.action.snooze`:
+        if (state.val) {
+          await this.setState("action.snooze", true);
+          this.sendToMqtt("action.snooze", false);
+        }
+        break;
+      case `${key}.action.preAlarmMinutes`:
+        await this.setState("config.preAlarmMinutes", state.val);
+        break;
+      case `${key}.action.snoozeMinutes`:
+        await this.setState("config.snoozeMinutes", state.val);
+        break;
+      default:
+        found = false;
+    }
+    return found;
+  }
+  /**
+   * Senden eines Wertes an dem MQTT-Broker
+   *
+   * @param key Der Schlüssel des Topic
+   * @param msg Die zu sendende Nachricht
+   */
+  sendToMqtt(key, msg) {
+    this.log.debug(`sentToMqtt(${this.config.mqttTopic}.${key}, ${msg})`);
+    if (this.config.mqttInstance && this.config.mqttInstance !== "") {
+      this.sendTo(this.config.mqttInstance, "sendMessage2Client", {
+        topic: `${this.config.mqttTopic}.${key}`.replaceAll(".", "/"),
+        message: msg,
+        retain: false
+      });
+    }
+  }
+  /**
    * Is called if a subscribed state changes.
    *
    * @param id State ID
@@ -811,23 +934,28 @@ class Alarmclock extends utils.Adapter {
       if (await this.onAlarmClockStateChange(id, state)) {
         found = true;
       }
-      if (this.config.holidayInstance && this.config.holidayInstance !== "") {
+      if (!found && this.config.holidayInstance && this.config.holidayInstance !== "") {
         if (await this.onHolidayStateChange(id, state)) {
           found = true;
         }
       }
-      if (this.config.publicHolidaysInstance && this.config.publicHolidaysInstance !== "") {
+      if (!found && this.config.publicHolidaysInstance && this.config.publicHolidaysInstance !== "") {
         if (await this.onPublicHolidayStateChange(id, state)) {
           found = true;
         }
       }
-      if (this.config.vacationInstance && this.config.vacationInstance !== "") {
+      if (!found && this.config.vacationInstance && this.config.vacationInstance !== "") {
         if (await this.onVacationStateChange(id, state)) {
           found = true;
         }
       }
-      if (this.config.appointmentInstance && this.config.appointmentInstance !== "") {
+      if (!found && this.config.appointmentInstance && this.config.appointmentInstance !== "") {
         if (await this.onAppointmentStateChange(id, state)) {
+          found = true;
+        }
+      }
+      if (!found && this.config.mqttInstance && this.config.mqttInstance !== "") {
+        if (await this.onMqttBrokerStateChange(id, state)) {
           found = true;
         }
       }
