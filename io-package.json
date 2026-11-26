@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alarmclock",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "news": {
+      "0.0.6": {
+        "en": "Added support for Actions for Alarmclock-States\nAdded support for Actions for light alarm clock\nAdded templates for wake-up times",
+        "de": "Unterstützung für Alarm-State-Aktionen hinzugefügt\nUnterstützung für Lichtwecker hinzugefügt\nVorlagen für Weckzeiten hinzugefügt",
+        "ru": "Добавлена поддержка действий для состояний будильника\nДобавлена поддержка действий для светового будильника\nДобавлены шаблоны времени пробуждения",
+        "pt": "Adicionado suporte a ações para Alarmclock-States\nAdicionado suporte a ações para despertador\nNovos modelos para acordar",
+        "nl": "Ondersteuning toegevoegd voor Actions for Alarmclock-States\nOndersteuning toegevoegd voor Actions for light alarm clock\nSjablonen toegevoegd voor wektijden",
+        "fr": "Ajout du support à Actions for Alarmclock-States\nAjout du support pour Actions for Light Alarm Clock\nAjout de modèles pour les heures de réveil",
+        "it": "Aggiunto supporto per Actions for Alarmclock-States\nAggiunto supporto per la sveglia Actions\nAggiunti modelli per il risveglio",
+        "es": "Se ha añadido soporte a Actions for Alarmclock-States\nSe ha añadido soporte para Actions for Light despertador\nSe han añadido plantillas para despertarse",
+        "pl": "Dodano obsługę działań dla stanów alarmclock-stanów\nDodano obsługę akcji dla lekkiego budzika\nDodano szablony dla godzin budzenia",
+        "uk": "Додана підтримка дій для станів Alarmclock\nДодана підтримка дій для світлового будильника\nДодані шаблони для часу пробудження",
+        "zh-cn": "增加了对闹钟状态操作的支持\n增加了对轻型闹钟操作的支持\n添加了起床时间模板"
+      },
       "0.0.5": {
         "en": "Added support for public-holidays-Adapter\nAdded support for MQTT-Client-Adapter\nMinor bug fixes",
         "de": "Support für public-holidays-Adapter hinzugefügt\nSupport für MQTT-Client-Adapter\nKleine Bugfixes",

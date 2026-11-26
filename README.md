@@ -259,8 +259,7 @@ Controlling the alarm clock via the MQTT-Broker.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.0.6 (2026-11-26)
 
 - (Volker Ganswind) Added support for Actions for Alarmclock-States
 - (Volker Ganswind) Added support for Actions for light alarm clock
