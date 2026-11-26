@@ -2,6 +2,8 @@
     "enabled": true,
     "language": "de,en",
     "words": [
+        "ALARMNAMES",
+        "ALARMTIME",
         "createstatesobjects",
         "EVALUATESTATEINTERVAL",
         "FHEM",

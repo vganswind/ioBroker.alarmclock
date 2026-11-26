@@ -18,6 +18,8 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var constants_exports = {};
 __export(constants_exports, {
+  ALARMNAMES: () => ALARMNAMES,
+  ALARMTIME: () => ALARMTIME,
   EVALUATESTATEINTERVAL: () => EVALUATESTATEINTERVAL,
   STATE: () => STATE,
   UPDATECOUNTDOWNSINTERVAL: () => UPDATECOUNTDOWNSINTERVAL,
@@ -43,8 +45,41 @@ const STATE = {
   /** Fehler */
   ERROR: "ERROR"
 };
+const ALARMTIME = {
+  /** Montag */
+  MONDAY: 0,
+  /** Dienstag */
+  TUESDAY: 1,
+  /** Mittwoch */
+  WEDNESDAY: 2,
+  /** Donnerstag */
+  THURSDAY: 3,
+  /** Freitag */
+  FRIDAY: 4,
+  /** Samstag */
+  SATURDAY: 5,
+  /** Sonntag */
+  SUNDAY: 6,
+  /** Urlaub */
+  VACATION: 7,
+  /** Feiertag */
+  HOLIDAY: 8
+};
+const ALARMNAMES = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+  "vacation",
+  "holiday"
+];
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  ALARMNAMES,
+  ALARMTIME,
   EVALUATESTATEINTERVAL,
   STATE,
   UPDATECOUNTDOWNSINTERVAL,

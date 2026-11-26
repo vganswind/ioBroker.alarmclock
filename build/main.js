@@ -627,24 +627,13 @@ class Alarmclock extends utils.Adapter {
     if (id < 0 || id > 8) {
       throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
     }
-    const days = [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
-      "vacation",
-      "holiday"
-    ];
     if (state.ack === false) {
-      this.log.debug(`New wake-up time for ${days[id]}: ${state.val}`);
+      this.log.debug(`New wake-up time for ${import_constants.ALARMNAMES[id]}: ${state.val}`);
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
-      await this.setState(`schedule.${days[id]}`, this.alarmStates[id], true);
-      this.sendToMqtt(`schedule.${days[id]}`, this.alarmStates[id]);
+      await this.setState(`schedule.${import_constants.ALARMNAMES[id]}`, this.alarmStates[id], true);
+      this.sendToMqtt(`schedule.${import_constants.ALARMNAMES[id]}`, this.alarmStates[id]);
     } else {
-      await this.checkNewAlarmTime(`schedule.${days[id]}`);
+      await this.checkNewAlarmTime(`schedule.${import_constants.ALARMNAMES[id]}`);
     }
   }
   /**
@@ -659,21 +648,10 @@ class Alarmclock extends utils.Adapter {
     if (id < 0 || id > 8) {
       throw new Error(`Ung\xFCltige Alarm-ID: ${id}`);
     }
-    const days = [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
-      "vacation",
-      "holiday"
-    ];
-    const state = await this.getStateAsync(`schedule.${days[id]}`);
+    const state = await this.getStateAsync(`schedule.${import_constants.ALARMNAMES[id]}`);
     if (state && state.val !== "") {
       this.alarmStates[id] = this.checkValidTime((_a = state.val) == null ? void 0 : _a.toString(), this.alarmStates[id]);
-      this.sendToMqtt(`schedule.${days[id]}`, this.alarmStates[id]);
+      this.sendToMqtt(`schedule.${import_constants.ALARMNAMES[id]}`, this.alarmStates[id]);
     }
   }
   /**
@@ -703,31 +681,31 @@ class Alarmclock extends utils.Adapter {
     let found = true;
     switch (id) {
       case `${this.namespace}.schedule.monday`:
-        await this.checkStateUpdateNewAlarmTime(0, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.MONDAY, state);
         break;
       case `${this.namespace}.schedule.tuesday`:
-        await this.checkStateUpdateNewAlarmTime(1, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.TUESDAY, state);
         break;
       case `${this.namespace}.schedule.wednesday`:
-        await this.checkStateUpdateNewAlarmTime(2, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.WEDNESDAY, state);
         break;
       case `${this.namespace}.schedule.thursday`:
-        await this.checkStateUpdateNewAlarmTime(3, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.THURSDAY, state);
         break;
       case `${this.namespace}.schedule.friday`:
-        await this.checkStateUpdateNewAlarmTime(4, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.FRIDAY, state);
         break;
       case `${this.namespace}.schedule.saturday`:
-        await this.checkStateUpdateNewAlarmTime(5, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.SATURDAY, state);
         break;
       case `${this.namespace}.schedule.sunday`:
-        await this.checkStateUpdateNewAlarmTime(6, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.SUNDAY, state);
         break;
       case `${this.namespace}.schedule.vacation`:
-        await this.checkStateUpdateNewAlarmTime(7, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.VACATION, state);
         break;
       case `${this.namespace}.schedule.holiday`:
-        await this.checkStateUpdateNewAlarmTime(8, state);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.HOLIDAY, state);
         break;
       case `${this.namespace}.action.snooze`:
         if (state.ack === false) {
@@ -866,31 +844,31 @@ class Alarmclock extends utils.Adapter {
     };
     switch (id) {
       case `${key}.action.monday`:
-        await this.checkStateUpdateNewAlarmTime(0, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.MONDAY, mqttState);
         break;
       case `${key}.action.tuesday`:
-        await this.checkStateUpdateNewAlarmTime(1, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.TUESDAY, mqttState);
         break;
       case `${key}.action.wednesday`:
-        await this.checkStateUpdateNewAlarmTime(2, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.WEDNESDAY, mqttState);
         break;
       case `${key}.action.thursday`:
-        await this.checkStateUpdateNewAlarmTime(3, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.THURSDAY, mqttState);
         break;
       case `${key}.action.friday`:
-        await this.checkStateUpdateNewAlarmTime(4, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.FRIDAY, mqttState);
         break;
       case `${key}.action.saturday`:
-        await this.checkStateUpdateNewAlarmTime(5, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.SATURDAY, mqttState);
         break;
       case `${key}.action.sunday`:
-        await this.checkStateUpdateNewAlarmTime(6, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.SUNDAY, mqttState);
         break;
       case `${key}.action.vacation`:
-        await this.checkStateUpdateNewAlarmTime(7, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.VACATION, mqttState);
         break;
       case `${key}.action.holiday`:
-        await this.checkStateUpdateNewAlarmTime(8, mqttState);
+        await this.checkStateUpdateNewAlarmTime(import_constants.ALARMTIME.HOLIDAY, mqttState);
         break;
       case `${key}.action.enabled`:
         await this.setState("config.enabled", state.val);

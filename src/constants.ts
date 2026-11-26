@@ -22,3 +22,38 @@ export const STATE = {
     /** Fehler */
     ERROR: "ERROR",
 };
+
+/** Liste der IDs der Objekte für die Weckzeit */
+export const ALARMTIME = {
+    /** Montag */
+    MONDAY: 0,
+    /** Dienstag */
+    TUESDAY: 1,
+    /** Mittwoch */
+    WEDNESDAY: 2,
+    /** Donnerstag */
+    THURSDAY: 3,
+    /** Freitag */
+    FRIDAY: 4,
+    /** Samstag */
+    SATURDAY: 5,
+    /** Sonntag */
+    SUNDAY: 6,
+    /** Urlaub */
+    VACATION: 7,
+    /** Feiertag */
+    HOLIDAY: 8,
+};
+
+/** Liste der Namen der Objekte für die Weckzeit */
+export const ALARMNAMES = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+    "vacation",
+    "holiday",
+];
