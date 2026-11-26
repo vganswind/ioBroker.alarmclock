@@ -69,6 +69,14 @@ e.g., alarm, wake-up call, etc.
 Here you can select the instance and the name of the topic for the mqtt adapter.
 This is then used to publish and subscribe the mqtt values.
 
+#### Action settings
+
+Here you can add actions that are executed when the alarm clock's status changes.
+
+#### Light alarm clock
+
+Here you can add actions to be executed by the light alarm clock.
+
 #### Miscellaneous
 
 Here, you can set the duration of the wake-up delay history.
@@ -216,6 +224,12 @@ Controlling the alarm clock via the MQTT-Broker.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (Volker Ganswind) Added support for Actions for Alarmclock-States
+- (Volker Ganswind) Added support for Actions for light alarm clock
+
 ### 0.0.5 (2026-11-24)
 
 - (Volker Ganswind) Added support for public-holidays-Adapter

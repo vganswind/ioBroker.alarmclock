@@ -64,7 +64,7 @@ class Alarmclock extends utils.Adapter {
 
         // Überprüfe des mqtt-Topics
         if (!this.config.mqttTopic || this.config.mqttTopic === "") {
-            this.config.mqttTopic = this.namespace;
+            this.config.mqttTopic = "alarmclock";
         }
 
         // Speicherung der Weckzeiten in das Array alarmStates
@@ -508,6 +508,19 @@ class Alarmclock extends utils.Adapter {
             await this.setState("runtime.sunriseProgress", progress, true);
             await this.setState("runtime.sunriseBrightness", Math.round(progress), true);
             this.sendToMqtt("runtime.sunriseBrightness", Math.round(progress));
+
+            if (this.config.sunriseEvents && this.config.sunriseEvents.length > 0) {
+                this.config.sunriseEvents
+                    .filter((e: any) => e.enabled === true)
+                    .forEach(e => {
+                        let calc = (e.max * progress) / 100;
+                        if (e.invers === true) {
+                            calc = e.max - calc;
+                        }
+                        this.log.debug(`sunriseEvents set ${e.objectId} with '${Math.round(calc)}'`);
+                        this.setForeignState(e.objectId, Math.round(calc));
+                    });
+            }
         }
     }
 
@@ -555,6 +568,8 @@ class Alarmclock extends utils.Adapter {
                 await this.incrementStat("errorCount");
                 break;
         }
+
+        this.runningActionEvents(state);
     }
 
     /**
@@ -1117,6 +1132,24 @@ class Alarmclock extends utils.Adapter {
                 message: msg,
                 retain: false,
             });
+        }
+    }
+
+    /**
+     * Ausführen der Aktionen beim Status des Weckers.
+     *
+     * @param action Der Status des Weckers
+     */
+    private runningActionEvents(action: string): void {
+        this.log.debug(`runningActionEvents(${action})`);
+
+        if (this.config.actionEvents && this.config.actionEvents.length > 0) {
+            this.config.actionEvents
+                .filter((e: any) => e.type === action && e.enabled === true)
+                .forEach(e => {
+                    this.log.debug(`action set ${e.objectId} with '${e.value}'`);
+                    this.setForeignState(e.objectId, e.value);
+                });
         }
     }
 

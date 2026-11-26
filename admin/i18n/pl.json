@@ -31,5 +31,17 @@
     "Select the MQTT instance": "Wybierz instancję MQTT",
     "Select the instance that publish the MQTT data.": "Wybierz instancję, która publikuje dane MQTT.",
     "The MQTT-publish Topic": "Temat publikacji MQTT",
-    "Input the Topic for the publish the values": "Wprowadź temat, w którym chcesz opublikować wartości"
+    "Input the Topic for the publish the values": "Wprowadź temat, w którym chcesz opublikować wartości",
+
+    "Action settings": "Ustawienia akcji",
+    "Here you can configure the settings for the object values to be set white the alarm clock states changed.": "Tutaj możesz skonfigurować ustawienia wartości obiektów, które mają zostać ustawione na biały kolor po zmianie stanu budzika.",
+    "The actions that are to be carried out": "Działania, które mają zostać wykonane",
+    "Type": "Typ",
+    "Object": "Identyfikator obiektu",
+    "Value": "Wartość",
+
+    "Sunrise settings": "Ustawienia budzika świetlnego",
+    "Here you can configure the settings for the objects to be set white the light alarm clock.": "Tutaj możesz skonfigurować ustawienia dla obiektów, dla których ma zostać ustawione białe światło budzika.",
+    "Max": "Maksym",
+    "invert?": "odwracać?"
 }

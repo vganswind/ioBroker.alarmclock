@@ -31,5 +31,17 @@
     "Select the MQTT instance": "Выберите экземпляр MQTT",
     "Select the instance that publish the MQTT data.": "Выберите экземпляр, который публикует данные MQTT.",
     "The MQTT-publish Topic": "Тема публикации MQTT",
-    "Input the Topic for the publish the values": "Укажите тему для публикации значений."
+    "Input the Topic for the publish the values": "Укажите тему для публикации значений.",
+
+    "Action settings": "Настройки действий",
+    "Here you can configure the settings for the object values to be set white the alarm clock states changed.": "Здесь вы можете настроить параметры значений объекта, которые будут устанавливаться при изменении состояния будильника.",
+    "The actions that are to be carried out": "Действия, которые должны быть выполнены",
+    "Type": "Тип",
+    "Object": "Идентификатор объекта",
+    "Value": "Ценить",
+
+    "Sunrise settings": "Настройки светового будильника",
+    "Here you can configure the settings for the objects to be set white the light alarm clock.": "Здесь вы можете настроить параметры объектов, которые будут отображаться белым цветом в световом будильнике.",
+    "Max": "Макс",
+    "invert?": "инвертировать?"
 }

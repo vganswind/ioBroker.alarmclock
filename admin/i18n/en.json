@@ -31,5 +31,17 @@
     "Select the MQTT instance": "Select the MQTT instance",
     "Select the instance that publish the MQTT data.": "Select the instance that publish the MQTT data.",
     "The MQTT-publish Topic": "The MQTT-publish Topic",
-    "Input the Topic for the publish the values": "Input the Topic for the publish the values"
+    "Input the Topic for the publish the values": "Input the Topic for the publish the values",
+
+    "Action settings": "Action settings",
+    "Here you can configure the settings for the object value to be set white the alarm clock states changed.": "Here you can configure the settings for the object values to be set white the alarm clock states changed.",
+    "The actions that are to be carried out": "The actions that are to be carried out",
+    "Type": "Type",
+    "Object": "Object-ID",
+    "Value": "Value",
+
+    "Sunrise settings": "Light alarm clock settings",
+    "Here you can configure the settings for the objects to be set white the light alarm clock.": "Here you can configure the settings for the objects to be set white the light alarm clock.",
+    "Max": "Max",
+    "invert?": "invert?"
 }

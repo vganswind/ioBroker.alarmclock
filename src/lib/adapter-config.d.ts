@@ -33,6 +33,28 @@ declare global {
             mqttInstance: string;
             /** Name des MQTT-Topics */
             mqttTopic: string;
+            /** Liste der Actions des Weckerstatus */
+            actionEvents: {
+                /** Der Typ des Actions */
+                type: string;
+                /** Die Object-ID des zu setzenden Status */
+                objectId: string;
+                /** Der Wert der gesetzt wird */
+                value: any;
+                /** Das Event ist aktiviert */
+                enabled: boolean;
+            }[];
+            /** Liste der Actions des Lichtweckers */
+            sunriseEvents: {
+                /** Die Object-ID des zu setzenden Status */
+                objectId: string;
+                /** Der Wert für 100% */
+                max: number;
+                /** Fortschritt invertieren */
+                invers: boolean;
+                /** Das Event ist aktiviert */
+                enabled: boolean;
+            }[];
         }
     }
 }

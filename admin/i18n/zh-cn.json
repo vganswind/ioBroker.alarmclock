@@ -31,5 +31,17 @@
     "Select the MQTT instance": "选择 MQTT 实例",
     "Select the instance that publish the MQTT data.": "选择发布 MQTT 数据的实例。",
     "The MQTT-publish Topic": "MQTT 发布主题",
-    "Input the Topic for the publish the values": "输入要发布值的主题"
+    "Input the Topic for the publish the values": "输入要发布值的主题",
+
+    "Action settings": "操作设置",
+    "Here you can configure the settings for the object values to be set white the alarm clock states changed.": "在这里，您可以配置闹钟状态改变时要设置的对象值。",
+    "The actions that are to be carried out": "要采取的行动",
+    "Type": "类型",
+    "Object": "对象 ID",
+    "Value": "价值",
+
+    "Sunrise settings": "灯光闹钟设置",
+    "Here you can configure the settings for the objects to be set white the light alarm clock.": "在这里，您可以配置要设置为白色灯光闹钟的对象设置。",
+    "Max": "最大限度",
+    "invert?": "倒置？"
 }

@@ -187,6 +187,149 @@
             "tooltip": "Input the Topic for the publish the values",
             "default": ""
         },
+        "actionHeading": {
+            "type": "header",
+            "text": "Action settings",
+            "size": 4
+        },
+        "actionInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the object values to be set white the alarm clock states changed.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "actionEvents": {
+            "type": "table",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 10,
+            "lg": 7,
+            "xl": 7,
+            "label": "The actions that are to be carried out",
+            "noDelete": false,
+            "items": [
+                {
+                    "attr": "type",
+                    "title": "Type",
+                    "width": "15%",
+                    "type": "select",
+                    "default": "TRIGGERED",
+                    "options": [
+                        {
+                            "label": "ARMED",
+                            "value": "ARMED"
+                        },
+                        {
+                            "label": "DISABLED",
+                            "value": "DISABLED"
+                        },
+                        {
+                            "label": "ERROR",
+                            "value": "ERROR"
+                        },
+                        {
+                            "label": "PREALARM",
+                            "value": "PREALARM"
+                        },
+                        {
+                            "label": "SNOOZE",
+                            "value": "SNOOZE"
+                        },
+                        {
+                            "label": "STOPPED",
+                            "value": "STOPPED"
+                        },
+                        {
+                            "label": "TRIGGERED",
+                            "value": "TRIGGERED"
+                        }
+                    ]
+                },
+                {
+                    "type": "objectId",
+                    "title": "Object",
+                    "attr": "objectId",
+                    "width": "45%"
+                },
+                {
+                    "type": "text",
+                    "title": "Value",
+                    "attr": "value",
+                    "width": "25%"
+                },
+                {
+                    "type": "checkbox",
+                    "attr": "enabled",
+                    "title": "Active?",
+                    "width": "15%",
+                    "default": true
+                }
+            ],
+            "default": []
+        },
+        "sunriseHeading": {
+            "type": "header",
+            "text": "Sunrise settings",
+            "size": 4
+        },
+        "sunriseInfoText": {
+            "type": "staticText",
+            "label": "Here you can configure the settings for the objects to be set white the light alarm clock.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "sunriseEvents": {
+            "type": "table",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 10,
+            "lg": 7,
+            "xl": 7,
+            "label": "The actions that are to be carried out",
+            "noDelete": false,
+            "items": [
+                {
+                    "type": "objectId",
+                    "title": "Object",
+                    "attr": "objectId",
+                    "width": "70%"
+                },
+
+                {
+                    "type": "number",
+                    "title": "Max",
+                    "attr": "max",
+                    "width": "15%",
+                    "min": 1,
+                    "max": 1024,
+                    "step": 1,
+                    "default": 100
+                },
+                {
+                    "type": "checkbox",
+                    "attr": "invers",
+                    "title": "invert?",
+                    "width": "15%",
+                    "default": false
+                },
+                {
+                    "type": "checkbox",
+                    "attr": "enabled",
+                    "title": "Active?",
+                    "width": "15%",
+                    "default": true
+                }
+            ],
+            "default": []
+        },
         "otherHeading": {
             "type": "header",
             "text": "Other settings",

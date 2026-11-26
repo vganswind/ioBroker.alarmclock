@@ -70,7 +70,7 @@ class Alarmclock extends utils.Adapter {
     this.subscribeStates("schedule.vacation");
     this.subscribeStates("schedule.holiday");
     if (!this.config.mqttTopic || this.config.mqttTopic === "") {
-      this.config.mqttTopic = this.namespace;
+      this.config.mqttTopic = "alarmclock";
     }
     for (let i = 0; i <= 8; i++) {
       await this.readAlarmTime(i);
@@ -413,6 +413,16 @@ class Alarmclock extends utils.Adapter {
       await this.setState("runtime.sunriseProgress", progress, true);
       await this.setState("runtime.sunriseBrightness", Math.round(progress), true);
       this.sendToMqtt("runtime.sunriseBrightness", Math.round(progress));
+      if (this.config.sunriseEvents && this.config.sunriseEvents.length > 0) {
+        this.config.sunriseEvents.filter((e) => e.enabled === true).forEach((e) => {
+          let calc = e.max * progress / 100;
+          if (e.invers === true) {
+            calc = e.max - calc;
+          }
+          this.log.debug(`sunriseEvents set ${e.objectId} with '${Math.round(calc)}'`);
+          this.setForeignState(e.objectId, Math.round(calc));
+        });
+      }
     }
   }
   /**
@@ -458,6 +468,7 @@ class Alarmclock extends utils.Adapter {
         await this.incrementStat("errorCount");
         break;
     }
+    this.runningActionEvents(state);
   }
   /**
    * Ausführen des Pre-Alarms.
@@ -923,6 +934,20 @@ class Alarmclock extends utils.Adapter {
         topic: `${this.config.mqttTopic}.${key}`.replaceAll(".", "/"),
         message: msg,
         retain: false
+      });
+    }
+  }
+  /**
+   * Ausführen der Aktionen beim Status des Weckers.
+   *
+   * @param action Der Status des Weckers
+   */
+  runningActionEvents(action) {
+    this.log.debug(`runningActionEvents(${action})`);
+    if (this.config.actionEvents && this.config.actionEvents.length > 0) {
+      this.config.actionEvents.filter((e) => e.type === action && e.enabled === true).forEach((e) => {
+        this.log.debug(`action set ${e.objectId} with '${e.value}'`);
+        this.setForeignState(e.objectId, e.value);
       });
     }
   }

@@ -31,5 +31,17 @@
     "Select the MQTT instance": "Selecteer de MQTT-instantie",
     "Select the instance that publish the MQTT data.": "Selecteer de instantie die de MQTT-gegevens publiceert.",
     "The MQTT-publish Topic": "Het MQTT-publicatieonderwerp",
-    "Input the Topic for the publish the values": "Voer het onderwerp in voor het publiceren van de waarden."
+    "Input the Topic for the publish the values": "Voer het onderwerp in voor het publiceren van de waarden.",
+
+    "Action settings": "Actie-instellingen",
+    "Here you can configure the settings for the object values to be set white the alarm clock states changed.": "Hier kunt u de instellingen configureren voor de objectwaarden die moeten worden ingesteld wanneer de status van de wekker verandert.",
+    "The actions that are to be carried out": "De acties die moeten worden uitgevoerd",
+    "Type": "Type",
+    "Object": "Object-ID",
+    "Value": "Waarde",
+
+    "Sunrise settings": "Lichte wekkerinstellingen",
+    "Here you can configure the settings for the objects to be set white the light alarm clock.": "Hier kunt u de instellingen configureren voor de objecten die als wit licht op de wekker moeten worden ingesteld.",
+    "Max": "Max",
+    "invert?": "omkeren?"
 }
