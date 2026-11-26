@@ -1119,4 +1119,399 @@ export async function createStatesObjects(adapter: any): Promise<void> {
         },
         native: {},
     });
+
+    await adapter.setObjectNotExistsAsync("template", {
+        type: "channel",
+        common: {
+            name: {
+                en: "Templates",
+                de: "Vorlagen",
+                ru: "Шаблоны",
+                pt: "Modelos",
+                nl: "Sjablonen",
+                fr: "Modèles",
+                it: "Modelli",
+                es: "Plantillas",
+                pl: "Szablony",
+                uk: "Шаблони",
+                "zh-cn": "模板",
+            },
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.1_data", {
+        type: "state",
+        common: {
+            name: {
+                en: "First template",
+                de: "Erste Vorlage",
+                ru: "Первый шаблон",
+                pt: "Primeiro modelo",
+                nl: "Eerste sjabloon",
+                fr: "Premier modèle",
+                it: "Primo modello",
+                es: "Primera plantilla",
+                pl: "Pierwszy szablon",
+                uk: "Перший шаблон",
+                "zh-cn": "第一个模板",
+            },
+            type: "json",
+            role: "state",
+            read: true,
+            write: false,
+            def: ["06:00", "06:00", "06:00", "06:00", "06:00", "08:00", "08:30", "10:30", "09:30"],
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.1_load", {
+        type: "state",
+        common: {
+            name: {
+                en: "Load first template",
+                de: "Erste Vorlage laden",
+                ru: "Загрузить первый шаблон",
+                pt: "Carregar primeiro modelo",
+                nl: "Laad de eerste sjabloon",
+                fr: "Charger le premier modèle",
+                it: "Carica il primo modello",
+                es: "Cargar primera plantilla",
+                pl: "Załaduj pierwszy szablon",
+                uk: "Завантажте перший шаблон",
+                "zh-cn": "加载第一个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.1_save", {
+        type: "state",
+        common: {
+            name: {
+                en: "Save first template",
+                de: "Erste Vorlage speichern",
+                ru: "Сохраните первый шаблон",
+                pt: "Salvar primeiro modelo",
+                nl: "Sla de eerste sjabloon op.",
+                fr: "Enregistrer le premier modèle",
+                it: "Salva il primo modello",
+                es: "Guardar primera plantilla",
+                pl: "Zapisz pierwszy szablon",
+                uk: "Зберегти перший шаблон",
+                "zh-cn": "保存第一个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.2_data", {
+        type: "state",
+        common: {
+            name: {
+                en: "Second template",
+                de: "Zweite Vorlage",
+                ru: "Второй шаблон",
+                pt: "Segundo modelo",
+                nl: "Tweede sjabloon",
+                fr: "Deuxième modèle",
+                it: "Secondi modelli",
+                es: "Segunda plantilla",
+                pl: "Drugi szablon",
+                uk: "Другий шаблон",
+                "zh-cn": "第二模板",
+            },
+            type: "json",
+            role: "state",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.2_load", {
+        type: "state",
+        common: {
+            name: {
+                en: "Load second template",
+                de: "Zweite Vorlage laden",
+                ru: "Загрузите второй шаблон",
+                pt: "Carregar segundo modelo",
+                nl: "Laad het tweede sjabloon",
+                fr: "Charger le deuxième modèle",
+                it: "Carica il secondo modello",
+                es: "Cargar segunda plantilla",
+                pl: "Załaduj drugi szablon",
+                uk: "Завантажити другий шаблон",
+                "zh-cn": "加载第二个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.2_save", {
+        type: "state",
+        common: {
+            name: {
+                en: "Save second template",
+                de: "Zweite Vorlage speichern",
+                ru: "Сохраните второй шаблон",
+                pt: "Salvar segundo modelo",
+                nl: "Sla het tweede sjabloon op.",
+                fr: "Enregistrer le deuxième modèle",
+                it: "Salva il secondo modello",
+                es: "Guardar segunda plantilla",
+                pl: "Zapisz drugi szablon",
+                uk: "Зберегти другий шаблон",
+                "zh-cn": "保存第二个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.3_data", {
+        type: "state",
+        common: {
+            name: {
+                en: "Third template",
+                de: "Dritte Vorlage",
+                ru: "Третий шаблон",
+                pt: "Terceiro modelo",
+                nl: "Derde sjabloon",
+                fr: "Troisième modèle",
+                it: "Terzo modello",
+                es: "Tercera plantilla",
+                pl: "Trzeci szablon",
+                uk: "Третій шаблон",
+                "zh-cn": "第三模板",
+            },
+            type: "json",
+            role: "state",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.3_load", {
+        type: "state",
+        common: {
+            name: {
+                en: "Load third template",
+                de: "Dritte Vorlage laden",
+                ru: "Загрузить третий шаблон",
+                pt: "Carregar terceiro modelo",
+                nl: "Laad de derde sjabloon",
+                fr: "Charger le troisième modèle",
+                it: "Carica il terzo modello",
+                es: "Cargar tercera plantilla",
+                pl: "Załaduj trzeci szablon",
+                uk: "Завантажити третій шаблон",
+                "zh-cn": "加载第三个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.3_save", {
+        type: "state",
+        common: {
+            name: {
+                en: "Save third template",
+                de: "Dritte Vorlage speichern",
+                ru: "Сохраните третий шаблон",
+                pt: "Salvar terceiro modelo",
+                nl: "Derde sjabloon opslaan",
+                fr: "Enregistrer le troisième modèle",
+                it: "Salva il terzo modello",
+                es: "Guardar tercera plantilla",
+                pl: "Zapisz trzeci szablon",
+                uk: "Зберегти третій шаблон",
+                "zh-cn": "保存第三个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.4_data", {
+        type: "state",
+        common: {
+            name: {
+                en: "Fourth template",
+                de: "Vierte Vorlage",
+                ru: "Четвертый шаблон",
+                pt: "Quarto modelo",
+                nl: "Vierde sjabloon",
+                fr: "Quatrième modèle",
+                it: "Quarto modello",
+                es: "Cuarta plantilla",
+                pl: "Czwarty szablon",
+                uk: "Четвертий шаблон",
+                "zh-cn": "第四个模板",
+            },
+            type: "json",
+            role: "state",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.4_load", {
+        type: "state",
+        common: {
+            name: {
+                en: "Load fourth template",
+                de: "Vierte Vorlage laden",
+                ru: "Загрузите четвертый шаблон",
+                pt: "Carregar o quarto modelo",
+                nl: "Vierde sjabloon laden",
+                fr: "Charger le quatrième modèle",
+                it: "Carica il quarto modello",
+                es: "Cargar cuarta plantilla",
+                pl: "Załaduj czwarty szablon",
+                uk: "Завантажити четвертий шаблон",
+                "zh-cn": "加载第四个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.4_save", {
+        type: "state",
+        common: {
+            name: {
+                en: "Save fourth template",
+                de: "Vierte Vorlage speichern",
+                ru: "Сохраните четвертый шаблон",
+                pt: "Salvar quarto modelo",
+                nl: "Bewaar de vierde sjabloon",
+                fr: "Enregistrer le quatrième modèle",
+                it: "Salva il quarto modello",
+                es: "Guardar cuarta plantilla",
+                pl: "Zapisz czwarty szablon",
+                uk: "Зберегти четвертий шаблон",
+                "zh-cn": "保存第四个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.5_data", {
+        type: "state",
+        common: {
+            name: {
+                en: "Fifth template",
+                de: "Fünfte Vorlage",
+                ru: "Пятый шаблон",
+                pt: "Quinto modelo",
+                nl: "Vijfde sjabloon",
+                fr: "Cinquième modèle",
+                it: "Quinto modello",
+                es: "Quinta plantilla",
+                pl: "Piąty szablon",
+                uk: "П'ятий шаблон",
+                "zh-cn": "第五个模板",
+            },
+            type: "json",
+            role: "state",
+            read: true,
+            write: false,
+            def: "",
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.5_load", {
+        type: "state",
+        common: {
+            name: {
+                en: "Load fifth template",
+                de: "Fünfte Vorlage laden",
+                ru: "Загрузить пятый шаблон",
+                pt: "Carregar o quinto modelo",
+                nl: "Laad de vijfde sjabloon",
+                fr: "Charger le cinquième modèle",
+                it: "Carica il quinto modello",
+                es: "Cargar quinta plantilla",
+                pl: "Załaduj piąty szablon",
+                uk: "Завантажити п'ятий шаблон",
+                "zh-cn": "加载第五个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
+
+    await adapter.setObjectNotExistsAsync("template.5_save", {
+        type: "state",
+        common: {
+            name: {
+                en: "Save fifth template",
+                de: "Fünfte Vorlage speichern",
+                ru: "Сохраните пятый шаблон",
+                pt: "Salvar quinto modelo",
+                nl: "Bewaar de vijfde sjabloon",
+                fr: "Enregistrer le cinquième modèle",
+                it: "Salva il quinto modello",
+                es: "Guardar quinta plantilla",
+                pl: "Zapisz piąty szablon",
+                uk: "Зберегти п'ятий шаблон",
+                "zh-cn": "保存第五个模板",
+            },
+            type: "boolean",
+            role: "button",
+            read: false,
+            write: true,
+            def: false,
+        },
+        native: {},
+    });
 }

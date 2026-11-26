@@ -162,6 +162,26 @@ All times are in HH:mm format
 | lastAlarm        | Last alarm                |
 | lastWakeup       | Last wake-up time         |
 
+#### Templates
+
+| Name   | Function             |
+| ------ | -------------------- |
+| 1_data | First template       |
+| 1_load | Load first template  |
+| 1_save | Save first template  |
+| 2_data | Second template      |
+| 2_load | Load second template |
+| 2_save | Save second template |
+| 3_data | Third template       |
+| 3_load | Load third template  |
+| 3_save | Save third template  |
+| 4_data | Fourth template      |
+| 4_load | Load fourth template |
+| 4_save | Save fourth template |
+| 5_data | Fifth template       |
+| 5_load | Load fifth template  |
+| 5_save | Save fifth template  |
+
 ### MQTT
 
 The alarm clock's MQTT interface.
@@ -195,6 +215,11 @@ Publishing alarm clock data to the MQTT-Broker.
 | &lt;TOPIC&gt;/schedule/sunday               | Wake-up time on sunday                   |
 | &lt;TOPIC&gt;/schedule/holiday              | Wake-up time on holidays                 |
 | &lt;TOPIC&gt;/schedule/vacation             | Wake-up time during vacation             |
+| &lt;TOPIC&gt;/template/1_data               | First template                           |
+| &lt;TOPIC&gt;/template/2_data               | Second template                          |
+| &lt;TOPIC&gt;/template/3_data               | Third template                           |
+| &lt;TOPIC&gt;/template/4_data               | Fourth template                          |
+| &lt;TOPIC&gt;/template/5_data               | Fifth template                           |
 
 #### MQTT subscribe
 
@@ -217,6 +242,16 @@ Controlling the alarm clock via the MQTT-Broker.
 | &lt;TOPIC&gt;/action/sunday          | Wake-up time on sunday       | 09:30       |
 | &lt;TOPIC&gt;/action/holiday         | Wake-up time on holidays     | 10:30       |
 | &lt;TOPIC&gt;/action/vacation        | Wake-up time during vacation | 10:00       |
+| &lt;TOPIC&gt;/action/template_1_load | Load first template          | true        |
+| &lt;TOPIC&gt;/action/template_1_save | Save first template          | true        |
+| &lt;TOPIC&gt;/action/template_2_load | Load second template         | true        |
+| &lt;TOPIC&gt;/action/template_2_save | Save second template         | true        |
+| &lt;TOPIC&gt;/action/template_3_load | Load third template          | true        |
+| &lt;TOPIC&gt;/action/template_3_save | Save third template          | true        |
+| &lt;TOPIC&gt;/action/template_4_load | Load fourth template         | true        |
+| &lt;TOPIC&gt;/action/template_4_save | Save fourth template         | true        |
+| &lt;TOPIC&gt;/action/template_5_load | Load fifth template          | true        |
+| &lt;TOPIC&gt;/action/template_5_save | Save fifth template          | true        |
 
 ## Changelog
 
@@ -229,6 +264,7 @@ Controlling the alarm clock via the MQTT-Broker.
 
 - (Volker Ganswind) Added support for Actions for Alarmclock-States
 - (Volker Ganswind) Added support for Actions for light alarm clock
+- (Volker Ganswind) Added templates for wake-up times
 
 ### 0.0.5 (2026-11-24)
 

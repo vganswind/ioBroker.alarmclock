@@ -1091,6 +1091,385 @@ async function createStatesObjects(adapter) {
     },
     native: {}
   });
+  await adapter.setObjectNotExistsAsync("template", {
+    type: "channel",
+    common: {
+      name: {
+        en: "Templates",
+        de: "Vorlagen",
+        ru: "\u0428\u0430\u0431\u043B\u043E\u043D\u044B",
+        pt: "Modelos",
+        nl: "Sjablonen",
+        fr: "Mod\xE8les",
+        it: "Modelli",
+        es: "Plantillas",
+        pl: "Szablony",
+        uk: "\u0428\u0430\u0431\u043B\u043E\u043D\u0438",
+        "zh-cn": "\u6A21\u677F"
+      }
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.1_data", {
+    type: "state",
+    common: {
+      name: {
+        en: "First template",
+        de: "Erste Vorlage",
+        ru: "\u041F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Primeiro modelo",
+        nl: "Eerste sjabloon",
+        fr: "Premier mod\xE8le",
+        it: "Primo modello",
+        es: "Primera plantilla",
+        pl: "Pierwszy szablon",
+        uk: "\u041F\u0435\u0440\u0448\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u7B2C\u4E00\u4E2A\u6A21\u677F"
+      },
+      type: "json",
+      role: "state",
+      read: true,
+      write: false,
+      def: ["06:00", "06:00", "06:00", "06:00", "06:00", "08:00", "08:30", "10:30", "09:30"]
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.1_load", {
+    type: "state",
+    common: {
+      name: {
+        en: "Load first template",
+        de: "Erste Vorlage laden",
+        ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Carregar primeiro modelo",
+        nl: "Laad de eerste sjabloon",
+        fr: "Charger le premier mod\xE8le",
+        it: "Carica il primo modello",
+        es: "Cargar primera plantilla",
+        pl: "Za\u0142aduj pierwszy szablon",
+        uk: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u043F\u0435\u0440\u0448\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u52A0\u8F7D\u7B2C\u4E00\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.1_save", {
+    type: "state",
+    common: {
+      name: {
+        en: "Save first template",
+        de: "Erste Vorlage speichern",
+        ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Salvar primeiro modelo",
+        nl: "Sla de eerste sjabloon op.",
+        fr: "Enregistrer le premier mod\xE8le",
+        it: "Salva il primo modello",
+        es: "Guardar primera plantilla",
+        pl: "Zapisz pierwszy szablon",
+        uk: "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u043F\u0435\u0440\u0448\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u4FDD\u5B58\u7B2C\u4E00\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.2_data", {
+    type: "state",
+    common: {
+      name: {
+        en: "Second template",
+        de: "Zweite Vorlage",
+        ru: "\u0412\u0442\u043E\u0440\u043E\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Segundo modelo",
+        nl: "Tweede sjabloon",
+        fr: "Deuxi\xE8me mod\xE8le",
+        it: "Secondi modelli",
+        es: "Segunda plantilla",
+        pl: "Drugi szablon",
+        uk: "\u0414\u0440\u0443\u0433\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u7B2C\u4E8C\u6A21\u677F"
+      },
+      type: "json",
+      role: "state",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.2_load", {
+    type: "state",
+    common: {
+      name: {
+        en: "Load second template",
+        de: "Zweite Vorlage laden",
+        ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0432\u0442\u043E\u0440\u043E\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Carregar segundo modelo",
+        nl: "Laad het tweede sjabloon",
+        fr: "Charger le deuxi\xE8me mod\xE8le",
+        it: "Carica il secondo modello",
+        es: "Cargar segunda plantilla",
+        pl: "Za\u0142aduj drugi szablon",
+        uk: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0434\u0440\u0443\u0433\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u52A0\u8F7D\u7B2C\u4E8C\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.2_save", {
+    type: "state",
+    common: {
+      name: {
+        en: "Save second template",
+        de: "Zweite Vorlage speichern",
+        ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0432\u0442\u043E\u0440\u043E\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Salvar segundo modelo",
+        nl: "Sla het tweede sjabloon op.",
+        fr: "Enregistrer le deuxi\xE8me mod\xE8le",
+        it: "Salva il secondo modello",
+        es: "Guardar segunda plantilla",
+        pl: "Zapisz drugi szablon",
+        uk: "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0434\u0440\u0443\u0433\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u4FDD\u5B58\u7B2C\u4E8C\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.3_data", {
+    type: "state",
+    common: {
+      name: {
+        en: "Third template",
+        de: "Dritte Vorlage",
+        ru: "\u0422\u0440\u0435\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Terceiro modelo",
+        nl: "Derde sjabloon",
+        fr: "Troisi\xE8me mod\xE8le",
+        it: "Terzo modello",
+        es: "Tercera plantilla",
+        pl: "Trzeci szablon",
+        uk: "\u0422\u0440\u0435\u0442\u0456\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u7B2C\u4E09\u6A21\u677F"
+      },
+      type: "json",
+      role: "state",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.3_load", {
+    type: "state",
+    common: {
+      name: {
+        en: "Load third template",
+        de: "Dritte Vorlage laden",
+        ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0442\u0440\u0435\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Carregar terceiro modelo",
+        nl: "Laad de derde sjabloon",
+        fr: "Charger le troisi\xE8me mod\xE8le",
+        it: "Carica il terzo modello",
+        es: "Cargar tercera plantilla",
+        pl: "Za\u0142aduj trzeci szablon",
+        uk: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0442\u0440\u0435\u0442\u0456\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u52A0\u8F7D\u7B2C\u4E09\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.3_save", {
+    type: "state",
+    common: {
+      name: {
+        en: "Save third template",
+        de: "Dritte Vorlage speichern",
+        ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0442\u0440\u0435\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Salvar terceiro modelo",
+        nl: "Derde sjabloon opslaan",
+        fr: "Enregistrer le troisi\xE8me mod\xE8le",
+        it: "Salva il terzo modello",
+        es: "Guardar tercera plantilla",
+        pl: "Zapisz trzeci szablon",
+        uk: "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0442\u0440\u0435\u0442\u0456\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u4FDD\u5B58\u7B2C\u4E09\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.4_data", {
+    type: "state",
+    common: {
+      name: {
+        en: "Fourth template",
+        de: "Vierte Vorlage",
+        ru: "\u0427\u0435\u0442\u0432\u0435\u0440\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Quarto modelo",
+        nl: "Vierde sjabloon",
+        fr: "Quatri\xE8me mod\xE8le",
+        it: "Quarto modello",
+        es: "Cuarta plantilla",
+        pl: "Czwarty szablon",
+        uk: "\u0427\u0435\u0442\u0432\u0435\u0440\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u7B2C\u56DB\u4E2A\u6A21\u677F"
+      },
+      type: "json",
+      role: "state",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.4_load", {
+    type: "state",
+    common: {
+      name: {
+        en: "Load fourth template",
+        de: "Vierte Vorlage laden",
+        ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0447\u0435\u0442\u0432\u0435\u0440\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Carregar o quarto modelo",
+        nl: "Vierde sjabloon laden",
+        fr: "Charger le quatri\xE8me mod\xE8le",
+        it: "Carica il quarto modello",
+        es: "Cargar cuarta plantilla",
+        pl: "Za\u0142aduj czwarty szablon",
+        uk: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0447\u0435\u0442\u0432\u0435\u0440\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u52A0\u8F7D\u7B2C\u56DB\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.4_save", {
+    type: "state",
+    common: {
+      name: {
+        en: "Save fourth template",
+        de: "Vierte Vorlage speichern",
+        ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0447\u0435\u0442\u0432\u0435\u0440\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Salvar quarto modelo",
+        nl: "Bewaar de vierde sjabloon",
+        fr: "Enregistrer le quatri\xE8me mod\xE8le",
+        it: "Salva il quarto modello",
+        es: "Guardar cuarta plantilla",
+        pl: "Zapisz czwarty szablon",
+        uk: "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0447\u0435\u0442\u0432\u0435\u0440\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u4FDD\u5B58\u7B2C\u56DB\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.5_data", {
+    type: "state",
+    common: {
+      name: {
+        en: "Fifth template",
+        de: "F\xFCnfte Vorlage",
+        ru: "\u041F\u044F\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Quinto modelo",
+        nl: "Vijfde sjabloon",
+        fr: "Cinqui\xE8me mod\xE8le",
+        it: "Quinto modello",
+        es: "Quinta plantilla",
+        pl: "Pi\u0105ty szablon",
+        uk: "\u041F'\u044F\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u7B2C\u4E94\u4E2A\u6A21\u677F"
+      },
+      type: "json",
+      role: "state",
+      read: true,
+      write: false,
+      def: ""
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.5_load", {
+    type: "state",
+    common: {
+      name: {
+        en: "Load fifth template",
+        de: "F\xFCnfte Vorlage laden",
+        ru: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043F\u044F\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Carregar o quinto modelo",
+        nl: "Laad de vijfde sjabloon",
+        fr: "Charger le cinqui\xE8me mod\xE8le",
+        it: "Carica il quinto modello",
+        es: "Cargar quinta plantilla",
+        pl: "Za\u0142aduj pi\u0105ty szablon",
+        uk: "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u043F'\u044F\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u52A0\u8F7D\u7B2C\u4E94\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
+  await adapter.setObjectNotExistsAsync("template.5_save", {
+    type: "state",
+    common: {
+      name: {
+        en: "Save fifth template",
+        de: "F\xFCnfte Vorlage speichern",
+        ru: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043F\u044F\u0442\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        pt: "Salvar quinto modelo",
+        nl: "Bewaar de vijfde sjabloon",
+        fr: "Enregistrer le cinqui\xE8me mod\xE8le",
+        it: "Salva il quinto modello",
+        es: "Guardar quinta plantilla",
+        pl: "Zapisz pi\u0105ty szablon",
+        uk: "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u043F'\u044F\u0442\u0438\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+        "zh-cn": "\u4FDD\u5B58\u7B2C\u4E94\u4E2A\u6A21\u677F"
+      },
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true,
+      def: false
+    },
+    native: {}
+  });
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

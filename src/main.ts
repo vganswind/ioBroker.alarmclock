@@ -69,6 +69,12 @@ class Alarmclock extends utils.Adapter {
         this.subscribeStates("schedule.vacation");
         this.subscribeStates("schedule.holiday");
 
+        // Wecker-Vorlagen
+        for (let i = 1; i <= 5; i++) {
+            this.subscribeStates(`template.${i}_load`);
+            this.subscribeStates(`template.${i}_save`);
+        }
+
         // Überprüfe des mqtt-Topics
         if (!this.config.mqttTopic || this.config.mqttTopic === "") {
             this.config.mqttTopic = "alarmclock";
@@ -136,6 +142,12 @@ class Alarmclock extends utils.Adapter {
             this.subscribeForeignStates(`${key}.action.sunday`);
             this.subscribeForeignStates(`${key}.action.holiday`);
             this.subscribeForeignStates(`${key}.action.vacation`);
+
+            // Wecker-Vorlagen
+            for (let i = 1; i <= 5; i++) {
+                this.subscribeForeignStates(`${key}.action.template_${i}_load`);
+                this.subscribeForeignStates(`${key}.action.template_${i}_save`);
+            }
         }
 
         // Erstelle die Interval-Timer
@@ -917,6 +929,66 @@ class Alarmclock extends utils.Adapter {
                 this.sendToMqtt("config.snoozeMinutes", state.val);
                 break;
 
+            case `${this.namespace}.template.1_load`:
+                if (state.ack === false) {
+                    await this.templateLoad(1);
+                    await this.setState("template.1_load", false, true);
+                }
+                break;
+            case `${this.namespace}.template.1_save`:
+                if (state.ack === false) {
+                    await this.templateSave(1);
+                    await this.setState("template.1_save", false, true);
+                }
+                break;
+            case `${this.namespace}.template.2_load`:
+                if (state.ack === false) {
+                    await this.templateLoad(2);
+                    await this.setState("template.2_load", false, true);
+                }
+                break;
+            case `${this.namespace}.template.2_save`:
+                if (state.ack === false) {
+                    await this.templateSave(2);
+                    await this.setState("template.2_save", false, true);
+                }
+                break;
+            case `${this.namespace}.template.3_load`:
+                if (state.ack === false) {
+                    await this.templateLoad(3);
+                    await this.setState("template.3_load", false, true);
+                }
+                break;
+            case `${this.namespace}.template.3_save`:
+                if (state.ack === false) {
+                    await this.templateSave(3);
+                    await this.setState("template.3_save", false, true);
+                }
+                break;
+            case `${this.namespace}.template.4_load`:
+                if (state.ack === false) {
+                    await this.templateLoad(4);
+                    await this.setState("template.4_load", false, true);
+                }
+                break;
+            case `${this.namespace}.template.4_save`:
+                if (state.ack === false) {
+                    await this.templateSave(4);
+                    await this.setState("template.4_save", false, true);
+                }
+                break;
+            case `${this.namespace}.template.5_load`:
+                if (state.ack === false) {
+                    await this.templateLoad(5);
+                    await this.setState("template.5_load", false, true);
+                }
+                break;
+            case `${this.namespace}.template.5_save`:
+                if (state.ack === false) {
+                    await this.templateSave(5);
+                    await this.setState("template.5_save", false, true);
+                }
+                break;
             default:
                 found = false;
         }
@@ -1091,6 +1163,37 @@ class Alarmclock extends utils.Adapter {
             case `${key}.action.snoozeMinutes`:
                 await this.setState("config.snoozeMinutes", state.val);
                 break;
+
+            case `${key}.action.template_1_load`:
+                await this.templateLoad(1);
+                break;
+            case `${key}.action.template_1_save`:
+                await this.templateSave(1);
+                break;
+            case `${key}.action.template_2_load`:
+                await this.templateLoad(2);
+                break;
+            case `${key}.action.template_2_save`:
+                await this.templateSave(2);
+                break;
+            case `${key}.action.template_3_load`:
+                await this.templateLoad(3);
+                break;
+            case `${key}.action.template_3_save`:
+                await this.templateSave(3);
+                break;
+            case `${key}.action.template_4_load`:
+                await this.templateLoad(4);
+                break;
+            case `${key}.action.template_4_save`:
+                await this.templateSave(4);
+                break;
+            case `${key}.action.template_5_load`:
+                await this.templateLoad(5);
+                break;
+            case `${key}.action.template_5_save`:
+                await this.templateSave(5);
+                break;
             default:
                 found = false;
         }
@@ -1132,6 +1235,62 @@ class Alarmclock extends utils.Adapter {
                     this.setForeignState(e.objectId, e.value);
                 });
         }
+    }
+
+    /**
+     * Laden einer Wecker-Vorlage.
+     *
+     * @param id Die Id der Vorlage
+     */
+    private async templateLoad(id: number): Promise<void> {
+        this.log.debug(`templateLoad(${id})`);
+
+        const data = (await this.getStateAsync(`template.${id}_data`))?.val || "";
+        if (data && data !== "") {
+            try {
+                const json = JSON.parse(data as string);
+
+                if (!Array.isArray(json)) {
+                    this.log.error(`Der Wert der Profilvorlage ist nicht korrekt: ${json}`);
+                    return;
+                }
+
+                if (json.length != 9) {
+                    this.log.error(`Die Länge des Profile ist nicht korrekt: ${json.length}`);
+                    return;
+                }
+
+                if (!json.every((t, _i) => /^([01]\d|2[0-3]):[0-5]\d$/.test(t))) {
+                    this.log.error(`Der Wert der Profilvorlage enthält fehlerhafte Daten: ${JSON.stringify(json)}`);
+                    return;
+                }
+
+                for (let i = 0; i < json.length; i++) {
+                    this.log.info(`item: ${i} => ${json[i]}`);
+                    this.alarmStates[i] = json[i];
+                    await this.setState(`schedule.${ALARMNAMES[i]}`, this.alarmStates[i], true);
+                    this.sendToMqtt(`schedule.${ALARMNAMES[i]}`, this.alarmStates[i]);
+                }
+
+                await this.checkNewAlarmTime("templateLoad");
+            } catch (error: any) {
+                this.log.error(`Invalid template data JSON: ${error.message}`);
+            }
+        } else {
+            this.log.error(`Der Wert der Profilvorlage ist fehlerhaft: ${data}`);
+        }
+    }
+
+    /**
+     * Speichern der Wecker-Vorlage.
+     *
+     * @param id Die Id der Vorlage
+     */
+    private async templateSave(id: number): Promise<void> {
+        this.log.debug(`templateSave(${id})`);
+
+        await this.setState(`template.${id}_data`, JSON.stringify(this.alarmStates), true);
+        this.sendToMqtt(`template.${id}_data`, JSON.stringify(this.alarmStates));
     }
 
     /**
